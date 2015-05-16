@@ -6,7 +6,7 @@ public class DeadHorseEval {
 			int j=0x1FFF;
 			int e=(u0^u1^u2^u3^u4)&j;
 			int f=(u0|u1|u2|u3|u4);
-		int r = f&j;
+			int r = f&j;
 			int n=r;
 			int a=e;
 			int v=(n&=n-1)!=0?(n&=n-1)!=0?(n&=n-1)!=0?5:4:3:2;
