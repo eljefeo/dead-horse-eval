@@ -4,7 +4,7 @@ So I decided to beat a dead horse and make another 5 card evaluator. I did not l
 So I wanted to make a fast and small eval, yes like so many others. I also wrote it in Java, partly because most people dont, and partly so I can throw it into an android app later maybe...Either way it can quickly be recoded for other languages. This is all very new.
 Before you read into the explanation, please note that this evaluator has been tested for accuracy against all 2,598,960 5card hands that you can make with a 52 card deck (Which it burns through in .016 seconds or so, give or take a few .001).
 
-It takes roughly 0.06 or 0.07 seconds to run through 15,000,000 random 5 card hands, at least it does on my amd desktop and intel laptop. So I am happy with the speed of around 200 million hands a second. The timing and rate analysis is very simple, not sure if the poker community has a standard way of checking the speed of the evaluator.
+It takes roughly 0.07 or 0.08 seconds to run through 20,000,000 random 5 card hands, at least it does on my amd desktop and intel laptop. So I am happy with the speed of around 200+ million hands a second. The timing and rate analysis is very simple, not sure if the poker community has a standard way of checking the speed of the evaluator,c but you can check it out in the source.
 
 I simply wanted to try my hand at the ol' poker hand evaluator. It seemed like a fun project.
 
