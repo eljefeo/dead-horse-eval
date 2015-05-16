@@ -344,5 +344,53 @@ Our quad card (Ace) times 4
 plus our single card
 16384 + 8 = 16392 
 
+16392 == 16392
 !!!!
 ```
+
+##We did it
+
+After all that we have a way to find pairs, two pairs, 3 of a kinds, straights, flushes, full houses, 4 of a kinds, and straight flushes (if it is a straight and a flush)
+
+I will explain the actual code later, but in short here it is:
+
+Pass any five of these:
+```
+ static int[] fiftyTwo = new int[]
+	  {
+		  65537,65538,65540,65544,65552,65568,65600,65664,65792,66048,66560,67584,69632,
+		  32769,32770,32772,32776,32784,32800,32832,32896,33024,33280,33792,34816,36864,
+		  16385,16386,16388,16392,16400,16416,16448,16512,16640,16896,17408,18432,20480,
+		  8193,8194,8196,8200,8208,8224,8256,8320,8448,8704,9216,10240,12288
+	  };
+```
+Into this:
+```
+  public static int eval(int u0, int u1,int u2,int u3, int u4){
+		int j=0x1FFF;
+		int e=(u0^u1^u2^u3^u4)&j;
+		int f=(u0|u1|u2|u3|u4);
+		int r = f&j;
+		int n=r;
+		int a=e;
+		int v=(n&=n-1)!=0?(n&=n-1)!=0?(n&=n-1)!=0?5:4:3:2;
+		if((a&=a-1)!=0)v++;
+		if((a&=a-1)!=0)v++;
+		if((a&=a-1)!=0)v++;
+		boolean s=0x1F1D100%r==0;
+		boolean h=0x10000%(f&~j)==0;
+		boolean q=(u0+u1+u2+u3+u4-e&j)==(j&(r^e)<<2);
+		return v==7?1:v== 4?2:v==6?3:h&&s?8:h?5:s?4:v==3?q?7:6:0;
+	  }
+```
+And you will receive a number 0-8, corresponding to this:
+* 0 High Card
+* 1 Pair
+* 2 Two Pair
+* 3 Three of a kind
+* 4 Straight
+* 5 Flush
+* 6 Full House
+* 7 Four of a kind
+* 8 Straight Flush
+
