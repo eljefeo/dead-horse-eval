@@ -33,4 +33,96 @@ You can imaginge these numbers like this :
 	  };
 ```
 
-There is a method to this number madness.
+There is a method to this number madness
+
+####Card Structure
+
+These numbers correspond to a nicely arranged set of bits. 
+I setup the cards so each one only need 17 bits. 13 bits for the numbers 2-A, and 4 bits for the suits Spades Hearts Clubs Diamonds.
+
+The Card setup follows this bit structure:
+
+```
+S H C D A K Q J 10 9 8 7 6 5 4 3 2
+```
+So an Ace of Spades would look like this in binary:
+```
+Ace of Spades :
+1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 
+```
+
+And a 5 of clubs would look like this :
+```
+Five of clubs:
+0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0
+```
+
+You get the picture.
+
+###The 3 Hands
+
+Now, setting the cards up like this gave me some advantages. Because in poker there are really 3 types of hands:
+* Straights	(where the numbers matter) 
+* Flushes 	(where the suits matter)  
+* Duplicates 	(where the quantities matter)
+
+This bit structure came about with this in mind.
+
+So how would I handle each of these 3 types of hands ???
+
+#####Straights:
+Straights are 5 cards in a row : 4 5 6 7 8, or 9 10 J Q K, or even A 2 3 4 5.
+I wanted a quick way to find these types of hands. 
+First, using our bits, we would take the bitwise OR of all the cards as so:
+```
+00100000001000000 : Eight of clubs, 16448 in decimal
+01000000000010000 : Six of Hearts, 32784 in decimal
+00010000000001000 : Five of Diamonds, 8200 in decmal
+10000000010000000 : Nine of Spades, 65664 in decimal
+01000000000100000 : Seven of Hearts, 32800 in decimal
+| (OR them all together)
+11110000011111000 : Our results after Or'ing, 123128 in decimal
+```
+
+Since we do not need our Suits for a straight check we will use a Suit Mask to only leave our numbers:
+```
+Suit Mask:
+00001111111111111
+
+so...
+
+11110000011111000 : Our result from Or'ing above
+&
+00001111111111111 : Our Suit Mask
+=
+00000000011111000 : Our Result, 248 in decimal
+```
+So now what are we looking at ? 
+We have our five cards, all in a row, whose decimal equivalent is a number unique to straights. When I say unique to straights, I mean that when you OR all 5 cards together, you will never get the same number that a straight gives you, with any other type of hand. So a pair, full house, flush etc. will never OR into the same number a straight would. This allows us to isolate the straights and find them with unified way. 
+
+The way we find if this masked OR number is a straight, is by modulo. The highes straight you can have, after being masked comes out to :
+```
+A K Q J 10
+00001111100000000 : After OR'ing the cards, 7936 in decimal
+```
+Here is a cool thing about these straights. This highest straight number (7936) will give a 0 result when modulo'd against any other straight number. For example:
+```
+(AKQJ10 % 87654 = 0)
+7936 % 124 = 0
+
+(AKQJ10 % Q J 10 9 8 = 0)
+7936 % 1984 = 0
+```
+The issue is, of course, that darn low Ace straight (A2345)
+So to get around this we get the Least Common Multiple of 4111 (A234)5 and 7936 (AKQJ10) which comes out to 32624896
+
+Now this number, 32624896, when modulo'd against any of our straights, including a low Ace straight will give 0 !!
+
+######Finally for Straights.....
+we find out straights by 
+* OR'ing all 5 cards
+* Mask the suit bits
+* If (32624896 % ourNumber) == 0 {Straight !}
+
+
+```
