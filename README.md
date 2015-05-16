@@ -1,7 +1,8 @@
 # DeadHorseEval
 
-So I decided to beat a dead horse and make another 5 card evaluator. I did not like the idea of lugging around a >100MB lookup table file. I figured this eval would go into an app someday and who in their right minds would attach a 100MB file to a 10MB game just to eval the hand?
+So I decided to beat a dead horse and make another 5 card evaluator. I did not like the idea of lugging around a >100MB lookup table file. I figured this eval would go into an app someday and who in their right minds would attach a 100MB file to a 10MB game just to eval the hand? But I also loved the speed of the lookup table evals, so I wanted both.
 So I wanted to make a fast and small eval, yes like so many others. 
+Before you read into the explanation, please note that this evaluator has been tested for accuracy against all 2,598,960 5card hands that you can make with a 52 card deck (Which it burns through in .016 seconds or so, give or take a few .001). 
 
 I simply wanted to try my hand at the ol' poker hand evaluator. It seemed like a fun project.
 
@@ -10,7 +11,7 @@ You see, with the lookup table, all the preprocessing has been done already, whi
 
 So my preprocessing is setting up 52 specific numbers (cards):
 
-##1. The Cards
+## I The Cards
 ```
  static int[] fiftyTwo = new int[]
 	  {
@@ -59,7 +60,7 @@ Five of clubs:
 
 You get the picture.
 
-##2. The 3 Hands
+## II The 3 Hands
 
 Now, setting the cards up like this gave me some advantages. Because in poker there are really 3 types of hands:
 * Straights	(where the numbers matter) 
@@ -70,7 +71,7 @@ This bit structure came about with this in mind.
 
 So how would I handle each of these 3 types of hands ???
 
-#####Straights:
+###II.a Straights:
 Straights are 5 cards in a row : 4 5 6 7 8, or 9 10 J Q K, or even A 2 3 4 5.
 I wanted a quick way to find these types of hands. 
 First, using our bits, we would take the bitwise OR of all the cards as so:
@@ -124,7 +125,7 @@ we find out straights by
 * Mask the suit bits
 * if (32624896 % ourNumber == 0) {Straight !}
 
-#####Flushes:
+###II.b Flushes:
 We find our flushes in a similar way to the straights above. First we OR all the cards together, except instead of masking the suits away, we mask the card numbers away and only leave the suits, since that is all we are interested in for a flush. So...
 ```
 00100000000001000 : Five of clubs
@@ -172,7 +173,7 @@ So to find Flushes:
 * Mask the numbers with the Number Mask, leaving suit bits
 * if (65536 % ourNumber == 0) {Flush!}
 
-####Duplicates (Pairs, Trips, etc.)
+###II.c Duplicates (Pairs, Trips, etc.)
 The last type of hand we will come across are the five hands that include duplicated cards:
 * Pair
 * Two Pair
