@@ -9,6 +9,8 @@ The idea behind the eval is simple, set the 52 cards in such a way, where it wou
 You see, with the lookup table, all the preprocessing has been done already, which is why they are so damn fast. I wanted to do preprocessing as well, just without the added space of a file.
 
 So my preprocessing is setting up 52 specific numbers (cards):
+
+##1. The Cards
 ```
  static int[] fiftyTwo = new int[]
 	  {
@@ -31,3 +33,4 @@ You can imaginge these numbers like this :
 	  };
 ```
 
+There is a method to this number madness.
