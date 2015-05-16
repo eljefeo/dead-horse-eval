@@ -114,7 +114,7 @@ Here is a cool thing about these straights. This highest straight number (7936) 
 7936 % 1984 = 0
 ```
 The issue is, of course, that darn low Ace straight (A2345)
-So to get around this we get the Least Common Multiple of 4111 (A234)5 and 7936 (AKQJ10) which comes out to 32624896
+So to get around this we get the Least Common Multiple of 4111 (A2345) and 7936 (AKQJ10) which comes out to 32624896
 
 Now this number, 32624896, when modulo'd against any of our straights, including a low Ace straight will give 0 !!
 
@@ -122,7 +122,7 @@ Now this number, 32624896, when modulo'd against any of our straights, including
 we find out straights by 
 * OR'ing all 5 cards
 * Mask the suit bits
-* If (32624896 % ourNumber) == 0 {Straight !}
+* if (32624896 % ourNumber == 0) {Straight !}
 
 #####Flushes:
 We find our flushes in a similar way to the straights above. First we OR all the cards together, except instead of masking the suits away, we mask the card numbers away and only leave the suits, since that is all we are interested in for a flush. So...
@@ -135,7 +135,7 @@ We find our flushes in a similar way to the straights above. First we OR all the
 |
 00101001010001001 : our results from Or'ing, 21129 in decimal
 ```
-And our mask in this case would be the opposite of our Suit Mask used for finding straights, so can use the bitwise NOT (~) of our Suit Maske to get our Number Mask:
+And our mask in this case would be the opposite of our Suit Mask used for finding straights, so can use the bitwise NOT (~) of our Suit Mask to get our Number Mask:
 ```
 Suit Mask = 8191
 00000000000000000001111111111111
@@ -144,11 +144,205 @@ Number Mask = ~8191
 11111111111111111110000000000000
 ```
 
-Using that Numer mask we can isolate our suits in the five cards:
+Using that Number mask we can isolate our suits in the five cards:
 ```
 00000000000000000101001010001001 : our results from Or'ing our five flush cards above, 21129 in decimal
 &
 11111111111111111110000000000000
 =
-00000000000000000100000000000000, 
+00000000000000000100000000000000, 16384 in decimal
+```
+Now, the difference between a flush, and a non-flush, is that a flush would only have 1 bit set after OR'ing the cards together, because all cards would have the same suit. So if we modulo the highest suit bit (65536:Spade) but the OR result of the five cards, we should get 0 as a  results if there is only 1 bit set for all five card suits !
+```
+00100000000000000 : our club bit is set after OR'ing the five club cards above, 16384 in decimal
+
+65536 % 16384 = 0 !
+
+also:
+
+65536 % 65536 = 0 (Spade Flush)
+65536 % 32768 = 0 (Heart Flush)
+65536 % 16384 = 0 (Club Flush)
+65536 % 8192  = 0 (Diamond Flush)
+
+```
+As you can see 65536 will modulo to a result of 0, only if it is modulo'ing against a power of 2, which will only happen if all 5 cards have the same suit.
+So to find Flushes:
+* OR the five cards together
+* Mask the numbers with the Number Mask, leaving suit bits
+* if (65536 % ourNumber == 0) {Flush!}
+
+####Duplicates (Pairs, Trips, etc.)
+The last type of hand we will come across are the five hands that include duplicated cards:
+* Pair
+* Two Pair
+* 3 of a Kind
+* Full House
+* 4 of a Kind
+
+With straights and flushes, we found magic numbers to modulo against our OR'd cards, and it was easy peezy. Not for duplicates. What we can do with duplicates though is find a unique way to tell these five hands apart. The way we can do that is this:
+* OR the cards together
+* XOR the cards together
+* Count the bits in both the OR and XOR results
+
+Lets see an example:
+```
+Pair:
+00100000000001000 : Five of clubs
+00100000010000000 : Nine of clubs
+01000000000001000 : Five of Hearts
+00100000000000001 : Two of clubs
+00101000000000000 : Ace of clubs
+
+OR all five cards and Mask the Suits :
+= 00001000010001001 (4 bits set)
+
+XOR all five cards and Mask the Suits
+= 00001000010000001 (3 bits set)
+
+Total Bits set (4+3) = 7
+
+---------------------------------------
+Two Pair:
+00100000000001000 : Five of clubs
+01001000000000000 : Ace of Diamonds
+01000000000001000 : Five of Hearts
+00100000000000001 : Two of clubs
+00101000000000000 : Ace of clubs
+
+OR all five cards and Mask the Suits :
+= 00001000000001001 (3 bits set)
+
+XOR all five cards and Mask the Suits
+= 00000000000000001 (1 bit set)
+
+Total Bits set (3+1) = 4
+
+---------------------------------------
+Three of a kind:
+00100000000001000 : Five of clubs
+00011000000000000 : Ace of Diamonds
+01001000000000000 : Ace of Hearts
+00100000000000001 : Two of clubs
+00101000000000000 : Ace of clubs
+
+OR all five cards and Mask the Suits :
+= 00001000000001001 (3 bits set)
+
+XOR all five cards and Mask the Suits
+= 00001000000001001 (3 bits set)
+
+Total Bits set (3+3) = 6
+
+---------------------------------------
+Full House:
+00100000000001000 : Five of clubs
+00011000000000000 : Ace of Diamonds
+01000000000001000 : Five of Hearts
+01001000000000000 : Ace of Hearts
+00101000000000000 : Ace of clubs
+
+OR all five cards and Mask the Suits :
+= 00001000000001000 (2 bits set)
+
+XOR all five cards and Mask the Suits
+= 00001000000000000 (1 bits set)
+
+Total Bits set (2+1) = 3
+---------------------------------------
+
+4 of a Kind:
+10001000000000000 : Ace of Spades
+00011000000000000 : Ace of Diamonds
+01000000000001000 : Five of Hearts
+01001000000000000 : Ace of Hearts
+00101000000000000 : Ace of clubs
+
+OR all five cards and Mask the Suits :
+= 00001000000001000 (2 bits set)
+
+XOR all five cards and Mask the Suits
+= 00000000000001000 (1 bits set)
+
+Total Bits set (2+1) = 3
+---------------------------------------
+
+```
+So after all these bits, what do we have left? We now know that if you OR the five cards, add up the amount of bits in the result, then XOR the five cards, add up the amount of bits in the result, you get unique numbers for pairs, two pairs, and 3 of a kind. Full house and 4 of a kind end up with the same number (3) which means we will have to do a separate check for them.
+
+So to find pairs, two pair, 3 of a kind, Full house, 4 of a kind:
+* OR all five cards, count the bits in the result
+* XOR all five cards, count the bits in the result
+* add those 2 counts together
+* 
+* if (count==7){Pair !}
+* if (count==4){Two Pair!}
+* if (count==6){3 of a kind!}
+* if (count==3){Full House or 4 of a Kind!}
+
+That damn Full House and 4 of a kind, why did they have to be the same? Everything was going sooo good until then. Aww well, We have done good so far. What we will do is if the count comes back as 3, we will check to see if it is a 4 of a kind or full house. This is how we will do that:
+
+In 4 of a kind : the OR result from all five cards has both the quadruple card and the single card. So in the example:
+```
+10001000000000000 : Ace of Spades
+00011000000000000 : Ace of Diamonds
+01000000000001000 : Five of Hearts
+01001000000000000 : Ace of Hearts
+00101000000000000 : Ace of clubs
+
+OR all five cards and Mask the Suits :
+00001000000001000 
+
+XOR all five cards and Mask the Suits
+00000000000001000 
+
+```
+We can see that both the Ace bit (The Quadruple card) and the Five bit (the single card) are in the OR result.
+We can also see that only the Five bit (the single card) shows up in the XOR result. This means that XOR'ing the OR and XOR together will give us back our quadruple card:
+```
+OR all five cards and Mask the Suits :
+00001000000001000
+
+XOR all five cards and Mask the Suits
+00000000000001000 
+
+
+XOR the OR and XOR (OR ^ XOR)
+00001000000001000 : has both the Ace (Quad card) and Five (single card)
+^
+00000000000001000 : has just the Five (single card)
+
+=
+00001000000000000 : we get only our Ace back (our quadruple card)
+```
+This probably seems like a lot of stupid bit twiddling for something so simple. You are probably right, but what ends up happening is we now have isolated our Quad card (Ace) and Single Card(Five). Now we can do some math. If we mask the suit bits of all our cards and add the numbers together (Yes actually add, like arithmetic "+") we would get the same thing as our quad card times 4 plus our single card.
+
+Example:
+```
+10001000000000000 : Ace of Spades
+00011000000000000 : Ace of Diamonds
+01000000000001000 : Five of Hearts
+01001000000000000 : Ace of Hearts
+00101000000000000 : Ace of clubs
+
+
+Masked the suits :
+
+00001000000000000 : Ace 
+00001000000000000 : Ace
+00000000000001000 : Five
+00001000000000000 : Ace
+00001000000000000 : Ace
+
+add the numbers together:
+4096 + 4096 + 8 + 4096 + 4096 = 16392
+
+===============================
+
+Our quad card (Ace) times 4
+4096 * 4 = 16384
+plus our single card
+16384 + 8 = 16392 
+
+!!!!
 ```
