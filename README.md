@@ -59,7 +59,7 @@ Five of clubs:
 
 You get the picture.
 
-###The 3 Hands
+##2. The 3 Hands
 
 Now, setting the cards up like this gave me some advantages. Because in poker there are really 3 types of hands:
 * Straights	(where the numbers matter) 
@@ -87,13 +87,13 @@ First, using our bits, we would take the bitwise OR of all the cards as so:
 Since we do not need our Suits for a straight check we will use a Suit Mask to only leave our numbers:
 ```
 Suit Mask:
-00001111111111111
+00001111111111111 : 8191 in decimal
 
 so...
 
-11110000011111000 : Our result from Or'ing above
+11110000011111000 : Our result from Or'ing above, 123128 in decimal
 &
-00001111111111111 : Our Suit Mask
+00001111111111111 : Our Suit Mask, 8191 in decimal
 =
 00000000011111000 : Our Result, 248 in decimal
 ```
@@ -124,5 +124,31 @@ we find out straights by
 * Mask the suit bits
 * If (32624896 % ourNumber) == 0 {Straight !}
 
+#####Flushes:
+We find our flushes in a similar way to the straights above. First we OR all the cards together, except instead of masking the suits away, we mask the card numbers away and only leave the suits, since that is all we are interested in for a flush. So...
+```
+00100000000001000 : Five of clubs
+00100000010000000 : Nine of clubs
+00100001000000000 : Jack of clubs
+00100000000000001 : Two of clubs
+00101000000000000 : Ace of clubs
+|
+00101001010001001 : our results from Or'ing, 21129 in decimal
+```
+And our mask in this case would be the opposite of our Suit Mask used for finding straights, so can use the bitwise NOT (~) of our Suit Maske to get our Number Mask:
+```
+Suit Mask = 8191
+00000000000000000001111111111111
 
+Number Mask = ~8191
+11111111111111111110000000000000
+```
+
+Using that Numer mask we can isolate our suits in the five cards:
+```
+00000000000000000101001010001001 : our results from Or'ing our five flush cards above, 21129 in decimal
+&
+11111111111111111110000000000000
+=
+00000000000000000100000000000000, 
 ```
