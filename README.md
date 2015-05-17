@@ -128,52 +128,46 @@ we find out straights by
 * if (32624896 % ourNumber == 0) {Straight !}
 
 ###II.b Flushes:
-We find our flushes in a similar way to the straights above. First we OR all the cards together, except instead of masking the suits away, we mask the card numbers away and only leave the suits, since that is all we are interested in for a flush. So...
+
+~~We find our flushes in a similar way to the straights above. First we OR all the cards together, except instead of masking the suits away, we mask the card numbers away and only leave the suits, since that is all we are interested in for a flush. So...~~
+
+Thank you u/DrBreakalot for the idea and u/compiling for the comfirmation. Thanks to reddit, The flush check has been changed. previously we would OR the cards together, mask the numbers, leaving only the suit bits, then perform a modulo calculation that would return 0 only for flushes.
+
+It has been brought to my attention that there is a simpler way. All we have to do is AND all the cards together, if the result is non-zero we have a flush ! It is intersting, as I was going through these hand checks, I thought about using AND'ing, but I could not find a use for it...I missed the unique flush check it provides. Pretty Sweet.
+
+Lets check that out:
 ```
+A Flush Hand:
 00100000000001000 : Five of clubs
 00100000010000000 : Nine of clubs
 00100001000000000 : Jack of clubs
 00100000000000001 : Two of clubs
 00101000000000000 : Ace of clubs
-|
-00101001010001001 : our results from Or'ing, 21129 in decimal
-```
-And our mask in this case would be the opposite of our Suit Mask used for finding straights, so can use the bitwise NOT (~) of our Suit Mask to get our Number Mask:
-```
-Suit Mask = 8191
-00000000000000000001111111111111
-
-Number Mask = ~8191
-11111111111111111110000000000000
-```
-
-Using that Number mask we can isolate our suits in the five cards:
-```
-00000000000000000101001010001001 : our results from Or'ing our five flush cards above, 21129 in decimal
 &
-11111111111111111110000000000000
-=
-00000000000000000100000000000000, 16384 in decimal
-```
-Now, the difference between a flush, and a non-flush, is that a flush would only have 1 bit set after OR'ing the cards together, because all cards would have the same suit. So if we modulo the highest suit bit (65536:Spade) but the OR result of the five cards, we should get 0 as a  results if there is only 1 bit set for all five card suits !
-```
-00100000000000000 : our club bit is set after OR'ing the five club cards above, 16384 in decimal
-
-65536 % 16384 = 0 !
-
-also:
-
-65536 % 65536 = 0 (Spade Flush)
-65536 % 32768 = 0 (Heart Flush)
-65536 % 16384 = 0 (Club Flush)
-65536 % 8192  = 0 (Diamond Flush)
+00100000000000000 : our results from AND'ing, 16384 in decimal
 
 ```
-As you can see 65536 will modulo to a result of 0, only if it is modulo'ing against a power of 2, which will only happen if all 5 cards have the same suit.
-So to find Flushes:
-* OR the five cards together
-* Mask the numbers with the Number Mask, leaving suit bits
-* if (65536 % ourNumber == 0) {Flush!}
+Note that any hand that is not a flush would be zero'd out :
+```
+Non-Flush Hand
+00100000000001000 : Five of clubs
+00100000010000000 : Nine of clubs
+00100001000000000 : Jack of clubs
+00100000000000001 : Two of clubs
+10001000000000000 : Ace of spades
+&
+00000000000000000 : our results from AND'ing, 0 in decimal
+
+The spade at the end killed the 1, non-flushes end up as zero from AND'ing
+```
+The beautiful thing here is with AND'ing, the only bits that would make it through would be a single suit bit if the hand is actually a flush. AND'ing compares bits to eachother and only results in a 1 set bit if BOTH the two numbers have a 1 bit set in that position, if a 1 ever gets AND'ed with a 0, the 1 dies and the result is a 0. This means that a chain of five cards would need a bit set in the same place for all five cards, which would only happen for flushes.
+
+Finally for Flushes :
+* AND all five cards together
+* if (result!=0) {Flush!}
+
+So simple, I love it.
+
 
 ###II.c Duplicates (Pairs, Trips, etc.)
 The last type of hand we will come across are the five hands that include duplicated cards:
