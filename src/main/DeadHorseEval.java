@@ -14,8 +14,9 @@ public class DeadHorseEval {
 			if((cntX&=cntX-1)!=0)v++;
 			if((cntX&=cntX-1)!=0)v++;
 			boolean strt=0x1F1D100%orMasked==0;
-			boolean flsh=0x10000%(or&~sMask)==0;
+			boolean flsh = (a&b&c&d&e)!=0;
 			boolean quad=(a+b+c+d+e-xorMasked&sMask)==(sMask&(orMasked^xorMasked)<<2);
 			return v==7?1:v==4?2:v==6?3:flsh&&strt?8:flsh?5:strt?4:v==3?quad?7:6:0;
+			
 		  }
 }
