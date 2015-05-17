@@ -375,7 +375,7 @@ Into this:
 		if((cntX&=cntX-1)!=0)v++;
 		if((cntX&=cntX-1)!=0)v++;
 		boolean strt=0x1F1D100%orMasked==0;
-		boolean flsh=0x10000%(or&~sMask)==0;
+		boolean flsh=(a&b&c&d&e)!=0;
 		boolean quad=(a+b+c+d+e-xorMasked&sMask)==(sMask&(orMasked^xorMasked)<<2);
 		return v==7?1:v==4?2:v==6?3:flsh&&strt?8:flsh?5:strt?4:v==3?quad?7:6:0;
 	  }
@@ -390,4 +390,9 @@ And you will receive a number 0-8, corresponding to this:
 * 6 Full House
 * 7 Four of a kind
 * 8 Straight Flush
+
+
+##Next Step
+
+Now to make this a real evaluator we must now be able to compare 2 hands against eachother to find a victor. A lot of the work is done already to find the main type of hand (pair, 3 of a kind, flush etc..) now it is time to give each hand a score to compare to another....I have only begun thinking about this. And I think I will start by trying to see what we can do with the 32 bits an integer offers. The challenge continues...
 
