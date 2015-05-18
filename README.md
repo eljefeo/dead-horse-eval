@@ -2,9 +2,7 @@
 
 So I decided to beat a dead horse and make another 5 card evaluator. I did not like the idea of lugging around a >100MB lookup table file. I figured this eval would go into an app someday and who in their right minds would attach a 100MB file to a 10MB game just to eval the hand? But I also loved the speed of the lookup table evals, so I wanted both.
 So I wanted to make a fast and small eval, yes like so many others. I also wrote it in Java, partly because most people dont, and partly so I can throw it into an android app later maybe...Either way it can quickly be recoded for other languages. This is all very new.
-Before you read into the explanation, please note that this evaluator has been tested for accuracy against all 2,598,960 5card hands that you can make with a 52 card deck (Which it burns through in .016 seconds or so, give or take a few .001).
-
-It takes roughly 0.07 or 0.08 seconds to run through 20,000,000 random 5 card hands, at least it does on my amd desktop and intel laptop. So I am happy with the speed of around 200+ million hands a second. The timing and rate analysis is very simple, not sure if the poker community has a standard way of checking the speed of the evaluator,c but you can check it out in the source.
+Before you read into the explanation, please note that this evaluator has been tested for accuracy against all 2,598,960 5card hands that you can make with a 52 card deck (Which it currently burns through in .05 seconds or so).
 
 I simply wanted to try my hand at the ol' poker hand evaluator. It seemed like a fun project.
 
@@ -345,7 +343,7 @@ plus our single card
 !!!!
 ```
 
-##We did it
+##We can now tell what kind of hand you have
 
 After all that we have a way to find pairs, two pairs, 3 of a kinds, straights, flushes, full houses, 4 of a kinds, and straight flushes (if it is a straight and a flush)
 
@@ -392,7 +390,256 @@ And you will receive a number 0-8, corresponding to this:
 * 8 Straight Flush
 
 
-##Next Step
+##But Who Wins ??
+The next stage in this evaluator is to be able to determine a victor when presented with more than one hand. I mean it is great that we have simple code to tell what type of hand you have, but what happen when 2 people have the same type of hand ? Player A has a pair of 5's, and so does Player B...so who wins ???
 
-Now to make this a real evaluator we must now be able to compare 2 hands against eachother to find a victor. A lot of the work is done already to find the main type of hand (pair, 3 of a kind, flush etc..) now it is time to give each hand a score to compare to another....I have only begun thinking about this. And I think I will start by trying to see what we can do with the 32 bits an integer offers. The challenge continues...
+Now this section of the code is the newest. It works but it is certainly not optimized. There is room for improvement.. So this will get more streamlined in the near future (hopefully), but for now we do have a way to give each hand a unique value to compare against other hands.
+
+To tackle that challenge we need to be able to give the hand a final unique number. Let's revisit our bits...
+
+We have been using integers for our numbers and bits this whole time, so I would like to stay within the realm of 32 bits. So we have 32 bits to work with (31 for our signed numbers), but we should not need all 32, I think we can get it done in 30, and maybe even less in the future.
+
+Here is the current layout for our unique hand values:
+```
+Bit #
+32 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
+NA NA |Hand-Type| |----------Important Cards-----------| |--------Kicker Cards-------|
+```
+
+What is this non-sense?
+
+Well bit 32 and 31 are not going to be needed...so lets leave those aside..
+
+The next 4 bits (30-27) give us 16 different numbers to mess around with, and since we only have 9 different hand ranks (pair, flush, 4 of a kind etc..) these 4 bits can hold our hand rank. Lets see that:
+```
+Bit #		30 29 28 27 .........
+High Card	0  0  0  0 (0 in decimal)
+Pair		0  0  0  1 (67108864 in decimal)
+Two Pair	0  0  1  0 (134217728 '')
+3 of a kind	0  0  1  1 (201326592 '')
+Straight	0  1  0  0 (268435456)
+Flush		0  1  0  1 (335544320)
+Full House	0  1  1  0 (402653184)
+4 of a kind	0  1  1  1 (469762048)
+Straight Flush	1  0  0  0 (536870912)
+```
+
+The great thing about putting the hand rank in these high bits, is no matter what bits are set in the smaller positions, a straight flush (no matter how low or high) will ALWAYS beat a 4 of a kind, and a 4 of a kind (whether its four 2's or 4 Aces) will ALWAYS beat a fullhouse, a full house will always beat a flush and so on and so on...So placing our ranks in these bit positions will guarentee the type of hand will beat a lower type of hand
+
+The real problem is what happens when there is a sort of tie...?  What happens when two people have a 3 of a kind, or when two people have a full house. Not only that but what if two people both have a pair of 5's ??? Well that is where the next 2 sections of the bits come in:
+* Important Cards (13 bits for the 13 different cards : 2 - Ace)
+* Kicker Cards    (13 bits for the 13 different cards : 2 - Ace)
+
+The 'Important cards' will hold the following:
+* The card that is paired in a pair hand
+* Both cards that are paired in a two pair hand
+* The triple card in a 3 of a kind
+* The triple card in a full house
+* The quadruple card in a 4 of a kind
+
+The 'Kicker Cards' will hold the following:
+* All 5 single cards in a high card hand
+* The 4 single cards in a paired hand
+* The 1 single card in a two pair hand
+* The 3 single cards in a 3 of a kind
+* All 5 cards in a straight (save for low ace straight)
+* All 5 cards in a flush
+* The paired card in a full house
+* The 1 single card in a 4 of a kind
+* All 5 cards in a straight flush
+
+You might be asking why High Card hands, Straights, Flushes, and Straight Flushes do not have any 'Important Cards'? Well that is because in those hands all 5 cards are taken at face value (save for low ace straight). This means that simply OR'ing the cards together will produce a higher number for a higher hand. The OR'd result of a 56789 straight will be smaller than the OR'd result of a 678910 straight. The same goes for a Flush, and High Card hand. 
+
+The reason the duplicate type hands (pair, two pair, 3 of a kind, full house, 4 of a kind) need special treatment is because the cards do not take on face value. What I mean by this is with a pair of 4's, the number 4 is actually higher in a sense than the Ace kicker that it might have. So we need to elevate the status of that 4, and leave the kicker cards behind. This is what the 'Important Card' section is for. So how do we get and set these important cards you ask? well that is where our OR and XOR results come back into play.
+
+If you remember, OR'ing and XOR'ing would isolate our paired cards, triple cards, quadruple cards etc..(in most cases) so we can use those numbers that we already have, shift them into the 'Important' position, and we would now have a way to show that even though 2 hands are the same, Player A wins because his 'Important' card is a 9, while Player B's 'Important' card is only a 6...
+
+Lets find our important cards:
+```
+Pair
+OR'ing - gets all 4 unique cards
+XOR'ing - isolates our 3 single cards
+OR ^ XOR - isolates our 1 paired card
+
+
+Two Pair
+OR - all 3 unique cards
+XOR - our 1 single card
+OR ^ XOR - our 2 paired cards
+
+3 of a kind
+OR - all 3 unique cards
+XOR - all 3 cards (Oh no !)
+OR ^ XOR - Nothing left (Oh no!)
+*This 3 of a kind will be a problem...
+
+Full House
+OR - our 2 unique cards
+XOR - our 1 triple card
+OR ^ XOR - our 1 paired card
+
+4 of a kind
+OR - our 2 unique cards
+XOR - our 1 single card
+OR ^ XOR - our 1 quarduple card
+```
+
+Sweet, now we can tell which is the important cards simply by a little OR'ing and XOR'ing. Once we realize what the important card(s) are, we will shift them over a few spots ( card << 13 ) to put them in there important position. We will then take the leftover cards (single kicker cards) and leave them in there spots in the lower bit 'Kicker' section to give the hand a higher value if need be.
+
+This is what two players who have the same type of hand would look like:
+
+```
+Player A: Two Pair
+00100000000001000 : Five of clubs
+01001000000000000 : Ace of Diamonds
+01000000000001000 : Five of Hearts
+00100000000000001 : Two of clubs
+00101000000000000 : Ace of clubs
+
+OR'ing and masking suits:
+00001000000001001 : all 3 unique cards (Ace, Five, Two)
+
+XOR'ing and masking suits:
+00000000000000001 : our 1 single kicker card (Two)
+
+XOR'ing the OR and XOR from above:
+00001000000001000 : our 2 paired cards (Ace and Five)
+
+
+
+Player B: Two Pair
+10000000010000000 : Nine of Spades
+01000000010000000 : Nine of Hearts
+01000000001000000 : Eight of Hearts
+00100010000000000 : Jack of clubs
+00010000001000000 : Eight of Diamonds
+
+OR'ing and masking suits:
+00000001011000000 : all 3 unique cards (Jack, Nine, and Eight)
+
+XOR'ing and masking suits
+00000001000000000 : Our single kicker card (Jack)
+
+XOR'ing the OR and XOR:
+00000000011000000 : The two paired cards (Nine, Eight)
+
+```
+
+So Now we see that we have isolated our two 'Important' Paired cards, and our kicker card as well. it is now a matter of putting these bits in the right position to create the Entire hand in a single unique number:
+
+First lets label the hand as a whole as a Two Pair Hand. Remember from above, our Two Pair hand will start off as the number 134217728. So we will start with that number and add the important bits, and kicker bits onto that guy:
+```
+Bit #
+32 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
+NA NA |Hand-Type| |----------Important Cards-----------| |--------Kicker Cards-------|
+
+Player A : Two Pair (134217728)
+0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 0 0 0 0 0 0 0 0
+
+
+Player B : Two Pair (134217728)
+0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 0 0 0 0 0 0 0 0
+```
+Now we remember that we can see our two paired cards by using the OR^XOR trick in a Two Pair hand. Since those two paired cards are important to knowing which Two Pair hand wins, lets shift those over into the 'Important' section:
+
+```
+Player A:
+XOR'ing OR and XOR:
+1000000001000 : our 2 paired cards (Ace and Five)
+|-----------|
+
+       |
+       ------------------------------
+                                    |
+                                    
+NA NA |Hand-Type| |----------Important Cards-----------| |--------Kicker Cards-------|
+
+
+And we now end up with :
+Player A : Two Pair (167837696)
+0  0  0  0  1  0  1  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0 0 0 0 0 0 0 0 0
+                  A                          5
+
+Lets do the same to Player B:
+
+Player B:
+XOR'ing the OR and XOR:
+0000011000000 : The two paired cards (Nine, Eight)
+|-----------|
+
+       |
+       ------------------------------
+                                    |
+                                    
+NA NA |Hand-Type| |----------Important Cards-----------| |--------Kicker Cards-------|
+
+
+And we now end up with :
+Player B : Two Pair (135790592)
+0  0  0  0  1  0  0  0  0  0  0  1  1  0  0  0  0  0  0  0  0  0  0  0 0 0 0 0 0 0 0 0
+                                 9  8         
+```
+Totally sweet, we have our important bits set. For good measure lets throw in the last single kicker card that both of these players have in their Two Pair hand. Just in case both players had the two pairs the same, they would need the kicker card, so lets throw it in there:
+
+```
+
+
+
+
+
+Player A:
+XOR'ing and masking suits:
+0000000000001 : our 1 single kicker card (Two)
+|-----------|
+
+      |
+      -------------------------------------------------------------------
+                                                                        |
+                                                                        
+NA NA |Hand-Type| |----------Important Cards-----------| |--------Kicker Cards-------|
+
+So Now Player A is:
+
+Player A : Two Pair (167837697)
+0  0  0  0  1  0  1  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0 0 0 0 0 0 0 0 1
+                  A                          5                                       2
+
+```
+Lets do the same for Player B:
+```
+
+Player B
+XOR'ing and masking suits
+0001000000000 : Our single kicker card (Jack)
+|-----------|
+
+      |
+      -------------------------------------------------------------------
+                                                                        |
+                                                                        
+NA NA |Hand-Type| |----------Important Cards-----------| |--------Kicker Cards-------|
+
+
+Player B : Two Pair (135791104)
+0  0  0  0  1  0  0  0  0  0  0  1  1  0  0  0  0  0  0  0  0  0  1  0 0 0 0 0 0 0 0 0
+                                 9  8                             J
+```
+
+Now we have the finaly numbers for our two Players:
+* Player A = Two Pair, Aces and Fives with a Two kicker = 167837697
+* Player B = Two Pair, Nines and Eights, with a Jack kicker = 135791104
+
+And who wins ?????
+
+Well since 167837697 > 135791104
+
+Player A wins with his Aces and Fives !
+
+That is a lot of bits.....please no more bits...
+
+###To Do
+I still need to explain what we did with the 3 of a kind issue, and how the low ace straight gets handled, but I will have to add that shortly.
+
+But we can see the overall mechanism to determine hand values that can be used to compare hands to other hands. With this strategy, no 2 hands will have the same value (unless you compare the same exact hand to itself), so we can find the winner. Now it is time to optimize this code to speed it up....
+
 
