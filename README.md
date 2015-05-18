@@ -644,50 +644,26 @@ But we can see the overall mechanism to determine hand values that can be used t
 
 Here is the eval - with the added functionality of return unique values for hand comparison:
 ```
-  public static int eval(int a, int b, int c, int d, int e){
-		  
-			int sMask=0x1FFF;
-			int xorMasked=(a^b^c^d^e)&sMask;
-			int or=(a|b|c|d|e);
-			int orMasked = or&sMask;
-			int orXorMask = (orMasked^xorMasked);
-			int cntO=orMasked;
-			int cntX=xorMasked;
-			int v=(cntO&=cntO-1)!=0?(cntO&=cntO-1)!=0?(cntO&=cntO-1)!=0?5:4:3:2;
-			if((cntX&=cntX-1)!=0)v++;
-			if((cntX&=cntX-1)!=0)v++;
-			if((cntX&=cntX-1)!=0)v++;
-			boolean strt=0x1F1D100%orMasked==0;
-			boolean flsh=(a&b&c&d&e)!=0;
-			boolean quad=(a+b+c+d+e-xorMasked&sMask)==(sMask&(orMasked^xorMasked)<<2);
-			int trips=((a&b)==(a&sMask)?a:(c&d)==(c&sMask)?c:e)&sMask;
-			return  
-					//pair
-					v==7?0x4000000|xorMasked|orXorMask<<13
-					
-					//two pair
-					:v==4?0x8000000|xorMasked|orXorMask<<13
-					
-					//trips
-					:v==6?0xC000000|(trips^orMasked)|trips<<13
-					
-					//straight flush
-					:flsh&&strt?0x20000000|(xorMasked==0x100F?15:xorMasked)
-					
-					//flush
-					:flsh?0x14000000|xorMasked
-					
-					//straight
-					:strt?0x10000000|(xorMasked==0x100F?15:xorMasked)
-					
-					//quads
-					:v==3?quad?0x1C000000|xorMasked|orXorMask<<13
-					
-					//full house
-					:0x18000000|orXorMask|xorMasked<<13
-					
-					//high card
-					:xorMasked;
+ 	public static int eval(int a, int b, int c, int d, int e){
+		
+		int xor=(a^b^c^d^e)&0x1FFF, or=(a|b|c|d|e)&0x1FFF, orXxor=(or^xor);
+		int v=or&or-1; v=(v&=v-1)==0?2:(v&=v-1)==0?3:(v&=v-1)==0?4:5;
+		boolean strt=0x1F1D100%or==0, flsh=(a&b&c&d&e)!=0;
+		if(v==3)
+			if(orXxor==0){
+				int t=((a&b)==(a&0x1FFF)?a:(c&d)==(c&0x1FFF)?c:e)&0x1FFF;
+				return 0xC000000|(t^or)|t<<13;
+			}
+			else return 0x8000000|xor|orXxor<<13;
+		else return
+			  v==4 ? 0x4000000|xor|orXxor<<13
+			: v==2 ? (a+b+c+d+e-xor&0x1FFF)==(0x1FFF&(or^xor)<<2)
+			? 0x1C000000|xor|orXxor<<13
+			: 0x18000000|orXxor|xor<<13
+			: strt&&flsh ? 0x20000000|(xor==0x100F?15:xor)
+			: strt ? 0x10000000|(xor==0x100F?15:xor)
+			: flsh ? 0x14000000|xor
+			:xor;
 		  }
 ```
 
