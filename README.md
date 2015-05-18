@@ -2,7 +2,9 @@
 
 So I decided to beat a dead horse and make another 5 card evaluator. I did not like the idea of lugging around a >100MB lookup table file. I figured this eval would go into an app someday and who in their right minds would attach a 100MB file to a 10MB game just to eval the hand? But I also loved the speed of the lookup table evals, so I wanted both.
 So I wanted to make a fast and small eval, yes like so many others. I also wrote it in Java, partly because most people dont, and partly so I can throw it into an android app later maybe...Either way it can quickly be recoded for other languages. This is all very new.
-Before you read into the explanation, please note that this evaluator has been tested for accuracy against all 2,598,960 5card hands that you can make with a 52 card deck (Which it currently burns through in .05 seconds or so).
+Before you read into the explanation, please note that this evaluator has been tested for accuracy against all 2,598,960 5card hands that you can make with a 52 card deck (Which it currently burns through in .038 seconds or so).
+
+And as for the speed? Well, again, I want speed, like lookup table speed. I wrote this code less than 1 week ago...So there is optimization to be made. I recently added the unique number result functionality to compare hands which added a few more checks and brought the speed down, but the current speed from my amd desktop is ~70 million hands a second. It averages 0.28 seconds for 20,000,000 hands. There is only one way to go from here, and that is up.
 
 I simply wanted to try my hand at the ol' poker hand evaluator. It seemed like a fun project.
 
