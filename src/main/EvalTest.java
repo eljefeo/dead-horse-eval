@@ -103,13 +103,47 @@ public class EvalTest {
 		  
 	  }
 
-	public static void randomizerSpeedTest(int howMany){
+	public static void randomizerSpeedTest5CardDiagnostics(int howMany){
 		  
 		  //number of hands to burn through
 		  //pick a nice huge round number to let this sucker get warmed up
 		  // int howMany = 10000000;
 
-		  int[] allCards = HandMaker.makeLotsOfRandomHands(howMany);
+		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howMany);
+		  
+		  //get start time
+		 // long startT = System.nanoTime();
+		  
+		  //let er rip, go through every hand, 5 cards at a time
+		
+		  for(int i=0;i<allCards.length;i+=5){
+			 int res = DeadHorseEval.eval(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
+			 res&=0x3C000000;
+			  System.out.println("\n"+handNames[res>>26]);
+		  }
+		  //get end time
+		 // long endT = System.nanoTime();
+		  
+		 
+		  
+		  
+		    
+		  // Time is (end time - start time ) divided by a billion : because it is in nano seconds
+		  //double time = (double) (endT - startT)/1000000000;
+		  
+		  //System.out.println("Did " + howMany + " hands in " + time +" seconds");
+		  //hands per second in millions 
+		  //System.out.println((int)(howMany/time/1000000) + " million hands a second"); 
+	  }
+	
+	
+	public static void randomizerSpeedTest5Card(int howMany){
+		  
+		  //number of hands to burn through
+		  //pick a nice huge round number to let this sucker get warmed up
+		  // int howMany = 10000000;
+
+		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howMany);
 		  
 		  //get start time
 		  long startT = System.nanoTime();
@@ -120,6 +154,7 @@ public class EvalTest {
 		  
 		  //get end time
 		  long endT = System.nanoTime();
+		  
 		  
 		    
 		  // Time is (end time - start time ) divided by a billion : because it is in nano seconds
@@ -134,7 +169,7 @@ public class EvalTest {
 		  //how many hands do you want to test? choose a few million to be sure..
 		 // int howMany = 10000000;
 
-		  int[] allCards = HandMaker.makeLotsOfRandomHands(howMany);
+		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howMany);
 		  
 		  //create an array of size 9. 0-8 for each type of hand
 		  //this will hold the count of each type of hand that gets created/evaluated
@@ -154,4 +189,46 @@ public class EvalTest {
 
 	  }
 	
+
+public static void randomizerSpeedTest7Card(int howMany){
+		  
+		  //number of hands to burn through
+		  //pick a nice huge round number to let this sucker get warmed up
+		  // int howMany = 10000000;
+
+		  int[] allCards = HandMaker.makeLotsOfRandom7CardHands(howMany);
+		  //get start time
+		  int curWinner=0;
+		  long startT = System.nanoTime();
+		  
+		 
+		  //let er rip, go through every hand, 7 cards at a time
+		  for(int v=0;v<allCards.length/7;v++)
+			  for (int i = 0; i < 7 - 1; i++) 
+				  for (int j = i + 1; j < 7; j++) 
+					  for (int k = j + 1; k < 7; k++) 
+						  for (int l = k + 1; l < 7; l++) 
+							  for (int m = l + 1; m < 7; m++) {
+								  int current =DeadHorseEval.eval
+										(
+										  allCards[v*7+i],
+										  allCards[v*7+j],
+										  allCards[v*7+k],
+										  allCards[v*7+l],
+										  allCards[v*7+m]
+										);
+								  if(current>curWinner)curWinner=current;
+								}
+		  //get end time
+		  long endT = System.nanoTime();
+		  System.out.println("winning hand  : " + curWinner);
+		  
+		  // Time is (end time - start time ) divided by a billion : because it is in nano seconds
+		  double time = (double) (endT - startT)/1000000000;
+		  
+		  System.out.println("Did " + howMany + " hands in " + time +" seconds");
+		  //hands per second in millions 
+		  System.out.println((int)(howMany/time/1000000) + " million hands a second"); 
+	  }
+	  
 }
