@@ -639,6 +639,16 @@ Player A wins with his Aces and Fives !
 
 That is a lot of bits.....please no more bits...
 
+I also wanted to add here that the resulting number (167837697) contains the necessary information to say what the hand is, not just what hand beats what. What I am saying is the number 167837697 in binary:
+```
+0  0  0  0  1  0  1  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0 0 0 0 0 0 0 0 1
+```
+Can be seen with :
+```
+NA NA |Hand-Type| |----------Important Cards-----------| |--------Kicker Cards-------|
+```
+This gives one the ability to take the number 167837697 and tell that it is a Two Pair hand, Aces and Fives, with a Two kicker, not just that this number beat the other lower number. I think this can be valuable later. 
+The suit information does get lost, but again suits do not matter when comparing values anyway, so I am ok with that.
 ###To Do
 I still need to explain what we did with the 3 of a kind issue, and how the low ace straight gets handled, but I will have to add that shortly.
 
