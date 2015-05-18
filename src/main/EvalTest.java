@@ -230,5 +230,54 @@ public static void randomizerSpeedTest7Card(int howMany){
 		  //hands per second in millions 
 		  System.out.println((int)(howMany/time/1000000) + " million hands a second"); 
 	  }
+
+
+public static void handCompareTest(int howMany){
+	
+	for(int i=0;i<howMany;i++){
+	int[] highCard = HandMaker.makeHighCardHand();
+	int[] pair = HandMaker.makePairHand();
+	int[] twoPair = HandMaker.makeTwoPairHand();
+	int[] trips = HandMaker.makeTripHand();
+	int[] straight = HandMaker.makeStraightHand();
+	int[] flush = HandMaker.makeFlushHand();
+	int[] fullhouse = HandMaker.makeFullHouseHand();
+	int[] quads = HandMaker.makeQuadsHand();
+	int[] straightFlush = HandMaker.makeStraightFlushHand();
+	
+	int hc = DeadHorseEval.eval(highCard[0], highCard[1], highCard[2], highCard[3], highCard[4]);
+	int p = DeadHorseEval.eval(pair[0], pair[1], pair[2], pair[3], pair[4]);
+	int tp = DeadHorseEval.eval(twoPair[0], twoPair[1], twoPair[2], twoPair[3], twoPair[4]);
+	int t = DeadHorseEval.eval(trips[0], trips[1], trips[2], trips[3], trips[4]);
+	int s = DeadHorseEval.eval(straight[0], straight[1], straight[2], straight[3], straight[4]);
+	int f = DeadHorseEval.eval(flush[0], flush[1], flush[2], flush[3], flush[4]);
+	int fh = DeadHorseEval.eval(fullhouse[0], fullhouse[1], fullhouse[2], fullhouse[3], fullhouse[4]);
+	int q = DeadHorseEval.eval(quads[0], quads[1], quads[2], quads[3], quads[4]);
+	int sf = DeadHorseEval.eval(straightFlush[0], straightFlush[1], straightFlush[2], straightFlush[3], straightFlush[4]);
+	boolean check = hc<p && p<tp && tp<t && t<s && s<f && f<fh && fh<q && q<sf;
+	if(!check){
+		System.out.println("Failed! " + hc+","+p+","+tp+","+t+","+s+","+f+","+fh+","+q+","+sf);
+	
+		System.out.println("hc " + bin(highCard[0])+ ","+bin(highCard[1])+","+ bin(highCard[2])+","+ bin(highCard[3])+","+ bin(highCard[4]));
+	 
+	}
+}
+	
+/*	
+	System.out.println("High Card \t" + hc);
+	System.out.println("Pair \t\t" + p);
+	System.out.println("Two Pair \t" + tp);
+	System.out.println("Trips \t\t" + t);
+	System.out.println("Straight \t" + s);
+	System.out.println("Flush \t\t" + f);
+	System.out.println("Full House \t" + fh);
+	System.out.println("Quads \t\t" + q);
+	System.out.println("Straight Flush \t"  + sf);*/
+}
+
+
+public static String bin(int i){
+	return String.format("%17s", Integer.toBinaryString(i)).replace(' ', '0');
+}
 	  
 }
