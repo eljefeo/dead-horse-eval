@@ -642,4 +642,53 @@ I still need to explain what we did with the 3 of a kind issue, and how the low 
 
 But we can see the overall mechanism to determine hand values that can be used to compare hands to other hands. With this strategy, no 2 hands will have the same value (unless you compare the same exact hand to itself), so we can find the winner. Now it is time to optimize this code to speed it up....
 
+Here is the eval - with the added functionality of return unique values for hand comparison:
+```
+  public static int eval(int a, int b, int c, int d, int e){
+		  
+			int sMask=0x1FFF;
+			int xorMasked=(a^b^c^d^e)&sMask;
+			int or=(a|b|c|d|e);
+			int orMasked = or&sMask;
+			int orXorMask = (orMasked^xorMasked);
+			int cntO=orMasked;
+			int cntX=xorMasked;
+			int v=(cntO&=cntO-1)!=0?(cntO&=cntO-1)!=0?(cntO&=cntO-1)!=0?5:4:3:2;
+			if((cntX&=cntX-1)!=0)v++;
+			if((cntX&=cntX-1)!=0)v++;
+			if((cntX&=cntX-1)!=0)v++;
+			boolean strt=0x1F1D100%orMasked==0;
+			boolean flsh=(a&b&c&d&e)!=0;
+			boolean quad=(a+b+c+d+e-xorMasked&sMask)==(sMask&(orMasked^xorMasked)<<2);
+			int trips=((a&b)==(a&sMask)?a:(c&d)==(c&sMask)?c:e)&sMask;
+			return  
+					//pair
+					v==7?0x4000000|xorMasked|orXorMask<<13
+					
+					//two pair
+					:v==4?0x8000000|xorMasked|orXorMask<<13
+					
+					//trips
+					:v==6?0xC000000|(trips^orMasked)|trips<<13
+					
+					//straight flush
+					:flsh&&strt?0x20000000|(xorMasked==0x100F?15:xorMasked)
+					
+					//flush
+					:flsh?0x14000000|xorMasked
+					
+					//straight
+					:strt?0x10000000|(xorMasked==0x100F?15:xorMasked)
+					
+					//quads
+					:v==3?quad?0x1C000000|xorMasked|orXorMask<<13
+					
+					//full house
+					:0x18000000|orXorMask|xorMasked<<13
+					
+					//high card
+					:xorMasked;
+		  }
+```
+
 
