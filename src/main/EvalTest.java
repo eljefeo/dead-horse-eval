@@ -76,10 +76,13 @@ public class EvalTest {
 		  //Straight Flush	40
 		  //Total			2598960
 		  int[] handCounter = new int[9];
-		  for(int i=0;i<allCards.length;i+=5)
-			handCounter[DeadHorseEval.eval(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4])]++;
+		  for(int i=0;i<allCards.length;i+=5){
+			
+			  int res = DeadHorseEval.eval(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
+			  res&=0x3C000000;
+			  handCounter[res>>=26]++;
 		  
-		  
+		  }
 		  //this is to go through and compare the number of each type of hand we created
 		  //to the number of each type of hand we expect
 		   for(int j=0;j<handCounter.length;j++){
@@ -93,7 +96,7 @@ public class EvalTest {
 					   : (handCounter[j]-frequency[j])+" of "+frequency[j]
 							   +" "+handNames[j]+" hands failed!"; 
 			   
-			   System.out.println(res+"\n" + ((double)handCounter[j]/totalCounter*100) + "%\n");
+			   System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
 		   }
 			 
 		  System.out.println("Total Count : " + totalCounter);
