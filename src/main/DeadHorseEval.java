@@ -9,18 +9,17 @@ public class DeadHorseEval {
 		boolean strt=0x1F1D100%or==0, flsh=(a&b&c&d&e)!=0;
 		if(v==3)
 			if(orXxor==0){
-				int t=((a&b)==(a&0x1FFF)?a:(c&d)==(c&0x1FFF)?c:e)&0x1FFF;
-				return 0xC000000|(t^or)|t<<13;
+				v=((a&b)==(a&0x1FFF)?a:(c&d)==(c&0x1FFF)?c:e)&0x1FFF;
+				return 0xC000000|(v^or)|v<<13;
 			}
 			else return 0x8000000|xor|orXxor<<13;
 		else return
-			  v==4 ? 0x4000000|xor|orXxor<<13
-			: v==2 ? (a+b+c+d+e-xor&0x1FFF)==(0x1FFF&(or^xor)<<2)
-			? 0x1C000000|xor|orXxor<<13
-			: 0x18000000|orXxor|xor<<13
-			: strt&&flsh ? 0x20000000|(xor==0x100F?15:xor)
-			: strt ? 0x10000000|(xor==0x100F?15:xor)
-			: flsh ? 0x14000000|xor
+			  v==4?0x4000000|xor|orXxor<<13
+			: v==2?(a+b+c+d+e-xor&0x1FFF)==(0x1FFF&(or^xor)<<2)
+			?0x1C000000|xor|orXxor<<13:0x18000000|orXxor|xor<<13
+			:strt&&flsh?0x20000000|(xor==0x100F?15:xor)
+			:strt?0x10000000|(xor==0x100F?15:xor)
+			:flsh?0x14000000|xor
 			:xor;
 		  }
 	  

@@ -145,6 +145,15 @@ public class EvalTest {
 
 		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howMany);
 		  
+		 // long startTp = System.nanoTime();
+		  //let er rip, go through every hand, 5 cards at a time
+		/*  for(int i=0;i<allCards.length;i++)
+			  {i++;i++;i++;i++;}
+		*/  
+		  //get end time
+		//  long endTp = System.nanoTime();
+		  
+		  
 		  //get start time
 		  long startT = System.nanoTime();
 		  
@@ -158,7 +167,7 @@ public class EvalTest {
 		  
 		    
 		  // Time is (end time - start time ) divided by a billion : because it is in nano seconds
-		  double time = (double) (endT - startT)/1000000000;
+		  double time = (double) (endT - startT )/1000000000;
 		  
 		  System.out.println("Did " + howMany + " hands in " + time +" seconds");
 		  //hands per second in millions 
