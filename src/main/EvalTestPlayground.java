@@ -1,6 +1,6 @@
 package main;
 
-public class EvalTest {
+public class EvalTestPlayground {
 	
 	static String[] handNames = 
 		{
@@ -9,10 +9,25 @@ public class EvalTest {
 		};
 	
 	
-	static int[] frequency=
+	static int[] handFrequency=
 		{
 			1302540,1098240,123552,54912,10200,5108,3744,624,40
 		};
+	
+	static String[] allCardNames = new String[] { 
+		"2s","3s","4s","5s","6s","7s","8s","9s","10s","Js","Qs","Ks","As",
+		"2h","3h","4h","5h","6h","7h","8h","9h","10h","Jh","Qh","Kh","Ah",
+		"2c","3c","4c","5c","6c","7c","8c","9c","10c","Jc","Qc","Kc","Ac",
+		"2d","3d","4d","5d","6d","7d","8d","9d","10d","Jd","Qd","Kd","Ad"
+		};
+	
+	  static int[] allCardNums = new int[]{
+		  65537,65538,65540,65544,65552,65568,65600,65664,65792,66048,66560,67584,69632,
+		  32769,32770,32772,32776,32784,32800,32832,32896,33024,33280,33792,34816,36864,
+		  16385,16386,16388,16392,16400,16416,16448,16512,16640,16896,17408,18432,20480,
+		  8193,8194,8196,8200,8208,8224,8256,8320,8448,8704,9216,10240,12288
+	  };
+	
 	
 
 	  //there is a speed test method below
@@ -21,29 +36,23 @@ public class EvalTest {
 	  public static void testEveryHand(){
 		  
 		  //copy of the deck to make this method more portable
-		  int[] fiftyTwo = new int[]
-				  {
-					  65537,65538,65540,65544,65552,65568,65600,65664,65792,66048,66560,67584,69632,
-					  32769,32770,32772,32776,32784,32800,32832,32896,33024,33280,33792,34816,36864,
-					  16385,16386,16388,16392,16400,16416,16448,16512,16640,16896,17408,18432,20480,
-					  8193,8194,8196,8200,8208,8224,8256,8320,8448,8704,9216,10240,12288
-				  };
+
 		  
 		  int totalHands = 2598960;
 		  int[] allCards = new int[totalHands*5];
 		  int totalCounter=0;
 		  
 		  //this is how we create every possible 5 card hand
-		  for(int i=0;i<fiftyTwo.length-1;i++)
-			  for(int j=i+1;j<fiftyTwo.length;j++)
-				  for(int k=j+1;k<fiftyTwo.length;k++)
-					  for(int l=k+1;l<fiftyTwo.length;l++)
-						  for(int m=l+1;m<fiftyTwo.length;m++){
-							  allCards[totalCounter*5]	=fiftyTwo[i];
-							  allCards[totalCounter*5+1]=fiftyTwo[j];
-							  allCards[totalCounter*5+2]=fiftyTwo[k];
-							  allCards[totalCounter*5+3]=fiftyTwo[l];
-							  allCards[totalCounter*5+4]=fiftyTwo[m];
+		  for(int i=0;i<allCardNums.length-1;i++)
+			  for(int j=i+1;j<allCardNums.length;j++)
+				  for(int k=j+1;k<allCardNums.length;k++)
+					  for(int l=k+1;l<allCardNums.length;l++)
+						  for(int m=l+1;m<allCardNums.length;m++){
+							  allCards[totalCounter*5]	=allCardNums[i];
+							  allCards[totalCounter*5+1]=allCardNums[j];
+							  allCards[totalCounter*5+2]=allCardNums[k];
+							  allCards[totalCounter*5+3]=allCardNums[l];
+							  allCards[totalCounter*5+4]=allCardNums[m];
 							  totalCounter++;
 						  }
 		  
@@ -78,22 +87,22 @@ public class EvalTest {
 		  int[] handCounter = new int[9];
 		  for(int i=0;i<allCards.length;i+=5){
 			
-			  int res = DeadHorseEval.eval(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
-			  res&=0x3C000000;
-			  handCounter[res>>=26]++;
+			  int res = DeadHorseEval.eval(allCards[i],allCards[i+1],
+					  allCards[i+2],allCards[i+3],allCards[i+4])>>26;
+			  handCounter[res]++;
 		  
 		  }
 		  //this is to go through and compare the number of each type of hand we created
 		  //to the number of each type of hand we expect
 		   for(int j=0;j<handCounter.length;j++){
 			   //check if expected == actual
-			   boolean checked = handCounter[j]==frequency[j];
+			   boolean checked = handCounter[j]==handFrequency[j];
 			   String res = checked
 					   //if all hands accounted for, good news
-					   ?"All "+frequency[j]+" "+handNames[j]+" hands are accounted for" 
+					   ?"All "+handFrequency[j]+" "+handNames[j]+" hands are accounted for" 
 							   
 						//if the counts dont match, show how many failed
-					   : (handCounter[j]-frequency[j])+" of "+frequency[j]
+					   : (handCounter[j]-handFrequency[j])+" of "+handFrequency[j]
 							   +" "+handNames[j]+" hands failed!"; 
 			   
 			   System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
@@ -118,16 +127,12 @@ public class EvalTest {
 		
 		  for(int i=0;i<allCards.length;i+=5){
 			 int res = DeadHorseEval.eval(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
-			 res&=0x3C000000;
-			  System.out.println("\n"+handNames[res>>26]);
+			 res>>=26;
+			  System.out.println("\n"+handNames[res]);
 		  }
 		  //get end time
 		 // long endT = System.nanoTime();
 		  
-		 
-		  
-		  
-		    
 		  // Time is (end time - start time ) divided by a billion : because it is in nano seconds
 		  //double time = (double) (endT - startT)/1000000000;
 		  
@@ -208,9 +213,23 @@ public static void randomizerSpeedTest7Card(int howMany){
 		  int[] allCards = HandMaker.makeLotsOfRandom7CardHands(howMany);
 		  //get start time
 		  int curWinner=0;
+		  
+		  long startTf = System.nanoTime();
+		  
+		  //these dang for loops take a while
+		  for(int v=0;v<allCards.length/7;v++)
+			  for (int i = 0; i < 7 - 1; i++) 
+				  for (int j = i + 1; j < 7; j++) 
+					  for (int k = j + 1; k < 7; k++) 
+						  for (int l = k + 1; l < 7; l++) 
+							  for (int m = l + 1; m < 7; m++) {
+								  i++;i++;i--;i--;
+								}
+		  //get end time
+		  long endTf = System.nanoTime();
+		  
 		  long startT = System.nanoTime();
 		  
-		 
 		  //let er rip, go through every hand, 7 cards at a time
 		  for(int v=0;v<allCards.length/7;v++)
 			  for (int i = 0; i < 7 - 1; i++) 
@@ -232,8 +251,8 @@ public static void randomizerSpeedTest7Card(int howMany){
 		  long endT = System.nanoTime();
 		  System.out.println("winning hand  : " + curWinner);
 		  
-		  // Time is (end time - start time ) divided by a billion : because it is in nano seconds
-		  double time = (double) (endT - startT)/1000000000;
+		  // Time is (end time - start time  ) divided by a billion : because it is in nano seconds
+		  double time = (double) (endT - startT -(endTf - startTf))/1000000000;
 		  
 		  System.out.println("Did " + howMany + " hands in " + time +" seconds");
 		  //hands per second in millions 
@@ -283,6 +302,38 @@ public static void handCompareTest(int howMany){
 	System.out.println("Quads \t\t" + q);
 	System.out.println("Straight Flush \t"  + sf);*/
 }
+
+// can send user readable strings into here like 'As or Jc or 9h'..
+//capital letter for face cards and lower case letter for suit 
+public  static int humanEncodeEval(String as, String bs, String cs, String ds, String es){
+
+	//convert string to numbers that the eval recognizes
+	char ac=as.charAt(0),bc=bs.charAt(0),cc=cs.charAt(0),dc=ds.charAt(0),ec=es.charAt(0);
+	int a=((ac=='A'?1<<12:ac=='K'?1<<11:ac=='Q'?1<<10:ac=='J'?1<<9:1<<(ac-50))
+	|((ac=as.charAt(1))=='s'?0x10000:ac=='h'?0x8000:ac=='c'?0x4000:0x2000));
+	
+	int b=((bc=='A'?1<<12:bc=='K'?1<<11:bc=='Q'?1<<10:bc=='J'?1<<9:1<<(bc-50))		
+	|((bc=bs.charAt(1))=='s'?0x10000:bc=='h'?0x8000:bc=='c'?0x4000:0x2000));
+	
+	int c=((cc=='A'?1<<12:cc=='K'?1<<11:cc=='Q'?1<<10:cc=='J'?1<<9:1<<(cc-50))
+	|((cc=cs.charAt(1))=='s'?0x10000:cc=='h'?0x8000:cc=='c'?0x4000:0x2000));
+	
+	int d=((dc=='A'?1<<12:dc=='K'?1<<11:dc=='Q'?1<<10:dc=='J'?1<<9:1<<(dc-50))
+	|((dc=ds.charAt(1))=='s'?0x10000:dc=='h'?0x8000:dc=='c'?0x4000:0x2000));
+	
+	int e=((ec=='A'?1<<12:ec=='K'?1<<11:ec=='Q'?1<<10:ec=='J'?1<<9:1<<(ec-50))
+	|((ec=es.charAt(1))=='s'?0x10000:ec=='h'?0x8000:ec=='c'?0x4000:0x2000));
+
+	return DeadHorseEval.eval(a, b, c, d, e);
+}
+
+//give it human readable string cards, it will spit back a human readable hand type(pair, full house etc..)
+public static String humanDecodeEval(String as, String bs, String cs, String ds, String es){
+	int res= EvalTestPlayground.humanEncodeEval(as,bs,cs,ds,es);
+	return "unique hand value = " +res+ "\n"+ as + ", " + bs + ", " +cs+", " +ds+", "+es+"\n= "+ handNames[res>>26];
+}
+
+
 
 
 public static String bin(int i){
