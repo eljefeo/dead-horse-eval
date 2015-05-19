@@ -9,7 +9,7 @@ public class Entry {
 		 //EvalTestPlayground.randomizerSpeedTest7Card(10000000);
 		 //EvalTestPlayground.handCompareTest(100);
 		 
-		 EvalTestPlayground.randomizerSpeedTest5Card(20000000);
+		 EvalTestPlayground.randomizerSpeedTest5Card(75000000);
 		 //System.out.println(EvalTestPlayground.humanDecodeEval("9d", "9c", "9h", "6s", "9s"));
 		 //EvalTestPlayground.testEveryHand();
 		}

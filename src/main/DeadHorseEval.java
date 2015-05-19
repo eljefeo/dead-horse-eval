@@ -24,9 +24,8 @@ public class DeadHorseEval {
 		  }
 	
 	
-	//ugly as hell - I love it
-	public static int eval(int a, int b, int c, int d, int e){
-		
+	//ugly as hell - beautiful
+	public static int eval(int a,int b,int c,int d,int e){
 		int x=(a^b^c^d^e)&0x1FFF,y=(a|b|c|d|e)&0x1FFF,z=(y^x),v=y&y-1;
 		boolean strt=0x1F1D100%y==0,flsh=(a&b&c&d&e)!=0;
 		return strt&&flsh?0x20000000|(x==0x100F?15:x):strt
