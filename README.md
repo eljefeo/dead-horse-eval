@@ -655,28 +655,19 @@ I still need to explain what we did with the 3 of a kind issue, and how the low 
 But we can see the overall mechanism to determine hand values that can be used to compare hands to other hands. With this strategy, no 2 hands will have the same value (unless you compare the same exact hand to itself), so we can find the winner. Now it is time to optimize this code to speed it up....
 
 Here is the eval - with the added functionality of return unique values for hand comparison:
+The snippet here is ugly, and beautiful in its own way. It is small and compact so you can keep it in your back pocket and whip it out when its needed..
 ```
- 	public static int eval(int a, int b, int c, int d, int e){
-		
-		int xor=(a^b^c^d^e)&0x1FFF, or=(a|b|c|d|e)&0x1FFF, orXxor=(or^xor);
-		int v=or&or-1; v=(v&=v-1)==0?2:(v&=v-1)==0?3:(v&=v-1)==0?4:5;
-		boolean strt=0x1F1D100%or==0, flsh=(a&b&c&d&e)!=0;
-		if(v==3)
-			if(orXxor==0){
-				int t=((a&b)==(a&0x1FFF)?a:(c&d)==(c&0x1FFF)?c:e)&0x1FFF;
-				return 0xC000000|(t^or)|t<<13;
-			}
-			else return 0x8000000|xor|orXxor<<13;
-		else return
-			  v==4 ? 0x4000000|xor|orXxor<<13
-			: v==2 ? (a+b+c+d+e-xor&0x1FFF)==(0x1FFF&(or^xor)<<2)
-			? 0x1C000000|xor|orXxor<<13
-			: 0x18000000|orXxor|xor<<13
-			: strt&&flsh ? 0x20000000|(xor==0x100F?15:xor)
-			: strt ? 0x10000000|(xor==0x100F?15:xor)
-			: flsh ? 0x14000000|xor
-			:xor;
-		  }
+	public static int eval(int a,int b,int c,int d,int e){
+		int x=(a^b^c^d^e)&0x1FFF,y=(a|b|c|d|e)&0x1FFF,z=(y^x),v=y&y-1;
+		boolean strt=0x1F1D100%y==0,flsh=(a&b&c&d&e)!=0;
+		return strt&&flsh?0x20000000|(x==0x100F?15:x):strt
+			?0x10000000|(x==0x100F?15:x):flsh?0x14000000|x
+			:(v=(v&=v-1)==0?2:(v&=v-1)==0?3:(v&=v-1)==0?4:5)==3?z==0
+			?0xC000000|(v=((a&b)==(a&0x1FFF)?a:(c&d)==(c&0x1FFF)?c:e)&0x1FFF^y)|v<<13
+			:0x8000000|x|z<<13:v==4?0x4000000|x|z<<13
+			:v==2?(a+b+c+d+e-x&0x1FFF)==(0x1FFF&(y^x)<<2)
+			?0x1C000000|x|z<<13:0x18000000|z|x<<13:x;
+	}
 ```
 
 
