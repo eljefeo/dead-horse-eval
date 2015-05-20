@@ -60,7 +60,7 @@ public class EvalTestPlayground {
 		  long startT = System.nanoTime();
 		  //go through every hand, 5 cards at a time
 		  for(int i=0;i<allCards.length;i+=5)
-			 	DeadHorseEval.eval(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
+			 	DeadHorseEval.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
 		  //get end time
 		  long endT = System.nanoTime();
 		  
@@ -87,7 +87,7 @@ public class EvalTestPlayground {
 		  int[] handCounter = new int[9];
 		  for(int i=0;i<allCards.length;i+=5){
 			
-			  int res = DeadHorseEval.eval(allCards[i],allCards[i+1],
+			  int res = DeadHorseEval.eval5(allCards[i],allCards[i+1],
 					  allCards[i+2],allCards[i+3],allCards[i+4])>>26;
 			  handCounter[res]++;
 		  
@@ -126,7 +126,7 @@ public class EvalTestPlayground {
 		  //let er rip, go through every hand, 5 cards at a time
 		
 		  for(int i=0;i<allCards.length;i+=5){
-			 int res = DeadHorseEval.eval(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
+			 int res = DeadHorseEval.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
 			 res>>=26;
 			  System.out.println("\n"+handNames[res]);
 		  }
@@ -164,7 +164,7 @@ public class EvalTestPlayground {
 		  
 		  //let er rip, go through every hand, 5 cards at a time
 		  for(int i=0;i<allCards.length;i+=5)
-			  DeadHorseEval.eval(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
+			  DeadHorseEval.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
 		  
 		  //get end time
 		  long endT = System.nanoTime();
@@ -191,7 +191,7 @@ public class EvalTestPlayground {
 
 		  //evaluate every hand, 5 cards at a time
 		  for(int i=0;i<allCards.length;i+=5)
-			  handCounter[DeadHorseEval.eval(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4])]++;
+			  handCounter[DeadHorseEval.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4])]++;
 		
 		  //this will show the frequence and percentages of each type of hand 
 		  //these frequencies can be compared to the actual frequency percentages 
@@ -210,46 +210,46 @@ public static void randomizerSpeedTest7Card(int howMany){
 		  //pick a nice huge round number to let this sucker get warmed up
 		  // int howMany = 10000000;
 
-		  int[] allCards = HandMaker.makeLotsOfRandom7CardHands(howMany);
+		  int[] ac = HandMaker.makeLotsOfRandom7CardHands(howMany);
 		  //get start time
-		  int curWinner=0;
-		  
 		  long startTf = System.nanoTime();
 		  
 		  //these dang for loops take a while
-		  for(int v=0;v<allCards.length/7;v++)
-			  for (int i = 0; i < 7 - 1; i++) 
-				  for (int j = i + 1; j < 7; j++) 
-					  for (int k = j + 1; k < 7; k++) 
-						  for (int l = k + 1; l < 7; l++) 
-							  for (int m = l + 1; m < 7; m++) {
-								  i++;i++;i--;i--;
-								}
+		  for(int v=0;v<ac.length/7;)
+			  v++;
 		  //get end time
 		  long endTf = System.nanoTime();
-		  
+		  int winningHand = 0;
 		  long startT = System.nanoTime();
 		  
-		  //let er rip, go through every hand, 7 cards at a time
-		  for(int v=0;v<allCards.length/7;v++)
-			  for (int i = 0; i < 7 - 1; i++) 
-				  for (int j = i + 1; j < 7; j++) 
-					  for (int k = j + 1; k < 7; k++) 
-						  for (int l = k + 1; l < 7; l++) 
-							  for (int m = l + 1; m < 7; m++) {
-								  int current =DeadHorseEval.eval
-										(
-										  allCards[v*7+i],
-										  allCards[v*7+j],
-										  allCards[v*7+k],
-										  allCards[v*7+l],
-										  allCards[v*7+m]
-										);
-								  if(current>curWinner)curWinner=current;
-								}
+		  for(int v=0;v<ac.length/7;v++){
+			  //let er rip, go through every hand, 7 cards at a time
+			  int h1  = DeadHorseEval.eval5(ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h1>winningHand)winningHand=h1;
+			  int h2  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h2>winningHand)winningHand=h2;
+			  int h3  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h3>winningHand)winningHand=h3;
+			  int h4  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+5],ac[(v*7)+6]);if(h4>winningHand)winningHand=h4;
+			  int h5  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+6]);if(h5>winningHand)winningHand=h5;
+			  int h6  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5]);if(h6>winningHand)winningHand=h6;
+			  int h7  = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h7>winningHand)winningHand=h7;
+			  int h8  = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h8>winningHand)winningHand=h8;
+			  int h9  = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+5],ac[(v*7)+6]);if(h9>winningHand)winningHand=h9;
+			  int h10 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+6]);if(h10>winningHand)winningHand=h10;
+			  int h11 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5]);if(h11>winningHand)winningHand=h11;
+			  int h12 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h12>winningHand)winningHand=h12;
+			  int h13 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+5],ac[(v*7)+6]);if(h13>winningHand)winningHand=h13;
+			  int h14 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+6]);if(h14>winningHand)winningHand=h14;
+			  int h15 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5]);if(h15>winningHand)winningHand=h15;
+			  int h16 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+5],ac[(v*7)+6]);if(h16>winningHand)winningHand=h16;
+			  int h17 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+6]);if(h17>winningHand)winningHand=h17;
+			  int h18 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+5]);if(h18>winningHand)winningHand=h18;
+			  int h19 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+6]);if(h19>winningHand)winningHand=h19;
+			  int h20 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+5]);if(h20>winningHand)winningHand=h20;
+			  int h21 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4]);if(h21>winningHand)winningHand=h21;
+		  }
+
 		  //get end time
 		  long endT = System.nanoTime();
-		  System.out.println("winning hand  : " + curWinner);
+		  System.out.println("winning hand  : " + winningHand);
 		  
 		  // Time is (end time - start time  ) divided by a billion : because it is in nano seconds
 		  double time = (double) (endT - startT -(endTf - startTf))/1000000000;
@@ -273,15 +273,15 @@ public static void handCompareTest(int howMany){
 	int[] quads = HandMaker.makeQuadsHand();
 	int[] straightFlush = HandMaker.makeStraightFlushHand();
 	
-	int hc = DeadHorseEval.eval(highCard[0], highCard[1], highCard[2], highCard[3], highCard[4]);
-	int p = DeadHorseEval.eval(pair[0], pair[1], pair[2], pair[3], pair[4]);
-	int tp = DeadHorseEval.eval(twoPair[0], twoPair[1], twoPair[2], twoPair[3], twoPair[4]);
-	int t = DeadHorseEval.eval(trips[0], trips[1], trips[2], trips[3], trips[4]);
-	int s = DeadHorseEval.eval(straight[0], straight[1], straight[2], straight[3], straight[4]);
-	int f = DeadHorseEval.eval(flush[0], flush[1], flush[2], flush[3], flush[4]);
-	int fh = DeadHorseEval.eval(fullhouse[0], fullhouse[1], fullhouse[2], fullhouse[3], fullhouse[4]);
-	int q = DeadHorseEval.eval(quads[0], quads[1], quads[2], quads[3], quads[4]);
-	int sf = DeadHorseEval.eval(straightFlush[0], straightFlush[1], straightFlush[2], straightFlush[3], straightFlush[4]);
+	int hc = DeadHorseEval.eval5(highCard[0], highCard[1], highCard[2], highCard[3], highCard[4]);
+	int p = DeadHorseEval.eval5(pair[0], pair[1], pair[2], pair[3], pair[4]);
+	int tp = DeadHorseEval.eval5(twoPair[0], twoPair[1], twoPair[2], twoPair[3], twoPair[4]);
+	int t = DeadHorseEval.eval5(trips[0], trips[1], trips[2], trips[3], trips[4]);
+	int s = DeadHorseEval.eval5(straight[0], straight[1], straight[2], straight[3], straight[4]);
+	int f = DeadHorseEval.eval5(flush[0], flush[1], flush[2], flush[3], flush[4]);
+	int fh = DeadHorseEval.eval5(fullhouse[0], fullhouse[1], fullhouse[2], fullhouse[3], fullhouse[4]);
+	int q = DeadHorseEval.eval5(quads[0], quads[1], quads[2], quads[3], quads[4]);
+	int sf = DeadHorseEval.eval5(straightFlush[0], straightFlush[1], straightFlush[2], straightFlush[3], straightFlush[4]);
 	boolean check = hc<p && p<tp && tp<t && t<s && s<f && f<fh && fh<q && q<sf;
 	if(!check){
 		System.out.println("Failed! " + hc+","+p+","+tp+","+t+","+s+","+f+","+fh+","+q+","+sf);
@@ -324,7 +324,7 @@ public  static int humanEncodeEval(String as, String bs, String cs, String ds, S
 	int e=((ec=='A'?1<<12:ec=='K'?1<<11:ec=='Q'?1<<10:ec=='J'?1<<9:1<<(ec-50))
 	|((ec=es.charAt(1))=='s'?0x10000:ec=='h'?0x8000:ec=='c'?0x4000:0x2000));
 
-	return DeadHorseEval.eval(a, b, c, d, e);
+	return DeadHorseEval.eval5(a, b, c, d, e);
 }
 
 //give it human readable string cards, it will spit back a human readable hand type(pair, full house etc..)

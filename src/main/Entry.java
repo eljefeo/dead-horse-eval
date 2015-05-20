@@ -6,10 +6,10 @@ public class Entry {
 		{
 		 //EvalTestPlayground.showRandomizerDiagnostics(15000000);
 		 //EvalTestPlayground.randomizerSpeedTest5CardDiagnostics(5);
-		 //EvalTestPlayground.randomizerSpeedTest7Card(10000000);
-		 //EvalTestPlayground.handCompareTest(100);
+		//EvalTestPlayground.handCompareTest(100);
 		 
-		 EvalTestPlayground.randomizerSpeedTest5Card(75000000); //Recently : Did 75000000 hands in 0.994201148 seconds
+		 //EvalTestPlayground.randomizerSpeedTest7Card(20000000); // speed average : Did 20000000 hands in 1.640367631 seconds 12Mhps
+		 EvalTestPlayground.randomizerSpeedTest5Card(20000000); // speed average : 20000000 hands in 0.248193276 seconds = 80Mhps
 		 //System.out.println(EvalTestPlayground.humanDecodeEval("9d", "9c", "9h", "6s", "9s"));
 		 //EvalTestPlayground.testEveryHand();
 		}
