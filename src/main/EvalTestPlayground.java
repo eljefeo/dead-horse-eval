@@ -393,6 +393,18 @@ public static void randomizerSpeedTest7Cardr(int howMany){
 
 public static void test7(){
 	
+	int[] threepair = {66048,32896,16392,8196,8320,8200,33280};
+	
+	int[] trips2pair = {32832,65600,16448,32800,8224,34816,67584};
+	
+	int[] tripstrips = {65537,32769,16385,16640,65792,8448,8196};
+	
+	int[] quads = {65664,32896,16512,8320,36864,8704,65544};
+	
+	int[] quadspair = {36864,20480,12288,69632,65552,8208,16640};
+	
+	int[] quadstrips = {36864,20480,12288,69632,65552,8208,16400};;
+	
 	 int[][] allTestHands = {
 				{allCardNums[1],allCardNums[17],allCardNums[15],allCardNums[24],allCardNums[35],allCardNums[45],allCardNums[51]},
 				{allCardNums[1],allCardNums[17],allCardNums[15],allCardNums[25],allCardNums[35],allCardNums[45],allCardNums[51]}, //aces
@@ -406,7 +418,7 @@ public static void test7(){
 				{allCardNums[21],allCardNums[16],allCardNums[20],allCardNums[18],allCardNums[19],allCardNums[17],allCardNums[22]}//78910J
 			  };
 	 
-		int test = 4191;
+		/*int test = 4191;
 		System.out.println(bin(test));
 		int t1 = test&test-1;t1&=t1-1;
 		System.out.println(bin(t1));
@@ -414,14 +426,15 @@ public static void test7(){
 		System.out.println(bin(t2));
 		
 		System.out.println(bin(test&(test-1^(~test>>1))));
-	
-	int[] f7 = allTestHands[4];
+	*/
+	//int[] f7 = allTestHands[2];
+		int[] f7 = threepair;;
 	
 	System.out.println(f7[0]+" "+getName(f7[0])+", "+f7[1]+" "+getName(f7[1])+", "+f7[2]+" "+getName(f7[2])+", "
 			+f7[3]+" "+getName(f7[3])+", "+f7[4]+" "+getName(f7[4])+", "+f7[5]+" "+getName(f7[5])+", "+f7[6]+" "+getName(f7[6]));
 	
 	int res = DeadHorseEval.eval7(f7);
-	System.out.println(res);
+	System.out.println("Outcome " + res + ", " + handNames[(res>>26)]);
 	
 DeadHorseEval.sort7(f7);
 	System.out.println(f7[0]+" "+getName(f7[0])+", "+f7[1]+" "+getName(f7[1])+", "+f7[2]+" "+getName(f7[2])+", "

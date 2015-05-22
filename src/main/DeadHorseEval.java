@@ -36,7 +36,11 @@ public class DeadHorseEval {
 		
 
 		boolean quads = false;
-		int or = n[0]|n[1]|n[2]|n[3]|n[4]|n[5]|n[6];
+		int o = n[0]|n[1]|n[2]|n[3]|n[4]|n[5]|n[6];
+		int x = n[0]^n[1]^n[2]^n[3]^n[4]^n[5]^n[6];
+		
+		System.out.println("or " + bin(o));
+		System.out.println("xor " + bin(x));
 
 		sort7b(n,u);
 		
@@ -101,38 +105,127 @@ public class DeadHorseEval {
 			return 0x14000000|so;
 		}
 		
-		//straight
-		int s1=or&or-1;s1&=s1-1;
-		int s2=or-n[6];s2-=n[0];
-		int s3=or-n[0];
-		int mi=0;
-		if(n[1]!=n[0])mi=n[1];
-		else if(n[2]!=n[1])mi=n[2];
-		else if(n[2]!=n[3])mi=n[3];
-		else quads=true;
-		s3-=mi;
 		
+		
+
+		int v=1;
+		int orr = o&o-1;
+		System.out.println(bin(orr));
+		v+=(orr&=orr-1)!=0?(orr&=orr-1)!=0?(orr&=orr-1)!=0?(orr&=orr-1)!=0?(orr&=orr-1)!=0?6:5:4:3:2:1;
+		System.out.println("or " + bin(o) + ", orr " + bin(orr) + ", v " + v);
+		
+		
+		System.out.println("\n");
+		
+		int vv=1;
+		int xx=x;
+		System.out.println(bin(xx));
+		if((xx&=xx-1)!=0)
+			if((xx&=xx-1)!=0)
+				if((xx&=xx-1)!=0)
+					if((xx&=xx-1)!=0)
+						if((xx&=xx-1)!=0)
+							if((xx&=xx-1)!=0)
+								vv+=6;
+							else vv+=5;
+						else vv+=4;
+					else vv+=3;
+				else vv+=2;
+			else vv+=1;
+		
+		//vv+=(xx&=xx-1)!=0?(xx&=xx-1)!=0?(xx&=xx-1)!=0?(xx&=xx-1)!=0?(xx&=xx-1)!=0?(xx&=xx-1)!=0?6:5:4:3:2:1:0;
+		System.out.println("xor " + bin(x) + ", xx " + bin(xx) + ", vv " + vv);
+		
+		System.out.println("Total = " + (v+vv));
+		
+		int vvv=v+vv;
+		
+		
+		if(v>4){
+			//straight
+			int s1=o&o-1;s1&=s1-1;
+			int s2=o-n[6];s2-=n[0];
+			int s3=o-n[0];
+			int mi=0;
+			if(n[1]!=n[0])mi=n[1];
+			else if(n[2]!=n[1])mi=n[2];
+			else if(n[2]!=n[3])mi=n[3];
+			else return 0x18000000|n[4]|n[0]<<13;//accidently found quads, so return it
 	
-		if(0x1F1D100%s1==0){
-			System.out.println("Straight");
-			return 0x10000000|s1;
-		}
-		if(0x1F1D100%s2==0){
-			System.out.println("Straight");
-			return 0x10000000|s2;
-		}
-		if(0x1F1D100%s3==0){
-			System.out.println("Straight");
-			return 0x10000000|s3;
+			if(0x1F1D100%s1==0){
+				System.out.println("high Straight " + bin(s1));
+				return 0x10000000|s1;
+			}
+			if(0x1F1D100%s2==0){
+				System.out.println("mid Straight " +bin(s2));
+				return 0x10000000|s2;
+			}
+			if(0x1F1D100%(s3-=mi)==0){
+				System.out.println("low Straight " + bin(s3));
+				return 0x10000000|s3;
+			}
+			
+			if(n[0]==4096&&(o&15)==15){
+				System.out.println("Low ace Straight " );
+				return 0x10000000|15;
+			}
 		}
 		
-		if(n[0]==4096&&n[6]==1){
-			//maybe ace straight
+		if(vvv==14){
+			//high card
+			//return s1;
+			return o-n[6]-n[5];
+		}
+		
+		if(vvv==11){
+			//pair
+			int paired = o^x;
+			int highest3WithoutPaird=x&x-1;highest3WithoutPaird&=highest3WithoutPaird-1;
+			return 0x4000000|highest3WithoutPaird|paired<<13;
+		}
+		
+		if(vvv==8){
+			// 2 pair
+			int paired = o^x;
+			int highestKicker = n[0]!=n[1]?n[0]:n[2]!=n[3]?n[2]:n[4];
+			return 0x8000000|highestKicker|paired<<13;
+		}
+		
+		if(vvv==5){
+			//three pair
+			int paired = o^x;
+			int top2pair=paired&paired-1;
+			int highestKicker = n[0]!=n[1]?n[0]:n[2]!=n[3]?n[2]:n[4];
+			return 0x8000000|highestKicker|top2pair<<13;
+		}
+		
+		if(vvv==10){
+			//trips
+		}
+		
+		if(vvv==7){
+			//full house (trips and 1 pair)
+			//quads and 3 singles
+		}
+		
+		if(vvv==4){
+			//full house, trips and 2 pair
+			//quads with a pair 
+		}
+		
+		if(vvv==6){
+			//full house, trips and trips
+		}
+		
+		if(vvv==3){
+			//quads and trips
 		}
 		
 		
 		
-		return 0;
+		
+		
+		return 0;//else return 5 highest
 	}
 	
 	public static void sort7(int n[]){
@@ -184,7 +277,9 @@ public class DeadHorseEval {
 			:strt?0x10000000|(x==0x100F?15:x):flsh?0x14000000|x:x;
 	}
 	 */
-
+	public static String bin(int i){
+		return String.format("%17s", Integer.toBinaryString(i)).replace(' ', '0');
+	}
 }
 
 
