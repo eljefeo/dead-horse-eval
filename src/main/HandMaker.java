@@ -47,7 +47,7 @@ public class HandMaker {
 				  // x would remain zero if it chose it again, and the loop will continue
 				  // while x==0 until it chooses a card we have not picked yet
 				  while(x==0){
-					  ran = r.nextInt((51 - 1) + 1) +1;
+					  ran = r.nextInt(52);
 					  x = allc2[ran];
 				  }
 				  

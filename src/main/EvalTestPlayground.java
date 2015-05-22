@@ -333,6 +333,100 @@ public static String humanDecodeEval(String as, String bs, String cs, String ds,
 	return "unique hand value = " +res+ "\n"+ as + ", " + bs + ", " +cs+", " +ds+", "+es+"\n= "+ handNames[res>>26];
 }
 
+public static void randomizerSpeedTest7Cardr(int howMany){
+	  
+	  //number of hands to burn through
+	  //pick a nice huge round number to let this sucker get warmed up
+	  // int howMany = 10000000;
+
+	  int[] ac = HandMaker.makeLotsOfRandom7CardHands(howMany);
+	  //get start time
+	  long startTf = System.nanoTime();
+	  
+	  //these dang for loops take a while
+	  for(int v=0;v<ac.length/7;)
+		  v++;
+	  //get end time
+	  long endTf = System.nanoTime();
+	  int winningHand = 0;
+	  int r=0;
+	  long startT = System.nanoTime();
+	  
+	  for(int v=0;v<ac.length/7;v++){
+		  //let er rip, go through every hand, 7 cards at a time
+/*		  r = DeadHorseEval.eval5r(ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+5],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+5],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+5],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+5],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+5],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+5],r);if(r>winningHand)winningHand=r;
+		  r = DeadHorseEval.eval5r(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],r);if(r>winningHand)winningHand=r;*/
+		  
+	  }
+
+	  //get end time
+	  long endT = System.nanoTime();
+	  System.out.println("r winning hand  : " + winningHand);
+	  
+	  // Time is (end time - start time  ) divided by a billion : because it is in nano seconds
+	  double time = (double) (endT - startT -(endTf - startTf))/1000000000;
+	  
+	  System.out.println("Did " + howMany + " hands in " + time +" seconds");
+	  //hands per second in millions 
+	  System.out.println((int)(howMany/time/1000000) + " million hands a second"); 
+}
+
+
+public static void test7(){
+	
+	 int[][] allTestHands = {
+				{allCardNums[1],allCardNums[17],allCardNums[15],allCardNums[24],allCardNums[35],allCardNums[45],allCardNums[51]},
+				{allCardNums[1],allCardNums[17],allCardNums[15],allCardNums[25],allCardNums[35],allCardNums[45],allCardNums[51]}, //aces
+				{allCardNums[1],allCardNums[16],allCardNums[0],allCardNums[25],allCardNums[35],allCardNums[13],allCardNums[51]},//aces
+				{allCardNums[12],allCardNums[17],allCardNums[15],allCardNums[25],allCardNums[35],allCardNums[45],allCardNums[51]},//aces
+				{allCardNums[1],allCardNums[2],allCardNums[17],allCardNums[3],allCardNums[18],allCardNums[48],allCardNums[51]},// 34567
+				{allCardNums[1],allCardNums[44],allCardNums[9],allCardNums[6],allCardNums[3],allCardNums[8],allCardNums[45]},//spades
+				{allCardNums[4],allCardNums[33],allCardNums[46],allCardNums[48],allCardNums[35],allCardNums[17],allCardNums[30]},// 6 9 9 11 11 6 6 //6s full of 11s or 9s
+				//{allCardNums[6],allCardNums[33],allCardNums[19],allCardNums[32],allCardNums[50],allCardNums[17],allCardNums[45]},//4x8s
+				{allCardNums[12],allCardNums[25],allCardNums[19],allCardNums[32],allCardNums[38],allCardNums[17],allCardNums[51]},//4x8s
+				{allCardNums[21],allCardNums[16],allCardNums[20],allCardNums[18],allCardNums[19],allCardNums[17],allCardNums[22]}//78910J
+			  };
+	 
+		int test = 4191;
+		System.out.println(bin(test));
+		int t1 = test&test-1;t1&=t1-1;
+		System.out.println(bin(t1));
+		int t2=test&(~test>>1)^test;
+		System.out.println(bin(t2));
+		
+		System.out.println(bin(test&(test-1^(~test>>1))));
+	
+	int[] f7 = allTestHands[5];
+	
+	System.out.println(f7[0]+" "+getName(f7[0])+", "+f7[1]+" "+getName(f7[1])+", "+f7[2]+" "+getName(f7[2])+", "
+			+f7[3]+" "+getName(f7[3])+", "+f7[4]+" "+getName(f7[4])+", "+f7[5]+" "+getName(f7[5])+", "+f7[6]+" "+getName(f7[6]));
+	
+	int res = DeadHorseEval.eval7(f7);
+	System.out.println(res);
+	
+DeadHorseEval.sort7(f7);
+	System.out.println(f7[0]+" "+getName(f7[0])+", "+f7[1]+" "+getName(f7[1])+", "+f7[2]+" "+getName(f7[2])+", "
+	+f7[3]+" "+getName(f7[3])+", "+f7[4]+" "+getName(f7[4])+", "+f7[5]+" "+getName(f7[5])+", "+f7[6]+" "+getName(f7[6]));
+}
 
 
 
@@ -340,4 +434,14 @@ public static String bin(int i){
 	return String.format("%17s", Integer.toBinaryString(i)).replace(' ', '0');
 }
 	  
+public static String getName(int j){
+	for(int i=0;i<allCardNums.length;i++){
+		if(allCardNums[i]==j){
+			return allCardNames[i];
+		}
+	}
+	return j+"";
+}
+
+
 }
