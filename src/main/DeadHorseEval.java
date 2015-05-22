@@ -35,7 +35,7 @@ public class DeadHorseEval {
 		n[0]&=8191;n[1]&=8191;n[2]&=8191;n[3]&=8191;n[4]&=8191;n[5]&=8191;n[6]&=8191;
 		
 
-		
+		boolean quads = false;
 		int or = n[0]|n[1]|n[2]|n[3]|n[4]|n[5]|n[6];
 
 		sort7b(n,u);
@@ -103,12 +103,31 @@ public class DeadHorseEval {
 		
 		//straight
 		int s1=or&or-1;s1&=s1-1;
-		int s2=or&(or-1^(~or>>1));
-		int s3=or&(or-1^(~or>>1));
+		int s2=or-n[6];s2-=n[0];
+		int s3=or-n[0];
+		int mi=0;
+		if(n[1]!=n[0])mi=n[1];
+		else if(n[2]!=n[1])mi=n[2];
+		else if(n[2]!=n[3])mi=n[3];
+		else quads=true;
+		s3-=mi;
 		
 	
 		if(0x1F1D100%s1==0){
-			//System.out.println
+			System.out.println("Straight");
+			return 0x10000000|s1;
+		}
+		if(0x1F1D100%s2==0){
+			System.out.println("Straight");
+			return 0x10000000|s2;
+		}
+		if(0x1F1D100%s3==0){
+			System.out.println("Straight");
+			return 0x10000000|s3;
+		}
+		
+		if(n[0]==4096&&n[6]==1){
+			//maybe ace straight
 		}
 		
 		

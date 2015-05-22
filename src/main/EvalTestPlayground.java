@@ -415,7 +415,7 @@ public static void test7(){
 		
 		System.out.println(bin(test&(test-1^(~test>>1))));
 	
-	int[] f7 = allTestHands[5];
+	int[] f7 = allTestHands[4];
 	
 	System.out.println(f7[0]+" "+getName(f7[0])+", "+f7[1]+" "+getName(f7[1])+", "+f7[2]+" "+getName(f7[2])+", "
 			+f7[3]+" "+getName(f7[3])+", "+f7[4]+" "+getName(f7[4])+", "+f7[5]+" "+getName(f7[5])+", "+f7[6]+" "+getName(f7[6]));
