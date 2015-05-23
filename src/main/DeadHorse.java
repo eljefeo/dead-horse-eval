@@ -254,214 +254,111 @@ public class DeadHorse {
 		if(n3>n2){z=n3;n3=n2;n2=z;z=u3;u3=u2;u2=z;}
 		z=o^x;
 		int v=1;
-		int or = o&o-1;
-		v+=(or&=or-1)!=0?(or&=or-1)!=0?(or&=or-1)!=0
-		?(or&=or-1)!=0?(or&=or-1)!=0?6:5:4:3:2:1;		
-		
-		/*System.out.println(n0 + " : " + u0);
-		System.out.println(n1 + " : " + u1);
-		System.out.println(n2 + " : " + u2);
-		System.out.println(n3 + " : " + u3);
-		System.out.println(n4 + " : " + u4);
-		System.out.println(n5 + " : " + u5);
-		System.out.println(n6 + " : " + u6);*/
+		int w = o&o-1;
+		v+=(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?6:5:4:3:2:1;		
 
-		if(v>4){
-		
+
 			/**********************************v == 7***************************/
-			if(v==7){
-				//straight
-				int s1=o&o-1;s1&=s1-1;
-				int s2=o-n6;s2-=n0;
-				int s3=o-n0;
-					 if(n1!=n0)s3-=n1;
-				else if(n2!=n1)s3-=n2;
-				else if(n2!=n3)s3-=n3;
-				else return 0x18000000|n4|n0<<13;//accidently found quads, so return it
-		
+		if(v==7){
+			//straight
+			int s1=o&o-1;s1&=s1-1;
+			int s2=o-n6;s2-=n0;
+			int s3=o-n0;
+				 if(n1!=n0)s3-=n1;
+			else if(n2!=n1)s3-=n2;
+			else if(n2!=n3)s3-=n3;
+			else return 0x18000000|n4|n0<<13;//accidently found quads, so return it
+	 
 			//flush
 			int so=0;
 			int[]fn = new int[5];
 			fn[u0]++;fn[u1]++;fn[u2]++;fn[u3]++;
 			fn[u4]++;fn[u5]++;fn[u6]++;
-
-			if(fn[0]>4){//Diamond Flush
-				if(u0==0)so|=n0;if(u1==0)so|=n1;
-				if(u2==0)so|=n2;if(u3==0)so|=n3;
-				if(u4==0)so|=n4;if(u5==0)so|=n5;
-				if(u6==0)so|=n6;
-			}
-			if(fn[1]>4){//Club Flush
-				if(u0==1)so|=n0;if(u1==1)so|=n1;
-				if(u2==1)so|=n2;if(u3==1)so|=n3;
-				if(u4==1)so|=n4;if(u5==1)so|=n5;
-				if(u6==1)so|=n6;
-				
-			}
-			if(fn[2]>4){//Heart Flush
-				if(u0==2)so|=n0;if(u1==2)so|=n1;
-				if(u2==2)so|=n2;if(u3==2)so|=n3;
-				if(u4==2)so|=n4;if(u5==2)so|=n5;
-				if(u6==2)so|=n6;
-			}
-			if(fn[4]>4){//Spade Flush
-				if(u0==4)so|=n0;if(u1==4)so|=n1;
-				if(u2==4)so|=n2;if(u3==4)so|=n3;
-				if(u4==4)so|=n4;if(u5==4)so|=n5;
-				if(u6==4)so|=n6;
-			}
-			
-				//check for straight flush
-
-				if(so!=0){
-					return   (0x1F00%(so&s1))==0 ?0x20000000|s1
-							:(0x1F00%(so&s2))==0 ?0x20000000|s2
-							:(0x1F00%(so&s3))==0 ?0x20000000|s3
-							:(so&0x100F)==0x100F?0x20000000|15
-							:0x14000000|so;//else return flush
-				}
-				
-				if(0x1F00%s1==0) 	return 0x10000000|s1;//high Straight
-				if(0x1F00%s2==0) 	return 0x10000000|s2;//mid Straight
-				if(0x1F00%s3==0) 	return 0x10000000|s3;//low Straight
-				if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
-				
-			}
-			/***************************************************************************/
-			
-			
-			
-			
-			
-			
-			
-			
-			/****************************v == 6**************************************/
-			if(v==6){//straight
-				int s1=o&o-1;
-				int s2=o-n0;
-		
-			//flush
-			int so=0;
-			int[]fn = new int[5];
-			fn[u0]++;fn[u1]++;fn[u2]++;fn[u3]++;
-			fn[u4]++;fn[u5]++;fn[u6]++;
-
-			if(fn[0]>4){//Diamond Flush
-				if(u0==0)so|=n0;if(u1==0)so|=n1;
-				if(u2==0)so|=n2;if(u3==0)so|=n3;
-				if(u4==0)so|=n4;if(u5==0)so|=n5;
-				if(u6==0)so|=n6;
-			}
-			if(fn[1]>4){//Club Flush
-				if(u0==1)so|=n0;if(u1==1)so|=n1;
-				if(u2==1)so|=n2;if(u3==1)so|=n3;
-				if(u4==1)so|=n4;if(u5==1)so|=n5;
-				if(u6==1)so|=n6;
-				
-			}
-			if(fn[2]>4){//Heart Flush
-				if(u0==2)so|=n0;if(u1==2)so|=n1;
-				if(u2==2)so|=n2;if(u3==2)so|=n3;
-				if(u4==2)so|=n4;if(u5==2)so|=n5;
-				if(u6==2)so|=n6;
-			}
-			if(fn[4]>4){//Spade Flush
-				if(u0==4)so|=n0;if(u1==4)so|=n1;
-				if(u2==4)so|=n2;if(u3==4)so|=n3;
-				if(u4==4)so|=n4;if(u5==4)so|=n5;
-				if(u6==4)so|=n6;
-			}
-			
-				//check for straight flush
-
-				if(so!=0){
-					return   (0x1F00%(so&s1))==0 ?0x20000000|s1
-							:(0x1F00%(so&s2))==0 ?0x20000000|s2
-							:(so&0x100F)==0x100F?0x20000000|15
-							:0x14000000|so;//else return flush
-				}
-				
-				if(0x1F00%s1==0) 	return 0x10000000|s1;//high Straight
-				if(0x1F00%s2==0) 	return 0x10000000|s2;//low Straight
-				if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
-			}
-			/***************************************************************************/
-			
-			
-			
-			
-			/***********************************v == 5**************************/
-			if(v==5){
-		
-			//flush
-			int so=0;
-			int[]fn = new int[5];
-			fn[u0]++;fn[u1]++;fn[u2]++;fn[u3]++;
-			fn[u4]++;fn[u5]++;fn[u6]++;
-
-			if(fn[0]>4){//Diamond Flush
-				if(u0==0)so|=n0;if(u1==0)so|=n1;
-				if(u2==0)so|=n2;if(u3==0)so|=n3;
-				if(u4==0)so|=n4;if(u5==0)so|=n5;
-				if(u6==0)so|=n6;
-			}
-			if(fn[1]>4){//Club Flush
-				if(u0==1)so|=n0;if(u1==1)so|=n1;
-				if(u2==1)so|=n2;if(u3==1)so|=n3;
-				if(u4==1)so|=n4;if(u5==1)so|=n5;
-				if(u6==1)so|=n6;
-				
-			}
-			if(fn[2]>4){//Heart Flush
-				if(u0==2)so|=n0;if(u1==2)so|=n1;
-				if(u2==2)so|=n2;if(u3==2)so|=n3;
-				if(u4==2)so|=n4;if(u5==2)so|=n5;
-				if(u6==2)so|=n6;
-			}
-			if(fn[4]>4){//Spade Flush
-				if(u0==4)so|=n0;if(u1==4)so|=n1;
-				if(u2==4)so|=n2;if(u3==4)so|=n3;
-				if(u4==4)so|=n4;if(u5==4)so|=n5;
-				if(u6==4)so|=n6;
-			}
-			
-				//check for straight flush
-
-				if(so!=0){
-					return   (0x1F00%(so&o))==0 ?0x20000000|o
-							:(so&0x100F)==0x100F?0x20000000|15
-							:0x14000000|so;//else return flush
-				}
-				
-				if(0x1F00%o==0) 	return 0x10000000|o;//Straight
-				if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
-				
-			}
-			/***************************************************************************/
-			
-			
-			
-			
+			int gf=fn[0]>4?0:fn[1]>4?1:fn[2]>4?2:fn[4]>4?4:3;
+			if(gf!=3){
+				if(u0==gf)so|=n0;if(u1==gf)so|=n1;
+				if(u2==gf)so|=n2;if(u3==gf)so|=n3;
+				if(u4==gf)so|=n4;if(u5==gf)so|=n5;
+				if(u6==gf)so|=n6;
+				return   (0x1F00%(so&s1))==0 ?0x20000000|s1
+						:(0x1F00%(so&s2))==0 ?0x20000000|s2
+						:(0x1F00%(so&s3))==0 ?0x20000000|s3
+						:(so&0x100F)==0x100F?0x20000000|15
+						:0x14000000|so;//else return flush
+		}
+			if(0x1F00%s1==0) 	return 0x10000000|s1;//high Straight
+			if(0x1F00%s2==0) 	return 0x10000000|s2;//mid Straight
+			if(0x1F00%s3==0) 	return 0x10000000|s3;//low Straight
+			if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
 			
 		}
 		
+		if(v==6){//straight
+			int s1=o&o-1;
+			int s2=o-n0;
+			
+			//flush
+			int so=0;
+			int[]fn = new int[5];
+			fn[u0]++;fn[u1]++;fn[u2]++;fn[u3]++;
+			fn[u4]++;fn[u5]++;fn[u6]++;
+			int gf=fn[0]>4?0:fn[1]>4?1:fn[2]>4?2:fn[4]>4?4:3;
+			if(gf!=3){
+				if(u0==gf)so|=n0;if(u1==gf)so|=n1;
+				if(u2==gf)so|=n2;if(u3==gf)so|=n3;
+				if(u4==gf)so|=n4;if(u5==gf)so|=n5;
+				if(u6==gf)so|=n6;
+				return   (0x1F00%(so&s1))==0 ?0x20000000|s1
+						:(0x1F00%(so&s2))==0 ?0x20000000|s2
+						:(so&0x100F)==0x100F?0x20000000|15
+						:0x14000000|so;//else return flush
+			}
+			if(0x1F00%s1==0) 	return 0x10000000|s1;//high Straight
+			if(0x1F00%s2==0) 	return 0x10000000|s2;//low Straight
+			if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
+		}
 
+		if(v==5){
+			//flush
+			int so=0;
+			int[]fn = new int[5];
+			fn[u0]++;fn[u1]++;fn[u2]++;fn[u3]++;
+			fn[u4]++;fn[u5]++;fn[u6]++;
+			int gf=fn[0]>4?0:fn[1]>4?1:fn[2]>4?2:fn[4]>4?4:3;
+			if(gf!=3){
+				if(u0==gf)so|=n0;if(u1==gf)so|=n1;
+				if(u2==gf)so|=n2;if(u3==gf)so|=n3;
+				if(u4==gf)so|=n4;if(u5==gf)so|=n5;
+				if(u6==gf)so|=n6;
+				return   (0x1F00%(so&o))==0 ?0x20000000|o
+						:(so&0x100F)==0x100F?0x20000000|15
+						:0x14000000|so;//else return flush
+			}
+			if(0x1F00%o==0) 	return 0x10000000|o;//Straight
+			if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
+		}
+		
+		
 		int xx=x;
 		v+=(xx&=xx-1)!=0?(xx&=xx-1)!=0?(xx&=xx-1)!=0?(xx&=xx-1)!=0
 		?(xx&=xx-1)!=0?(xx&=xx-1)!=0?7:6:5:4:3:2:1;
 		
-		if(v==14) return o-n6-n5;//high card
+		//if(v==14) return o-n6-n5;//high card
+		if(v==14) return (o&=o-1)&o-1;// without order
+			
+		if(v==11) return 0x4000000|(x&=x-1)&x-1|z<<13;//pair without order
 		
-		if(v==11) return 0x4000000|(x&=x-1)&x-1|z<<13;//pair
+		if(v==8) return 0x8000000|(x&=x-1)&x-1|z<<13;//2 pair without order
 		
-		if(v==8) return 0x8000000|(n0!=n1?n0:n2!=n3?n2:n4)|z<<13;// 2 pair
-		
-		if(v==5) return 0x8000000|(n0!=n1?n0:n2!=n3?n2:n4)|(z&z-1)<<13;//three pair
+		if(v==5) return 0x8000000|(x>(z^(z&z-1))?x:(z^(z&z-1)))|(z&z-1)<<13;//three pair without order
 		
 		if(v==10) return n0==n1?0xC000000|n3|n4|n0<<13
 				  	:n2==n3?0xC000000|n0|(n1!=n2?n1:n4)|n2<<13
 				  	:0xC000000|n0|n1|n4<<13;//trips
+		
+		if(v==10){
+			//trips without ordera
+		}
 		
 		if(v==7) return (n0&n1&n2)==n3 ? 0x1C000000|n4|n3<<13
 					:(n1&n2&n4)==n3||(n2&n4&n5)==n3||(n4&n5&n6)==n3
@@ -470,15 +367,32 @@ public class DeadHorse {
 					:n2==n3&&n2!=z? 0x18000000|z|n2<<13
 					:0x18000000|z|n4<<13;//full house (trips and 1 pair)
 		
-		if(v==4) return (n0&n1&n2)==n3?0x1C000000|n4|n3<<13
+		if(v==4) {
+			
+			
+			
+			
+			
+			return 
+					//quads
+					(n0&n1&n2)==n3?0x1C000000|n4|n3<<13
 					:(n1&n2&n4)==n3||(n2&n4&n5)==n3||(n4&n5&n6)==n3
 					?0x1C000000|n0|n3<<13
+					
+					//fh
 					:(n0&n1&z)!=0?0x18000000|n0|n4<<13
 					:0x18000000|n3|n0<<13;//full house, trips and 2 pair, quads with a pair 
+		}
+			
+			
+			
+			
 		
-		if(v==6) return 0x18000000|n5|n1<<13;//full house, trips and trips
+		if(v==6) return 0x18000000|(x&x-1)|x^(x&x-1)<<13;//full house, trips and trips without order
 		
-		if(v==3) return 0x1C000000|(n0==n3?n6:n0)|n3<<13;//quads and trips
+		
+		
+		if(v==3) return 0x1C000000|x|z<<13;//quads and trips without order
 		
 		return 0;//should never come to this
 	}

@@ -460,6 +460,8 @@ public static void randomizerSpeedTest7Cardr(int howMany){
 	  //number of hands to burn through
 	  //pick a nice huge round number to let this sucker get warmed up
 	  // int howMany = 10000000;
+	
+	
 
 	  int[] ac = HandMaker.makeLotsOfRandom7CardHands(howMany);
 	  //get start time
@@ -520,6 +522,13 @@ public static void test7(){
 				{allCardNums[12],allCardNums[25],allCardNums[19],allCardNums[32],allCardNums[38],allCardNums[17],allCardNums[51]},//4x8s
 				{allCardNums[21],allCardNums[16],allCardNums[20],allCardNums[18],allCardNums[19],allCardNums[17],allCardNums[22]}//78910J
 			  };
+/*	 int tpo = (threepair[0]&8191)|(threepair[1]&8191)|(threepair[2]&8191)|(threepair[3]&8191)|(threepair[4]&8191)|(threepair[5]&8191)|(threepair[6]&8191);
+	 int tpx = (threepair[0]&8191)^(threepair[1]&8191)^(threepair[2]&8191)^(threepair[3]&8191)^(threepair[4]&8191)^(threepair[5]&8191)^(threepair[6]&8191);
+	 int tpz = tpo^tpx;
+	 int k= tpx > (tpz^(tpz&tpz-1)) ? tpx :(tpz^(tpz&tpz-1));
+	 int t2p=tpz&tpz-1;
+	 System.out.println(bin(tpo) + "\n"+bin(tpx) + "\n"+bin(tpz)+"\n"+bin(k));
+	 int out = */
 	 
 		/*int test = 4191;
 		System.out.println(bin(test));
