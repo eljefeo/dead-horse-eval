@@ -353,6 +353,7 @@ public static void randomizerSpeedTest7Cardr(int howMany){
 	  long startT = System.nanoTime();
 	  
 	  for(int v=0;v<ac.length/7;v++){
+		  DeadHorseEval.eval7b(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
 		  //let er rip, go through every hand, 7 cards at a time
 /*		  r = DeadHorseEval.eval5r(ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
 		  r = DeadHorseEval.eval5r(ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6],r);if(r>winningHand)winningHand=r;
@@ -412,7 +413,7 @@ public static void test7(){
 				{allCardNums[12],allCardNums[17],allCardNums[15],allCardNums[25],allCardNums[35],allCardNums[45],allCardNums[51]},//aces
 				{allCardNums[1],allCardNums[2],allCardNums[17],allCardNums[3],allCardNums[18],allCardNums[48],allCardNums[51]},// 34567
 				{allCardNums[1],allCardNums[44],allCardNums[9],allCardNums[6],allCardNums[3],allCardNums[8],allCardNums[45]},//spades
-				{allCardNums[4],allCardNums[33],allCardNums[46],allCardNums[48],allCardNums[35],allCardNums[17],allCardNums[30]},// 6 9 9 11 11 6 6 //6s full of 11s or 9s
+				{allCardNums[4],allCardNums[32],allCardNums[46],allCardNums[48],allCardNums[35],allCardNums[17],allCardNums[30]},// 6 9 9 11 11 6 6 //6s full of 11s or 9s
 				//{allCardNums[6],allCardNums[33],allCardNums[19],allCardNums[32],allCardNums[50],allCardNums[17],allCardNums[45]},//4x8s
 				{allCardNums[12],allCardNums[25],allCardNums[19],allCardNums[32],allCardNums[38],allCardNums[17],allCardNums[51]},//4x8s
 				{allCardNums[21],allCardNums[16],allCardNums[20],allCardNums[18],allCardNums[19],allCardNums[17],allCardNums[22]}//78910J
@@ -428,13 +429,16 @@ public static void test7(){
 		System.out.println(bin(test&(test-1^(~test>>1))));
 	*/
 	//int[] f7 = allTestHands[2];
-		int[] f7 = threepair;;
+		int[] f7 = quadstrips;
 	
 	System.out.println(f7[0]+" "+getName(f7[0])+", "+f7[1]+" "+getName(f7[1])+", "+f7[2]+" "+getName(f7[2])+", "
 			+f7[3]+" "+getName(f7[3])+", "+f7[4]+" "+getName(f7[4])+", "+f7[5]+" "+getName(f7[5])+", "+f7[6]+" "+getName(f7[6]));
 	
-	int res = DeadHorseEval.eval7(f7);
-	System.out.println("Outcome " + res + ", " + handNames[(res>>26)]);
+	
+	//int res = DeadHorseEval.eval7(f7);
+	int res = DeadHorseEval.eval7b(f7[0],f7[1],f7[2],f7[3],f7[4],f7[5],f7[6]);
+	
+	System.out.println("Outcome " + res + ", " + handNames[(res>>26)] + "\n"+bin32(res));
 	
 DeadHorseEval.sort7(f7);
 	System.out.println(f7[0]+" "+getName(f7[0])+", "+f7[1]+" "+getName(f7[1])+", "+f7[2]+" "+getName(f7[2])+", "
@@ -445,6 +449,10 @@ DeadHorseEval.sort7(f7);
 
 public static String bin(int i){
 	return String.format("%17s", Integer.toBinaryString(i)).replace(' ', '0');
+}
+
+public static String bin32(int i){
+	return String.format("%32s", Integer.toBinaryString(i)).replace(' ', '0');
 }
 	  
 public static String getName(int j){
