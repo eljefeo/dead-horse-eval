@@ -1,6 +1,6 @@
 package main;
 
-public class DeadHorseEval {
+public class DeadHorse {
 
 	public static int eval5(int a, int b, int c, int d, int e){
 		int x=(a^b^c^d^e)&8191;
@@ -267,60 +267,183 @@ public class DeadHorseEval {
 		System.out.println(n6 + " : " + u6);*/
 
 		if(v>4){
-			//straight
-			int s1=o&o-1;s1&=s1-1;
-			int s2=o-n6;s2-=n0;
-			int s3=o-n0;
-				 if(n1!=n0)s3-=n1;
-			else if(n2!=n1)s3-=n2;
-			else if(n2!=n3)s3-=n3;
-			else return 0x18000000|n4|n0<<13;//accidently found quads, so return it
-	
-		//flush
-		int so=0;
-		int[]fn = new int[5];
-		fn[u0]++;fn[u1]++;fn[u2]++;fn[u3]++;
-		fn[u4]++;fn[u5]++;fn[u6]++;
-
-		if(fn[0]>4){//Diamond Flush
-			if(u0==0)so|=n0;if(u1==0)so|=n1;
-			if(u2==0)so|=n2;if(u3==0)so|=n3;
-			if(u4==0)so|=n4;if(u5==0)so|=n5;
-			if(u6==0)so|=n6;
-		}
-		if(fn[1]>4){//Club Flush
-			if(u0==1)so|=n0;if(u1==1)so|=n1;
-			if(u2==1)so|=n2;if(u3==1)so|=n3;
-			if(u4==1)so|=n4;if(u5==1)so|=n5;
-			if(u6==1)so|=n6;
-			
-		}
-		if(fn[2]>4){//Heart Flush
-			if(u0==2)so|=n0;if(u1==2)so|=n1;
-			if(u2==2)so|=n2;if(u3==2)so|=n3;
-			if(u4==2)so|=n4;if(u5==2)so|=n5;
-			if(u6==2)so|=n6;
-		}
-		if(fn[4]>4){//Spade Flush
-			if(u0==4)so|=n0;if(u1==4)so|=n1;
-			if(u2==4)so|=n2;if(u3==4)so|=n3;
-			if(u4==4)so|=n4;if(u5==4)so|=n5;
-			if(u6==4)so|=n6;
-		}
 		
-					//check for straight flush
-			if(so!=0){
-			if((so&s1)==s1) 		return 0x20000000|s1;
-			if((so&s2)==s2) 		return 0x20000000|s2;
-			if((so&s3)==s3) 		return 0x20000000|s3;
-			if((so&0x100F)==0x100F) return 0x20000000|15;
-									return 0x14000000|so;//else return flush
+			/**********************************v == 7***************************/
+			if(v==7){
+				//straight
+				int s1=o&o-1;s1&=s1-1;
+				int s2=o-n6;s2-=n0;
+				int s3=o-n0;
+					 if(n1!=n0)s3-=n1;
+				else if(n2!=n1)s3-=n2;
+				else if(n2!=n3)s3-=n3;
+				else return 0x18000000|n4|n0<<13;//accidently found quads, so return it
+		
+			//flush
+			int so=0;
+			int[]fn = new int[5];
+			fn[u0]++;fn[u1]++;fn[u2]++;fn[u3]++;
+			fn[u4]++;fn[u5]++;fn[u6]++;
+
+			if(fn[0]>4){//Diamond Flush
+				if(u0==0)so|=n0;if(u1==0)so|=n1;
+				if(u2==0)so|=n2;if(u3==0)so|=n3;
+				if(u4==0)so|=n4;if(u5==0)so|=n5;
+				if(u6==0)so|=n6;
+			}
+			if(fn[1]>4){//Club Flush
+				if(u0==1)so|=n0;if(u1==1)so|=n1;
+				if(u2==1)so|=n2;if(u3==1)so|=n3;
+				if(u4==1)so|=n4;if(u5==1)so|=n5;
+				if(u6==1)so|=n6;
+				
+			}
+			if(fn[2]>4){//Heart Flush
+				if(u0==2)so|=n0;if(u1==2)so|=n1;
+				if(u2==2)so|=n2;if(u3==2)so|=n3;
+				if(u4==2)so|=n4;if(u5==2)so|=n5;
+				if(u6==2)so|=n6;
+			}
+			if(fn[4]>4){//Spade Flush
+				if(u0==4)so|=n0;if(u1==4)so|=n1;
+				if(u2==4)so|=n2;if(u3==4)so|=n3;
+				if(u4==4)so|=n4;if(u5==4)so|=n5;
+				if(u6==4)so|=n6;
 			}
 			
-			if(0x1F1D100%s1==0) 	return 0x10000000|s1;//high Straight
-			if(0x1F1D100%s2==0) 	return 0x10000000|s2;//mid Straight
-			if(0x1F1D100%s3==0) 	return 0x10000000|s3;//low Straight
-			if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
+				//check for straight flush
+
+				if(so!=0){
+					return   (0x1F00%(so&s1))==0 ?0x20000000|s1
+							:(0x1F00%(so&s2))==0 ?0x20000000|s2
+							:(0x1F00%(so&s3))==0 ?0x20000000|s3
+							:(so&0x100F)==0x100F?0x20000000|15
+							:0x14000000|so;//else return flush
+				}
+				
+				if(0x1F00%s1==0) 	return 0x10000000|s1;//high Straight
+				if(0x1F00%s2==0) 	return 0x10000000|s2;//mid Straight
+				if(0x1F00%s3==0) 	return 0x10000000|s3;//low Straight
+				if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
+				
+			}
+			/***************************************************************************/
+			
+			
+			
+			
+			
+			
+			
+			
+			/****************************v == 6**************************************/
+			if(v==6){//straight
+				int s1=o&o-1;
+				int s2=o-n0;
+		
+			//flush
+			int so=0;
+			int[]fn = new int[5];
+			fn[u0]++;fn[u1]++;fn[u2]++;fn[u3]++;
+			fn[u4]++;fn[u5]++;fn[u6]++;
+
+			if(fn[0]>4){//Diamond Flush
+				if(u0==0)so|=n0;if(u1==0)so|=n1;
+				if(u2==0)so|=n2;if(u3==0)so|=n3;
+				if(u4==0)so|=n4;if(u5==0)so|=n5;
+				if(u6==0)so|=n6;
+			}
+			if(fn[1]>4){//Club Flush
+				if(u0==1)so|=n0;if(u1==1)so|=n1;
+				if(u2==1)so|=n2;if(u3==1)so|=n3;
+				if(u4==1)so|=n4;if(u5==1)so|=n5;
+				if(u6==1)so|=n6;
+				
+			}
+			if(fn[2]>4){//Heart Flush
+				if(u0==2)so|=n0;if(u1==2)so|=n1;
+				if(u2==2)so|=n2;if(u3==2)so|=n3;
+				if(u4==2)so|=n4;if(u5==2)so|=n5;
+				if(u6==2)so|=n6;
+			}
+			if(fn[4]>4){//Spade Flush
+				if(u0==4)so|=n0;if(u1==4)so|=n1;
+				if(u2==4)so|=n2;if(u3==4)so|=n3;
+				if(u4==4)so|=n4;if(u5==4)so|=n5;
+				if(u6==4)so|=n6;
+			}
+			
+				//check for straight flush
+
+				if(so!=0){
+					return   (0x1F00%(so&s1))==0 ?0x20000000|s1
+							:(0x1F00%(so&s2))==0 ?0x20000000|s2
+							:(so&0x100F)==0x100F?0x20000000|15
+							:0x14000000|so;//else return flush
+				}
+				
+				if(0x1F00%s1==0) 	return 0x10000000|s1;//high Straight
+				if(0x1F00%s2==0) 	return 0x10000000|s2;//low Straight
+				if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
+			}
+			/***************************************************************************/
+			
+			
+			
+			
+			/***********************************v == 5**************************/
+			if(v==5){
+		
+			//flush
+			int so=0;
+			int[]fn = new int[5];
+			fn[u0]++;fn[u1]++;fn[u2]++;fn[u3]++;
+			fn[u4]++;fn[u5]++;fn[u6]++;
+
+			if(fn[0]>4){//Diamond Flush
+				if(u0==0)so|=n0;if(u1==0)so|=n1;
+				if(u2==0)so|=n2;if(u3==0)so|=n3;
+				if(u4==0)so|=n4;if(u5==0)so|=n5;
+				if(u6==0)so|=n6;
+			}
+			if(fn[1]>4){//Club Flush
+				if(u0==1)so|=n0;if(u1==1)so|=n1;
+				if(u2==1)so|=n2;if(u3==1)so|=n3;
+				if(u4==1)so|=n4;if(u5==1)so|=n5;
+				if(u6==1)so|=n6;
+				
+			}
+			if(fn[2]>4){//Heart Flush
+				if(u0==2)so|=n0;if(u1==2)so|=n1;
+				if(u2==2)so|=n2;if(u3==2)so|=n3;
+				if(u4==2)so|=n4;if(u5==2)so|=n5;
+				if(u6==2)so|=n6;
+			}
+			if(fn[4]>4){//Spade Flush
+				if(u0==4)so|=n0;if(u1==4)so|=n1;
+				if(u2==4)so|=n2;if(u3==4)so|=n3;
+				if(u4==4)so|=n4;if(u5==4)so|=n5;
+				if(u6==4)so|=n6;
+			}
+			
+				//check for straight flush
+
+				if(so!=0){
+					return   (0x1F00%(so&o))==0 ?0x20000000|o
+							:(so&0x100F)==0x100F?0x20000000|15
+							:0x14000000|so;//else return flush
+				}
+				
+				if(0x1F00%o==0) 	return 0x10000000|o;//Straight
+				if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
+				
+			}
+			/***************************************************************************/
+			
+			
+			
+			
+			
 		}
 		
 

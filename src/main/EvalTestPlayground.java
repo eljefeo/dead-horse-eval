@@ -1,6 +1,25 @@
 package main;
 
+import java.awt.List;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class EvalTestPlayground {
+	
+	static File[] files={
+		new File("allHC7.txt"),
+		new File("allP7.txt"), 
+		new File("allTP7.txt"),
+		new File("allT7.txt"),
+		new File("allS7.txt"),
+		new File("allF7.txt"),
+		new File("allFH7.txt"),
+		new File("allQ7.txt"),
+		new File("allSF7.txt")
+	};
 	
 	static String[] handNames = 
 		{
@@ -9,9 +28,14 @@ public class EvalTestPlayground {
 		};
 	
 	
-	static int[] handFrequency=
+	static int[] handFrequency5=
 		{
 			1302540,1098240,123552,54912,10200,5108,3744,624,40
+		};
+	
+	static int[] handFrequency7=
+		{
+			23294460,58627800,31433400,6461620,6180020,4047644,3473184,224848,41584
 		};
 	
 	static String[] allCardNames = new String[] { 
@@ -33,7 +57,7 @@ public class EvalTestPlayground {
 	  //there is a speed test method below
 	  //but in case you want the good ol fashion 'create every single possible hand'
 	  //here you go
-	  public static void testEveryHand(){
+	  public static void testEveryHand5(){
 		  
 		  //copy of the deck to make this method more portable
 
@@ -60,7 +84,7 @@ public class EvalTestPlayground {
 		  long startT = System.nanoTime();
 		  //go through every hand, 5 cards at a time
 		  for(int i=0;i<allCards.length;i+=5)
-			 	DeadHorseEval.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
+			 	DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
 		  //get end time
 		  long endT = System.nanoTime();
 		  
@@ -87,7 +111,7 @@ public class EvalTestPlayground {
 		  int[] handCounter = new int[9];
 		  for(int i=0;i<allCards.length;i+=5){
 			
-			  int res = DeadHorseEval.eval5(allCards[i],allCards[i+1],
+			  int res = DeadHorse.eval5(allCards[i],allCards[i+1],
 					  allCards[i+2],allCards[i+3],allCards[i+4])>>26;
 			  handCounter[res]++;
 		  
@@ -96,13 +120,13 @@ public class EvalTestPlayground {
 		  //to the number of each type of hand we expect
 		   for(int j=0;j<handCounter.length;j++){
 			   //check if expected == actual
-			   boolean checked = handCounter[j]==handFrequency[j];
+			   boolean checked = handCounter[j]==handFrequency5[j];
 			   String res = checked
 					   //if all hands accounted for, good news
-					   ?"All "+handFrequency[j]+" "+handNames[j]+" hands are accounted for" 
+					   ?"All "+handFrequency5[j]+" "+handNames[j]+" hands are accounted for" 
 							   
 						//if the counts dont match, show how many failed
-					   : (handCounter[j]-handFrequency[j])+" of "+handFrequency[j]
+					   : (handCounter[j]-handFrequency5[j])+" of "+handFrequency5[j]
 							   +" "+handNames[j]+" hands failed!"; 
 			   
 			   System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
@@ -112,6 +136,103 @@ public class EvalTestPlayground {
 		  
 	  }
 
+	  
+	  public static void testEveryHand7(){
+		  
+		  //copy of the deck to make this method more portable
+		  ArrayList[] lists = {
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>()
+		  };
+		   int totalHands = 133784560;
+		 // int[] allCards = new int[totalHands*7];
+		  int totalCounter=0;
+		  int[] handCounter = new int[9];
+		  //this is how we create all 133,784,560 7 card hands
+		  for(int i=0;i<allCardNums.length-1;i++)
+			  for(int j=i+1;j<allCardNums.length;j++)
+				  for(int k=j+1;k<allCardNums.length;k++)
+					  for(int l=k+1;l<allCardNums.length;l++)
+						  for(int m=l+1;m<allCardNums.length;m++)
+							  for(int n=m+1;n<allCardNums.length;n++)
+								  for(int o=n+1;o<allCardNums.length;o++){
+									  
+									  int res = DeadHorse.eval7b
+											  (
+											  	allCardNums[i],
+											  	allCardNums[j],
+											  	allCardNums[k],
+											  	allCardNums[l],
+											  	allCardNums[m],
+											  	allCardNums[n],
+											  	allCardNums[o]
+											  )>>26;
+								  
+								 /* String hand=	allCardNums[i]+","+
+										  		allCardNums[j]+","+
+												allCardNums[k]+","+
+												allCardNums[l]+","+
+												allCardNums[m]+","+
+												allCardNums[n]+","+
+												allCardNums[o];
+								  */
+								 /* lists[res].add(hand);
+								  
+								  if(lists[res].size()==1000000){
+									  atfl(files[res],lists[res]);
+									  lists[res].clear();
+								  }*/
+								  	
+								  	  handCounter[res]++;
+									  totalCounter++;
+						  }
+		 /* for(int i = 0;i<lists.length;i++)
+			  if(lists[i].size()>0)
+				atfl(files[i],lists[i]);*/
+
+		  //this is here to count how many of each type of hand come up.
+		  //it will re-eval each hand so we do not corrupt the timing with this extra process
+		  //this is here to show the accuracy of making/testing each hand possible
+		  //Since there is a known number of each type of 5 card hand with 52 cards :
+		  //High Card 		1302540
+		  //Pair 			1098240
+		  //Two Pair 		123552
+		  //Trips 			54912
+		  //Straight 		10200
+		  //Flush 			5108
+		  //Full House 		3744
+		  //Quads 			624
+		  //Straight Flush	40
+		  //Total			2598960
+		  
+		  //this is to go through and compare the number of each type of hand we created
+		  //to the number of each type of hand we expect
+		   for(int j=0;j<handCounter.length;j++){
+			   //check if expected == actual
+			   boolean checked = handCounter[j]==handFrequency7[j];
+			   String res = checked
+					   //if all hands accounted for, good news
+					   ?"PASS - All "+handFrequency7[j]+" "+handNames[j]+" hands are accounted for" 
+							   
+						//if the counts dont match, show how many failed
+					   : "FAIL - " +handCounter[j]+" out of "+handFrequency7[j]
+							   +" "+handNames[j]+" hands received!"; 
+			   
+			   System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
+		   }
+			 
+		  System.out.println("Total Count : " + totalCounter);
+		  
+	  }
+	  
+	  
 	public static void randomizerSpeedTest5CardDiagnostics(int howMany){
 		  
 		  //number of hands to burn through
@@ -126,7 +247,7 @@ public class EvalTestPlayground {
 		  //let er rip, go through every hand, 5 cards at a time
 		
 		  for(int i=0;i<allCards.length;i+=5){
-			 int res = DeadHorseEval.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
+			 int res = DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
 			 res>>=26;
 			  System.out.println("\n"+handNames[res]);
 		  }
@@ -164,7 +285,7 @@ public class EvalTestPlayground {
 		  
 		  //let er rip, go through every hand, 5 cards at a time
 		  for(int i=0;i<allCards.length;i+=5)
-			  DeadHorseEval.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
+			  DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
 		  
 		  //get end time
 		  long endT = System.nanoTime();
@@ -191,7 +312,7 @@ public class EvalTestPlayground {
 
 		  //evaluate every hand, 5 cards at a time
 		  for(int i=0;i<allCards.length;i+=5)
-			  handCounter[DeadHorseEval.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4])]++;
+			  handCounter[DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4])]++;
 		
 		  //this will show the frequence and percentages of each type of hand 
 		  //these frequencies can be compared to the actual frequency percentages 
@@ -224,7 +345,7 @@ public static void randomizerSpeedTest7Card(int howMany){
 		  
 		  for(int v=0;v<ac.length/7;v++){
 			  //let er rip, go through every hand, 7 cards at a time
-			  DeadHorseEval.eval7(new int[]{ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]});
+			  DeadHorse.eval7(new int[]{ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]});
 			 /* int h1  = DeadHorseEval.eval5(ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h1>winningHand)winningHand=h1;
 			  int h2  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h2>winningHand)winningHand=h2;
 			  int h3  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h3>winningHand)winningHand=h3;
@@ -274,15 +395,15 @@ public static void handCompareTest(int howMany){
 	int[] quads = HandMaker.makeQuadsHand();
 	int[] straightFlush = HandMaker.makeStraightFlushHand();
 	
-	int hc = DeadHorseEval.eval5(highCard[0], highCard[1], highCard[2], highCard[3], highCard[4]);
-	int p = DeadHorseEval.eval5(pair[0], pair[1], pair[2], pair[3], pair[4]);
-	int tp = DeadHorseEval.eval5(twoPair[0], twoPair[1], twoPair[2], twoPair[3], twoPair[4]);
-	int t = DeadHorseEval.eval5(trips[0], trips[1], trips[2], trips[3], trips[4]);
-	int s = DeadHorseEval.eval5(straight[0], straight[1], straight[2], straight[3], straight[4]);
-	int f = DeadHorseEval.eval5(flush[0], flush[1], flush[2], flush[3], flush[4]);
-	int fh = DeadHorseEval.eval5(fullhouse[0], fullhouse[1], fullhouse[2], fullhouse[3], fullhouse[4]);
-	int q = DeadHorseEval.eval5(quads[0], quads[1], quads[2], quads[3], quads[4]);
-	int sf = DeadHorseEval.eval5(straightFlush[0], straightFlush[1], straightFlush[2], straightFlush[3], straightFlush[4]);
+	int hc = DeadHorse.eval5(highCard[0], highCard[1], highCard[2], highCard[3], highCard[4]);
+	int p = DeadHorse.eval5(pair[0], pair[1], pair[2], pair[3], pair[4]);
+	int tp = DeadHorse.eval5(twoPair[0], twoPair[1], twoPair[2], twoPair[3], twoPair[4]);
+	int t = DeadHorse.eval5(trips[0], trips[1], trips[2], trips[3], trips[4]);
+	int s = DeadHorse.eval5(straight[0], straight[1], straight[2], straight[3], straight[4]);
+	int f = DeadHorse.eval5(flush[0], flush[1], flush[2], flush[3], flush[4]);
+	int fh = DeadHorse.eval5(fullhouse[0], fullhouse[1], fullhouse[2], fullhouse[3], fullhouse[4]);
+	int q = DeadHorse.eval5(quads[0], quads[1], quads[2], quads[3], quads[4]);
+	int sf = DeadHorse.eval5(straightFlush[0], straightFlush[1], straightFlush[2], straightFlush[3], straightFlush[4]);
 	boolean check = hc<p && p<tp && tp<t && t<s && s<f && f<fh && fh<q && q<sf;
 	if(!check){
 		System.out.println("Failed! " + hc+","+p+","+tp+","+t+","+s+","+f+","+fh+","+q+","+sf);
@@ -325,7 +446,7 @@ public  static int humanEncodeEval(String as, String bs, String cs, String ds, S
 	int e=((ec=='A'?1<<12:ec=='K'?1<<11:ec=='Q'?1<<10:ec=='J'?1<<9:1<<(ec-50))
 	|((ec=es.charAt(1))=='s'?0x10000:ec=='h'?0x8000:ec=='c'?0x4000:0x2000));
 
-	return DeadHorseEval.eval5(a, b, c, d, e);
+	return DeadHorse.eval5(a, b, c, d, e);
 }
 
 //give it human readable string cards, it will spit back a human readable hand type(pair, full house etc..)
@@ -345,14 +466,13 @@ public static void randomizerSpeedTest7Cardr(int howMany){
 	  long startTf = System.nanoTime();
 	  
 	  //these dang for loops take a while
-	  for(int v=0;v<ac.length/7;)
-		  v++;
+	  for(int v=0;v<ac.length/7;) v++;
 	  //get end time
 	  long endTf = System.nanoTime();
 	  long startT = System.nanoTime();
 	  
 	  for(int v=0;v<ac.length/7;v++)
-		  DeadHorseEval.eval7b(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
+		  DeadHorse.eval7b(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
 
 
 	  //get end time
@@ -418,7 +538,7 @@ public static void test7(){
 	
 	
 	//int res = DeadHorseEval.eval7(f7);
-	int res = DeadHorseEval.eval7b(f7[0],f7[1],f7[2],f7[3],f7[4],f7[5],f7[6]);
+	int res = DeadHorse.eval7b(f7[0],f7[1],f7[2],f7[3],f7[4],f7[5],f7[6]);
 	
 	System.out.println("Outcome " + res + ", " + handNames[(res>>26)] + "\n"+bin32(res));
 	
@@ -444,6 +564,30 @@ public static String getName(int j){
 		}
 	}
 	return j+"";
+}
+
+
+public static void atf(File f, String s){
+	if(!f.exists())try{f.createNewFile();}catch(IOException e1){e1.printStackTrace();}
+	
+	BufferedWriter bw=null;
+	try {
+		bw = new BufferedWriter(new FileWriter(f, true));
+		bw.write(s+"\n");
+	} catch (IOException e) {e.printStackTrace();}
+	finally{if(bw!=null){try{bw.close();}catch(Exception ee){}}}
+}
+
+public static void atfl(File f, ArrayList<String>l){
+	if(!f.exists())try{f.createNewFile();}catch(IOException e1){e1.printStackTrace();}
+	
+	BufferedWriter bw=null;
+	try {
+		bw = new BufferedWriter(new FileWriter(f, true));
+		for(String s : l)
+		bw.write(s+"\n");
+	} catch (IOException e) {e.printStackTrace();}
+	finally{if(bw!=null){try{bw.close();}catch(Exception ee){}}}
 }
 
 
