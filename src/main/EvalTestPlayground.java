@@ -224,7 +224,8 @@ public static void randomizerSpeedTest7Card(int howMany){
 		  
 		  for(int v=0;v<ac.length/7;v++){
 			  //let er rip, go through every hand, 7 cards at a time
-			  int h1  = DeadHorseEval.eval5(ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h1>winningHand)winningHand=h1;
+			  DeadHorseEval.eval7(new int[]{ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]});
+			 /* int h1  = DeadHorseEval.eval5(ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h1>winningHand)winningHand=h1;
 			  int h2  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h2>winningHand)winningHand=h2;
 			  int h3  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h3>winningHand)winningHand=h3;
 			  int h4  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+5],ac[(v*7)+6]);if(h4>winningHand)winningHand=h4;
@@ -244,12 +245,12 @@ public static void randomizerSpeedTest7Card(int howMany){
 			  int h18 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+5]);if(h18>winningHand)winningHand=h18;
 			  int h19 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+6]);if(h19>winningHand)winningHand=h19;
 			  int h20 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+5]);if(h20>winningHand)winningHand=h20;
-			  int h21 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4]);if(h21>winningHand)winningHand=h21;
+			  int h21 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4]);if(h21>winningHand)winningHand=h21;*/
 		  }
 
 		  //get end time
 		  long endT = System.nanoTime();
-		  System.out.println("winning hand  : " + winningHand);
+		 // System.out.println("winning hand  : " + winningHand);
 		  
 		  // Time is (end time - start time  ) divided by a billion : because it is in nano seconds
 		  double time = (double) (endT - startT -(endTf - startTf))/1000000000;

@@ -39,24 +39,24 @@ public class DeadHorseEval {
 		int o = n[0]|n[1]|n[2]|n[3]|n[4]|n[5]|n[6];
 		int x = n[0]^n[1]^n[2]^n[3]^n[4]^n[5]^n[6];
 		
-		System.out.println("or " + bin(o));
-		System.out.println("xor " + bin(x));
+		//System.out.println("or " + bin(o));
+		//System.out.println("xor " + bin(x));
 
 		sort7b(n,u);
 		
-		System.out.println(n[0] + " : " + u[0]);
+/*		System.out.println(n[0] + " : " + u[0]);
 		System.out.println(n[1] + " : " + u[1]);
 		System.out.println(n[2] + " : " + u[2]);
 		System.out.println(n[3] + " : " + u[3]);
 		System.out.println(n[4] + " : " + u[4]);
 		System.out.println(n[5] + " : " + u[5]);
-		System.out.println(n[6] + " : " + u[6]);
+		System.out.println(n[6] + " : " + u[6]);*/
 		
 		//flush
 		int[]fn = new int[5];
 		fn[u[0]]++;fn[u[1]]++;fn[u[2]]++;fn[u[3]]++;fn[u[4]]++;fn[u[5]]++;fn[u[6]]++;
 		if(fn[0]>4){
-			System.out.println("Diamond Flush");
+		//	System.out.println("Diamond Flush");
 			int so = 0,cnt=0;
 			if(u[0]==0){cnt++;so|=n[0];}
 			if(u[1]==0){cnt++;so|=n[1];}
@@ -68,7 +68,7 @@ public class DeadHorseEval {
 			return 0x14000000|so;
 		}
 		if(fn[1]>4){
-			System.out.println("Club Flush");
+		//	System.out.println("Club Flush");
 			int so = 0,cnt=0;
 			if(u[0]==1){cnt++;so|=n[0];}
 			if(u[1]==1){cnt++;so|=n[1];}
@@ -81,7 +81,7 @@ public class DeadHorseEval {
 			
 		}
 		if(fn[2]>4){
-			System.out.println("Heart Flush");
+		//	System.out.println("Heart Flush");
 			int so = 0,cnt=0;
 			if(u[0]==2){cnt++;so|=n[0];}
 			if(u[1]==2){cnt++;so|=n[1];}
@@ -93,7 +93,7 @@ public class DeadHorseEval {
 			return 0x14000000|so;
 		}
 		if(fn[4]>4){
-			System.out.println("Spade Flush");
+		//	System.out.println("Spade Flush");
 			int so = 0,cnt=0;
 			if(u[0]==4){cnt++;so|=n[0];}
 			if(u[1]==4){cnt++;so|=n[1];}
@@ -110,16 +110,16 @@ public class DeadHorseEval {
 
 		int v=1;
 		int orr = o&o-1;
-		System.out.println(bin(orr));
+		//System.out.println(bin(orr));
 		v+=(orr&=orr-1)!=0?(orr&=orr-1)!=0?(orr&=orr-1)!=0?(orr&=orr-1)!=0?(orr&=orr-1)!=0?6:5:4:3:2:1;
-		System.out.println("or " + bin(o) + ", orr " + bin(orr) + ", v " + v);
+		//System.out.println("or " + bin(o) + ", orr " + bin(orr) + ", v " + v);
 		
 		
-		System.out.println("\n");
+		//System.out.println("\n");
 		
 		int vv=1;
 		int xx=x;
-		System.out.println(bin(xx));
+		//System.out.println(bin(xx));
 		if((xx&=xx-1)!=0)
 			if((xx&=xx-1)!=0)
 				if((xx&=xx-1)!=0)
@@ -134,9 +134,9 @@ public class DeadHorseEval {
 			else vv+=1;
 		
 		//vv+=(xx&=xx-1)!=0?(xx&=xx-1)!=0?(xx&=xx-1)!=0?(xx&=xx-1)!=0?(xx&=xx-1)!=0?(xx&=xx-1)!=0?6:5:4:3:2:1:0;
-		System.out.println("xor " + bin(x) + ", xx " + bin(xx) + ", vv " + vv);
+		//System.out.println("xor " + bin(x) + ", xx " + bin(xx) + ", vv " + vv);
 		
-		System.out.println("Total = " + (v+vv));
+		//System.out.println("Total = " + (v+vv));
 		
 		int vvv=v+vv;
 		
@@ -153,20 +153,20 @@ public class DeadHorseEval {
 			else return 0x18000000|n[4]|n[0]<<13;//accidently found quads, so return it
 	
 			if(0x1F1D100%s1==0){
-				System.out.println("high Straight " + bin(s1));
+				//System.out.println("high Straight " + bin(s1));
 				return 0x10000000|s1;
 			}
 			if(0x1F1D100%s2==0){
-				System.out.println("mid Straight " +bin(s2));
+				//System.out.println("mid Straight " +bin(s2));
 				return 0x10000000|s2;
 			}
 			if(0x1F1D100%(s3-=mi)==0){
-				System.out.println("low Straight " + bin(s3));
+				//System.out.println("low Straight " + bin(s3));
 				return 0x10000000|s3;
 			}
 			
 			if(n[0]==4096&&(o&15)==15){
-				System.out.println("Low ace Straight " );
+				//System.out.println("Low ace Straight " );
 				return 0x10000000|15;
 			}
 		}
