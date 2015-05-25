@@ -235,24 +235,7 @@ public class DeadHorse {
 		n6&=8191;
 		int o=n0|n1|n2|n3|n4|n5|n6;
 		int x=n0^n1^n2^n3^n4^n5^n6;
-		int z=0;
-		if(n2>n1){z=n2;n2=n1;n1=z;z=u2;u2=u1;u1=z;}
-		if(n4>n3){z=n4;n4=n3;n3=z;z=u4;u4=u3;u3=z;}
-		if(n6>n5){z=n6;n6=n5;n5=z;z=u6;u6=u5;u5=z;}
-		if(n2>n0){z=n2;n2=n0;n0=z;z=u2;u2=u0;u0=z;}
-		if(n5>n3){z=n5;n5=n3;n3=z;z=u5;u5=u3;u3=z;}
-		if(n6>n4){z=n6;n6=n4;n4=z;z=u6;u6=u4;u4=z;}		
-		if(n1>n0){z=n1;n1=n0;n0=z;z=u1;u1=u0;u0=z;}
-		if(n5>n4){z=n5;n5=n4;n4=z;z=u5;u5=u4;u4=z;}
-		if(n6>n2){z=n6;n6=n2;n2=z;z=u6;u6=u2;u2=z;}
-		if(n4>n0){z=n4;n4=n0;n0=z;z=u4;u4=u0;u0=z;}
-		if(n5>n1){z=n5;n5=n1;n1=z;z=u5;u5=u1;u1=z;}
-		if(n3>n0){z=n3;n3=n0;n0=z;z=u3;u3=u0;u0=z;}
-		if(n5>n2){z=n5;n5=n2;n2=z;z=u5;u5=u2;u2=z;}
-		if(n3>n1){z=n3;n3=n1;n1=z;z=u3;u3=u1;u1=z;}
-		if(n4>n2){z=n4;n4=n2;n2=z;z=u4;u4=u2;u2=z;}
-		if(n3>n2){z=n3;n3=n2;n2=z;z=u3;u3=u2;u2=z;}
-		z=o^x;
+		int z=o^x;
 		int v=1;
 		int w = o&o-1;
 		v+=(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?6:5:4:3:2:1;		
@@ -260,15 +243,12 @@ public class DeadHorse {
 
 			/**********************************v == 7***************************/
 		if(v==7){
+			int newO = o&o-1;newO&=newO-1;newO&=newO-1;newO&=newO-1;newO&=newO-1;
+			
 			//straight
-			int s1=o&o-1;s1&=s1-1;
-			int s2=o-n6;s2-=n0;
-			int s3=o-n0;
-				 if(n1!=n0)s3-=n1;
-			else if(n2!=n1)s3-=n2;
-			else if(n2!=n3)s3-=n3;
-			else return 0x18000000|n4|n0<<13;//accidently found quads, so return it
-	 
+			int s1=o&o-1;s1&=s1-1;//highest five
+			int s2=(newO&newO-1)^(o&o-1);//mid five
+			int s3=newO ^ o;//low five
 			//flush
 			int so=0;
 			int[]fn = new int[5];
@@ -294,8 +274,11 @@ public class DeadHorse {
 		}
 		
 		if(v==6){//straight
-			int s1=o&o-1;
-			int s2=o-n0;
+			int newO = o&o-1;newO&=newO-1;newO&=newO-1;newO&=newO-1;newO&=newO-1;
+			
+			//straight
+			int s1=o&o-1;//highest five
+			int s2=newO^o;//mid five
 			
 			//flush
 			int so=0;
@@ -343,55 +326,44 @@ public class DeadHorse {
 		v+=(xx&=xx-1)!=0?(xx&=xx-1)!=0?(xx&=xx-1)!=0?(xx&=xx-1)!=0
 		?(xx&=xx-1)!=0?(xx&=xx-1)!=0?7:6:5:4:3:2:1;
 		
-		//if(v==14) return o-n6-n5;//high card
-		if(v==14) return (o&=o-1)&o-1;// without order
-			
+		if(v==14) return (o&=o-1)&o-1;//high card without order
 		if(v==11) return 0x4000000|(x&=x-1)&x-1|z<<13;//pair without order
-		
 		if(v==8) return 0x8000000|(x&=x-1)&x-1|z<<13;//2 pair without order
-		
 		if(v==5) return 0x8000000|(x>(z^(z&z-1))?x:(z^(z&z-1)))|(z&z-1)<<13;//three pair without order
 		
-		if(v==10) return n0==n1?0xC000000|n3|n4|n0<<13
-				  	:n2==n3?0xC000000|n0|(n1!=n2?n1:n4)|n2<<13
-				  	:0xC000000|n0|n1|n4<<13;//trips
-		
+
 		if(v==10){
-			//trips without ordera
+			//trips without order
+			int trip=n0==n1||n0==n2?n0:n1==n2?n2:n3==n4||n3==n5?n3:n4==n5?n4:n6;
+			int k = o^trip;
+			return 0xC000000 | (k&=k-1)&k-1 |trip<<13;
 		}
 		
-		if(v==7) return (n0&n1&n2)==n3 ? 0x1C000000|n4|n3<<13
-					:(n1&n2&n4)==n3||(n2&n4&n5)==n3||(n4&n5&n6)==n3
-					?0x1C000000|n0|n3<<13
-					:n0==n1&&n0!=z?0x18000000|z|n0<<13
-					:n2==n3&&n2!=z? 0x18000000|z|n2<<13
-					:0x18000000|z|n4<<13;//full house (trips and 1 pair)
+		if(v==7){ 
+			//quads
+			int l = n0+n1+n2+n3+n4+n5+n6;
+			if(z*4+x==l)return 0x1C000000 | (x&=x-1)&x-1 | z<<13;
+			//fullhouse
+			
+			int newX = x;
+			int c1=(newX&=newX-1)&newX-1;//highest bit of the 3
+			int c2=newX ^ newX&newX-1;//mid bit
+			int c3=(newX ^ x);//low bit
+			if(c1*3 +z*2+ c2+c3==l) return 0x18000000 | z | c1<<13;
+			if(c2*3 +z*2+ c1+c3==l) return 0x18000000 | z | c2<<13;
+			return 0x18000000 | z | c3<<13;
+			//normal quads, normal full house: without order
+			
+			}
 		
-		if(v==4) {
-			
-			
-			
-			
-			
-			return 
-					//quads
-					(n0&n1&n2)==n3?0x1C000000|n4|n3<<13
-					:(n1&n2&n4)==n3||(n2&n4&n5)==n3||(n4&n5&n6)==n3
-					?0x1C000000|n0|n3<<13
-					
-					//fh
-					:(n0&n1&z)!=0?0x18000000|n0|n4<<13
-					:0x18000000|n3|n0<<13;//full house, trips and 2 pair, quads with a pair 
-		}
-			
-			
-			
-			
-		
+		if(v==4){
+			int l = n0+n1+n2+n3+n4+n5+n6;
+			if(z*2+x*3==l) return 0x18000000|z|x<<13;//full house 
+			int p1= z&z-1,p2=z^p1;
+			return p1*2+p2*4+x==l?0x1C000000|(p1>x?p1:x)|p2<<13:0x1C000000|(p2>x?p2:x)|p1<<13;
+			//full house, trips and 2 pair, quads with a pair without order
+	}
 		if(v==6) return 0x18000000|(x&x-1)|x^(x&x-1)<<13;//full house, trips and trips without order
-		
-		
-		
 		if(v==3) return 0x1C000000|x|z<<13;//quads and trips without order
 		
 		return 0;//should never come to this
