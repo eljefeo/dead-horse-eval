@@ -28,201 +28,9 @@ public class DeadHorse {
 
 	}
 	
-	public static int eval7(int[]n){
-		int[] u = {(n[0]&0x1E000)>>14,(n[1]&0x1E000)>>14,(n[2]&0x1E000)>>14,(n[3]&0x1E000)>>14,(n[4]&0x1E000)>>14,(n[5]&0x1E000)>>14,(n[6]&0x1E000)>>14};
-		n[0]&=8191;n[1]&=8191;n[2]&=8191;n[3]&=8191;n[4]&=8191;n[5]&=8191;n[6]&=8191;
-		
-
-		int o = n[0]|n[1]|n[2]|n[3]|n[4]|n[5]|n[6];
-		int x = n[0]^n[1]^n[2]^n[3]^n[4]^n[5]^n[6];
-		int ox =o^x;
-		//System.out.println("or " + bin(o));
-		//System.out.println("xor " + bin(x));
-
-		sort7b(n,u);
-		
-/*		System.out.println(n[0] + " : " + u[0]);
-		System.out.println(n[1] + " : " + u[1]);
-		System.out.println(n[2] + " : " + u[2]);
-		System.out.println(n[3] + " : " + u[3]);
-		System.out.println(n[4] + " : " + u[4]);
-		System.out.println(n[5] + " : " + u[5]);
-		System.out.println(n[6] + " : " + u[6]);
-		*/
-		//flush
-			
-		
-		
-
-		int v=1;
-		int or = o&o-1;
-		//System.out.println(bin(or));
-		v+=(or&=or-1)!=0?(or&=or-1)!=0?(or&=or-1)!=0?(or&=or-1)!=0?(or&=or-1)!=0?6:5:4:3:2:1;
-
-
-		if(v>4){
-			//setup straight check
-			int s1=o&o-1;s1&=s1-1;
-			int s2=o-n[6];s2-=n[0];
-			int s3=o-n[0];
-			if(n[1]!=n[0])s3-=n[1];
-			else if(n[2]!=n[1])s3-=n[2];
-			else if(n[2]!=n[3])s3-=n[3];
-			else return 0x18000000|n[4]|n[0]<<13;//accidently found quads, so return it
-			
-			//setup flush check
-			int so=0;
-			int[]fn = new int[5];
-			fn[u[0]]++;fn[u[1]]++;fn[u[2]]++;fn[u[3]]++;
-			fn[u[4]]++;fn[u[5]]++;fn[u[6]]++;
-			if(fn[0]>4){//Diamond Flush
-					if(u[0]==0)so|=n[0];if(u[1]==0)so|=n[1];
-					if(u[2]==0)so|=n[2];if(u[3]==0)so|=n[3];
-					if(u[4]==0)so|=n[4];if(u[5]==0)so|=n[5];
-					if(u[6]==0)so|=n[6];
-				}
-				if(fn[1]>4){//Club Flush
-					if(u[0]==1)so|=n[0];if(u[1]==1)so|=n[1];
-					if(u[2]==1)so|=n[2];if(u[3]==1)so|=n[3];
-					if(u[4]==1)so|=n[4];if(u[5]==1)so|=n[5];
-					if(u[6]==1)so|=n[6];
-				}
-				if(fn[2]>4){//Heart Flush
-					if(u[0]==2)so|=n[0];if(u[1]==2)so|=n[1];
-					if(u[2]==2)so|=n[2];if(u[3]==2)so|=n[3];
-					if(u[4]==2)so|=n[4];if(u[5]==2)so|=n[5];
-					if(u[6]==2)so|=n[6];
-				}
-				if(fn[4]>4){//Spade Flush
-					if(u[0]==4)so|=n[0];if(u[1]==4)so|=n[1];
-					if(u[2]==4)so|=n[2];if(u[3]==4)so|=n[3];
-					if(u[4]==4)so|=n[4];if(u[5]==4)so|=n[5];
-					if(u[6]==4)so|=n[6];
-				}
-			
-			//check for straight flush
-			if(so!=0){
-				if((so&s1)==s1) return 0x20000000|s1;
-				if((so&s2)==s2) return 0x20000000|s2;
-				if((so&s3)==s3) return 0x20000000|s3;
-				if((so&0x100F)==0x100F)return 0x20000000|15;
-				return 0x14000000|so;//else return flush
-			}
-			//else check for straights
-			if(0x1F1D100%s1==0) 	return 0x10000000|s1;//high Straight
-			if(0x1F1D100%s2==0) 	return 0x10000000|s2;//mid Straight
-			if(0x1F1D100%s3==0) 	return 0x10000000|s3;//low Straight
-			if((o&0x100F)==0x100F)	return 0x10000000|15;//Low ace Straight
-		}
-		
-		int vv=1;
-		int xx=x;
-		//System.out.println(bin(xx));
-		if((xx&=xx-1)!=0)
-			if((xx&=xx-1)!=0)
-				if((xx&=xx-1)!=0)
-					if((xx&=xx-1)!=0)
-						if((xx&=xx-1)!=0)
-							if((xx&=xx-1)!=0)
-								vv+=6;
-							else vv+=5;
-						else vv+=4;
-					else vv+=3;
-				else vv+=2;
-			else vv+=1;
-		
-		
-		int vvv=v+vv;
-		
-		if(vvv==14){
-			//high card
-			//return s1;
-			return o-n[6]-n[5];
-		}
-		
-		if(vvv==11){
-			//pair
-			
-			int highest3WithoutPaird=x&x-1;highest3WithoutPaird&=highest3WithoutPaird-1;
-			return 0x4000000|highest3WithoutPaird|ox<<13;
-		}
-		
-		if(vvv==8){
-			// 2 pair
-			int highestKicker = n[0]!=n[1]?n[0]:n[2]!=n[3]?n[2]:n[4];
-			return 0x8000000|highestKicker|ox<<13;
-		}
-		
-		if(vvv==5){
-			//three pair
-			//int highestKicker = n[0]!=n[1]?n[0]:n[2]!=n[3]?n[2]:n[4];
-			//return 0x8000000|highestKicker|(ox&ox-1)<<13;
-			return 0x8000000|(n[0]!=n[1]?n[0]:n[2]!=n[3]?n[2]:n[4])|(ox&ox-1)<<13;
-		}
-		
-		if(vvv==10){
-			//trips
-			/*if(n[0]==n[1]) return 0xC000000|n[3]|n[4]|n[0]<<13;
-			else if (n[2]==n[3]) return 0xC000000|n[0]|(n[1]!=n[2]?n[1]:n[4])|n[2]<<13;
-			else return 0xC000000|n[0]|n[1]|n[4]<<13;*/
-			return n[0]==n[1] ? 0xC000000|n[3]|n[4]|n[0]<<13
-					:n[2]==n[3] ? 0xC000000|n[0]|(n[1]!=n[2]?n[1]:n[4])|n[2]<<13
-							:0xC000000|n[0]|n[1]|n[4]<<13;
-		}
-		
-		if(vvv==7){
-			//full house (trips and 1 pair)
-			//quads and 3 singles
-			
-			// if quads, n[3] contains quad card
-			if((n[0]&n[1]&n[2])==n[3]){
-				return 0x1C000000|n[4]|n[3]<<13;
-			}
-			if((n[1]&n[2]&n[4])==n[3] || (n[2]&n[4]&n[5])==n[3] || (n[4]&n[5]&n[6])==n[3]){
-				return 0x1C000000|n[0]|n[3]<<13;
-			}
-
-			 if(n[0]==n[1]&&n[0]!=ox) return 0x18000000|ox|n[0]<<13;
-			else if (n[2]==n[3]&&n[2]!=ox) return 0x18000000|ox|n[2]<<13;
-			else return 0x18000000|ox|n[4]<<13;
-		}
-		
-		if(vvv==4){
-			if((n[0]&n[1]&n[2])==n[3]){
-				return 0x1C000000|n[4]|n[3]<<13;
-			}
-			if((n[1]&n[2]&n[4])==n[3] || (n[2]&n[4]&n[5])==n[3] || (n[4]&n[5]&n[6])==n[3]){
-				return 0x1C000000|n[0]|n[3]<<13;
-			}
-			
-			 if((n[0]&n[1]&ox)!=0) return 0x18000000|n[0]|n[4]<<13;
-			 else return 0x18000000|n[3]|n[0]<<13;
-			//full house, trips and 2 pair
-			//quads with a pair 
-		}
-		
-		if(vvv==6){
-			//full house, trips and trips
-			//n[1] == higher trip card, n[5] lower trip (pair) card
-			return 0x18000000|n[5]|n[1]<<13;
-		}
-		
-		if(vvv==3){
-			
-			return 0x1C000000|(n[0]==n[3]?n[6]:n[0])|n[3]<<13;//quads and trips
-			
-		}
-		
-		
-		
-		
-		
-		return 0;//should never come to this
-	}
 	
 	
-	
-	public static int eval7b(int n0, int n1, int n2, int n3, int n4, int n5, int n6){
+	public static int eval7(int n0, int n1, int n2, int n3, int n4, int n5, int n6){
 		int u0=(n0&0x1E000)>>14;
 		int u1=(n1&0x1E000)>>14;
 		int u2=(n2&0x1E000)>>14;
@@ -230,69 +38,59 @@ public class DeadHorse {
 		int u4=(n4&0x1E000)>>14;
 		int u5=(n5&0x1E000)>>14;
 		int u6=(n6&0x1E000)>>14;
-		n0&=8191;n1&=8191;n2&=8191;
-		n3&=8191;n4&=8191;n5&=8191;
-		n6&=8191;
-		int o=n0|n1|n2|n3|n4|n5|n6;
-		int x=n0^n1^n2^n3^n4^n5^n6;
-		int z=o^x;
-		int v=1;
-		int w = o&o-1;
+		int o=(n0&=8191)|(n1&=8191)|(n2&=8191)|(n3&=8191)|(n4&=8191)|(n5&=8191)|(n6&=8191);
+		int x=n0^n1^n2^n3^n4^n5^n6, z=o^x, v=1, w=o&o-1;
 		v+=(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?6:5:4:3:2:1;		
 
 
-			/**********************************v == 7***************************/
 		if(v==7){
-			int newO = o&o-1;newO&=newO-1;newO&=newO-1;newO&=newO-1;newO&=newO-1;
+			int y = o&o-1;y&=y-1;y&=y-1;y&=y-1;y&=y-1;
 			
 			//straight
 			int s1=o&o-1;s1&=s1-1;//highest five
-			int s2=(newO&newO-1)^(o&o-1);//mid five
-			int s3=newO ^ o;//low five
+			int s2=(y&y-1)^(o&o-1);//mid five
+			int s3=y ^ o;//low five
 			//flush
 			int so=0;
-			int[]fn = new int[5];
-			fn[u0]++;fn[u1]++;fn[u2]++;fn[u3]++;
-			fn[u4]++;fn[u5]++;fn[u6]++;
-			int gf=fn[0]>4?0:fn[1]>4?1:fn[2]>4?2:fn[4]>4?4:3;
-			if(gf!=3){
-				if(u0==gf)so|=n0;if(u1==gf)so|=n1;
-				if(u2==gf)so|=n2;if(u3==gf)so|=n3;
-				if(u4==gf)so|=n4;if(u5==gf)so|=n5;
-				if(u6==gf)so|=n6;
-				return   (0x1F00%(so&s1))==0 ?0x20000000|s1
-						:(0x1F00%(so&s2))==0 ?0x20000000|s2
-						:(0x1F00%(so&s3))==0 ?0x20000000|s3
+			int[]u=new int[5];
+			u[u0]++;u[u1]++;u[u2]++;u[u3]++;u[u4]++;u[u5]++;u[u6]++;
+			int g=u[0]>4?0:u[1]>4?1:u[2]>4?2:u[4]>4?4:3;
+			if(g!=3){
+				if(u0==g)so|=n0;if(u1==g)so|=n1;
+				if(u2==g)so|=n2;if(u3==g)so|=n3;
+				if(u4==g)so|=n4;if(u5==g)so|=n5;
+				if(u6==g)so|=n6;
+				return   (0x1F00%(so&s1))==0?0x20000000|s1
+						:(0x1F00%(so&s2))==0?0x20000000|s2
+						:(0x1F00%(so&s3))==0?0x20000000|s3
 						:(so&0x100F)==0x100F?0x20000000|15
 						:0x14000000|so;//else return flush
-		}
-			if(0x1F00%s1==0) 	return 0x10000000|s1;//high Straight
-			if(0x1F00%s2==0) 	return 0x10000000|s2;//mid Straight
-			if(0x1F00%s3==0) 	return 0x10000000|s3;//low Straight
+			}
+			if(0x1F00%s1==0) 		return 0x10000000|s1;//high Straight
+			if(0x1F00%s2==0) 		return 0x10000000|s2;//mid Straight
+			if(0x1F00%s3==0) 		return 0x10000000|s3;//low Straight
 			if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
 			
 		}
 		
-		if(v==6){//straight
-			int newO = o&o-1;newO&=newO-1;newO&=newO-1;newO&=newO-1;newO&=newO-1;
+		if(v==6){
+			int y = o&o-1;y&=y-1;y&=y-1;y&=y-1;y&=y-1;
 			
 			//straight
 			int s1=o&o-1;//highest five
-			int s2=newO^o;//mid five
-			
+			int s2=y^o;//mid five
 			//flush
 			int so=0;
-			int[]fn = new int[5];
-			fn[u0]++;fn[u1]++;fn[u2]++;fn[u3]++;
-			fn[u4]++;fn[u5]++;fn[u6]++;
-			int gf=fn[0]>4?0:fn[1]>4?1:fn[2]>4?2:fn[4]>4?4:3;
-			if(gf!=3){
-				if(u0==gf)so|=n0;if(u1==gf)so|=n1;
-				if(u2==gf)so|=n2;if(u3==gf)so|=n3;
-				if(u4==gf)so|=n4;if(u5==gf)so|=n5;
-				if(u6==gf)so|=n6;
-				return   (0x1F00%(so&s1))==0 ?0x20000000|s1
-						:(0x1F00%(so&s2))==0 ?0x20000000|s2
+			int[]u = new int[5];
+			u[u0]++;u[u1]++;u[u2]++;u[u3]++;u[u4]++;u[u5]++;u[u6]++;
+			int g=u[0]>4?0:u[1]>4?1:u[2]>4?2:u[4]>4?4:3;
+			if(g!=3){
+				if(u0==g)so|=n0;if(u1==g)so|=n1;
+				if(u2==g)so|=n2;if(u3==g)so|=n3;
+				if(u4==g)so|=n4;if(u5==g)so|=n5;
+				if(u6==g)so|=n6;
+				return   (0x1F00%(so&s1))==0?0x20000000|s1
+						:(0x1F00%(so&s2))==0?0x20000000|s2
 						:(so&0x100F)==0x100F?0x20000000|15
 						:0x14000000|so;//else return flush
 			}
@@ -304,20 +102,19 @@ public class DeadHorse {
 		if(v==5){
 			//flush
 			int so=0;
-			int[]fn = new int[5];
-			fn[u0]++;fn[u1]++;fn[u2]++;fn[u3]++;
-			fn[u4]++;fn[u5]++;fn[u6]++;
-			int gf=fn[0]>4?0:fn[1]>4?1:fn[2]>4?2:fn[4]>4?4:3;
-			if(gf!=3){
-				if(u0==gf)so|=n0;if(u1==gf)so|=n1;
-				if(u2==gf)so|=n2;if(u3==gf)so|=n3;
-				if(u4==gf)so|=n4;if(u5==gf)so|=n5;
-				if(u6==gf)so|=n6;
+			int[]u = new int[5];
+			u[u0]++;u[u1]++;u[u2]++;u[u3]++;u[u4]++;u[u5]++;u[u6]++;
+			int g=u[0]>4?0:u[1]>4?1:u[2]>4?2:u[4]>4?4:3;
+			if(g!=3){
+				if(u0==g)so|=n0;if(u1==g)so|=n1;
+				if(u2==g)so|=n2;if(u3==g)so|=n3;
+				if(u4==g)so|=n4;if(u5==g)so|=n5;
+				if(u6==g)so|=n6;
 				return   (0x1F00%(so&o))==0 ?0x20000000|o
 						:(so&0x100F)==0x100F?0x20000000|15
 						:0x14000000|so;//else return flush
 			}
-			if(0x1F00%o==0) 	return 0x10000000|o;//Straight
+			if(0x1F00%o==0) 		return 0x10000000|o;//Straight
 			if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
 		}
 		
@@ -328,30 +125,30 @@ public class DeadHorse {
 		
 		if(v==14) return (o&=o-1)&o-1;//high card without order
 		if(v==11) return 0x4000000|(x&=x-1)&x-1|z<<13;//pair without order
-		if(v==8) return 0x8000000|(x&=x-1)&x-1|z<<13;//2 pair without order
-		if(v==5) return 0x8000000|(x>(z^(z&z-1))?x:(z^(z&z-1)))|(z&z-1)<<13;//three pair without order
+		if(v==8)  return 0x8000000|(x&=x-1)&x-1|z<<13;//2 pair without order
+		if(v==5)  return 0x8000000|(x>(z^(z&z-1))?x:(z^(z&z-1)))|(z&z-1)<<13;//three pair without order
 		
 
 		if(v==10){
 			//trips without order
 			int trip=n0==n1||n0==n2?n0:n1==n2?n2:n3==n4||n3==n5?n3:n4==n5?n4:n6;
 			int k = o^trip;
-			return 0xC000000 | (k&=k-1)&k-1 |trip<<13;
+			return 0xC000000|(k&=k-1)&k-1|trip<<13;
 		}
 		
 		if(v==7){ 
 			//quads
 			int l = n0+n1+n2+n3+n4+n5+n6;
-			if(z*4+x==l)return 0x1C000000 | (x&=x-1)&x-1 | z<<13;
+			if(z*4+x==l)return 0x1C000000|(x&=x-1)&x-1|z<<13;
 			//fullhouse
 			
-			int newX = x;
-			int c1=(newX&=newX-1)&newX-1;//highest bit of the 3
-			int c2=newX ^ newX&newX-1;//mid bit
-			int c3=(newX ^ x);//low bit
-			if(c1*3 +z*2+ c2+c3==l) return 0x18000000 | z | c1<<13;
-			if(c2*3 +z*2+ c1+c3==l) return 0x18000000 | z | c2<<13;
-			return 0x18000000 | z | c3<<13;
+			int j=x;
+			int c1=(j&=j-1)&j-1;//highest bit of the 3
+			int c2=j^j&j-1;//mid bit
+			int c3=j^x;//low bit
+			if(c1*3+z*2+c2+c3==l)return 0x18000000|z|c1<<13;
+			if(c2*3+z*2+c1+c3==l)return 0x18000000|z|c2<<13;
+			return 0x18000000|z|c3<<13;
 			//normal quads, normal full house: without order
 			
 			}

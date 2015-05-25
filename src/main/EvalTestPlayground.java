@@ -164,7 +164,7 @@ public class EvalTestPlayground {
 							  for(int n=m+1;n<allCardNums.length;n++)
 								  for(int o=n+1;o<allCardNums.length;o++){
 									  
-									  int res = DeadHorse.eval7b
+									  int res = DeadHorse.eval7
 											  (
 											  	allCardNums[i],
 											  	allCardNums[j],
@@ -323,64 +323,6 @@ public class EvalTestPlayground {
 				 System.out.println(handNames[j] +" : " + handCounter[j] + " : " + ((double)handCounter[j]/howMany*100) + "%");
 
 	  }
-	
-
-public static void randomizerSpeedTest7Card(int howMany){
-		  
-		  //number of hands to burn through
-		  //pick a nice huge round number to let this sucker get warmed up
-		  // int howMany = 10000000;
-
-		  int[] ac = HandMaker.makeLotsOfRandom7CardHands(howMany);
-		  //get start time
-		  long startTf = System.nanoTime();
-		  
-		  //these dang for loops take a while
-		  for(int v=0;v<ac.length/7;)
-			  v++;
-		  //get end time
-		  long endTf = System.nanoTime();
-		  int winningHand = 0;
-		  long startT = System.nanoTime();
-		  
-		  for(int v=0;v<ac.length/7;v++){
-			  //let er rip, go through every hand, 7 cards at a time
-			  DeadHorse.eval7(new int[]{ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]});
-			 /* int h1  = DeadHorseEval.eval5(ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h1>winningHand)winningHand=h1;
-			  int h2  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h2>winningHand)winningHand=h2;
-			  int h3  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h3>winningHand)winningHand=h3;
-			  int h4  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+5],ac[(v*7)+6]);if(h4>winningHand)winningHand=h4;
-			  int h5  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+6]);if(h5>winningHand)winningHand=h5;
-			  int h6  = DeadHorseEval.eval5(ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5]);if(h6>winningHand)winningHand=h6;
-			  int h7  = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h7>winningHand)winningHand=h7;
-			  int h8  = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h8>winningHand)winningHand=h8;
-			  int h9  = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+5],ac[(v*7)+6]);if(h9>winningHand)winningHand=h9;
-			  int h10 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+6]);if(h10>winningHand)winningHand=h10;
-			  int h11 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5]);if(h11>winningHand)winningHand=h11;
-			  int h12 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);if(h12>winningHand)winningHand=h12;
-			  int h13 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+5],ac[(v*7)+6]);if(h13>winningHand)winningHand=h13;
-			  int h14 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+6]);if(h14>winningHand)winningHand=h14;
-			  int h15 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5]);if(h15>winningHand)winningHand=h15;
-			  int h16 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+5],ac[(v*7)+6]);if(h16>winningHand)winningHand=h16;
-			  int h17 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+6]);if(h17>winningHand)winningHand=h17;
-			  int h18 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+4],ac[(v*7)+5]);if(h18>winningHand)winningHand=h18;
-			  int h19 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+6]);if(h19>winningHand)winningHand=h19;
-			  int h20 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+5]);if(h20>winningHand)winningHand=h20;
-			  int h21 = DeadHorseEval.eval5(ac[(v*7)+0],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4]);if(h21>winningHand)winningHand=h21;*/
-		  }
-
-		  //get end time
-		  long endT = System.nanoTime();
-		 // System.out.println("winning hand  : " + winningHand);
-		  
-		  // Time is (end time - start time  ) divided by a billion : because it is in nano seconds
-		  double time = (double) (endT - startT -(endTf - startTf))/1000000000;
-		  
-		  System.out.println("Did " + howMany + " hands in " + time +" seconds");
-		  //hands per second in millions 
-		  System.out.println((int)(howMany/time/1000000) + " million hands a second"); 
-	  }
-
 
 public static void handCompareTest(int howMany){
 	
@@ -455,7 +397,7 @@ public static String humanDecodeEval(String as, String bs, String cs, String ds,
 	return "unique hand value = " +res+ "\n"+ as + ", " + bs + ", " +cs+", " +ds+", "+es+"\n= "+ handNames[res>>26];
 }
 
-public static void randomizerSpeedTest7Cardr(int howMany){
+public static void randomizerSpeedTest7Card(int howMany){
 	  
 	  //number of hands to burn through
 	  //pick a nice huge round number to let this sucker get warmed up
@@ -474,7 +416,7 @@ public static void randomizerSpeedTest7Cardr(int howMany){
 	  long startT = System.nanoTime();
 	  
 	  for(int v=0;v<ac.length/7;v++)
-		  DeadHorse.eval7b(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
+		  DeadHorse.eval7(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
 
 
 	  //get end time
@@ -547,7 +489,7 @@ public static void test7(){
 	
 	
 	//int res = DeadHorseEval.eval7(f7);
-	int res = DeadHorse.eval7b(f7[0],f7[1],f7[2],f7[3],f7[4],f7[5],f7[6]);
+	int res = DeadHorse.eval7(f7[0],f7[1],f7[2],f7[3],f7[4],f7[5],f7[6]);
 	
 	System.out.println("Outcome " + res + ", " + handNames[(res>>26)] + "\n"+bin32(res));
 	
