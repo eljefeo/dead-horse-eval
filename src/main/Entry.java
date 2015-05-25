@@ -11,7 +11,7 @@ public class Entry {
 		//EvalTestPlayground.randomizerSpeedTest7Card(10000000); 
 		//EvalTestPlayground.randomizerSpeedTest7Cardr(10000000); 
 		
-		 //EvalTestPlayground.randomizerSpeedTest7Card(10040000);
+		 EvalTestPlayground.randomizerSpeedTest7Card(10040000);
 		
 		 
 		 //EvalTestPlayground.randomizerSpeedTest5Card(20000000); // speed average : 20000000 hands in 0.248193276 seconds = 80Mhps
@@ -20,7 +20,7 @@ public class Entry {
 		 //EvalTestPlayground.testEveryHand5();
 		 
 		 
-		 EvalTestPlayground.testEveryHand7();
+		 //EvalTestPlayground.testEveryHand7();
 		
 
 		//EvalTestPlayground.test7();

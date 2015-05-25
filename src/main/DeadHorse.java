@@ -29,83 +29,100 @@ public class DeadHorse {
 	public static int eval7(int n0, int n1, int n2, int n3, int n4, int n5, int n6){
 		int u0=n0>>14,u1=n1>>14,u2=n2>>14,u3=n3>>14,u4=n4>>14,u5=n5>>14,u6=n6>>14;
 		int o=(n0&=8191)|(n1&=8191)|(n2&=8191)|(n3&=8191)|(n4&=8191)|(n5&=8191)|(n6&=8191);
-		int x=n0^n1^n2^n3^n4^n5^n6, z=o^x, v=1, w=o&o-1;
-		v+=(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?6:5:4:3:2:1;		
-		
-		if(v==7){
-			int y = o&o-1;y&=y-1;y&=y-1;y&=y-1;y&=y-1;
-			int s1=o&o-1;s1&=s1-1;//highest five
-			int s2=(y&y-1)^(o&o-1);//mid five
-			int s3=y ^ o;//low five
-			z=0;
-			int[]u=new int[5];
-			u[u0]++;u[u1]++;u[u2]++;u[u3]++;u[u4]++;u[u5]++;u[u6]++;
-			int g=u[0]>4?0:u[1]>4?1:u[2]>4?2:u[4]>4?4:3;
-			if(g!=3){
-				if(u0==g)z|=n0;if(u1==g)z|=n1;
-				if(u2==g)z|=n2;if(u3==g)z|=n3;
-				if(u4==g)z|=n4;if(u5==g)z|=n5;
-				if(u6==g)z|=n6;
-				return   (0x1F00%(z&s1))==0?0x20000000|s1
-						:(0x1F00%(z&s2))==0?0x20000000|s2
-						:(0x1F00%(z&s3))==0?0x20000000|s3
-						:(z&0x100F)==0x100F?0x20000000|15
-						:0x14000000|z;//else return flush
+		int x=n0^n1^n2^n3^n4^n5^n6, z=o^x, w=o&o-1;int v=1;
+		if((w&=w-1)!=0){
+			if((w&=w-1)!=0){
+				if((w&=w-1)!=0){
+					if((w&=w-1)!=0){
+						if((w&=w-1)!=0){
+							int y = o&o-1;y&=y-1;y&=y-1;y&=y-1;y&=y-1;
+							int s1=o&o-1;s1&=s1-1;//highest five
+							int s2=(y&y-1)^(o&o-1);//mid five
+							int s3=y ^ o;//low five
+							z=0;
+							int[]u=new int[5];
+							u[u0]++;u[u1]++;u[u2]++;u[u3]++;u[u4]++;u[u5]++;u[u6]++;
+							int g=u[0]>4?0:u[1]>4?1:u[2]>4?2:u[4]>4?4:3;
+							if(g!=3){
+								if(u0==g)z|=n0;if(u1==g)z|=n1;
+								if(u2==g)z|=n2;if(u3==g)z|=n3;
+								if(u4==g)z|=n4;if(u5==g)z|=n5;
+								if(u6==g)z|=n6;
+								return   (0x1F00%(z&s1))==0?0x20000000|s1
+										:(0x1F00%(z&s2))==0?0x20000000|s2
+										:(0x1F00%(z&s3))==0?0x20000000|s3
+										:(z&0x100F)==0x100F?0x20000000|15
+										:0x14000000|z;//else return flush
+							}
+							if(0x1F00%s1==0) 		return 0x10000000|s1;//high Straight
+							if(0x1F00%s2==0) 		return 0x10000000|s2;//mid Straight
+							if(0x1F00%s3==0) 		return 0x10000000|s3;//low Straight
+							if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
+							return s1;//else return high card, highest 5
+						}
+						else{
+							int y = o&o-1;y&=y-1;y&=y-1;y&=y-1;y&=y-1;
+							int s1=o&o-1;//highest five
+							int s2=y^o;//mid five
+							z=0;
+							int[]u=new int[5];
+							u[u0]++;u[u1]++;u[u2]++;u[u3]++;u[u4]++;u[u5]++;u[u6]++;
+							int g=u[0]>4?0:u[1]>4?1:u[2]>4?2:u[4]>4?4:3;
+							if(g!=3){
+								if(u0==g)z|=n0;if(u1==g)z|=n1;
+								if(u2==g)z|=n2;if(u3==g)z|=n3;
+								if(u4==g)z|=n4;if(u5==g)z|=n5;
+								if(u6==g)z|=n6;
+								return   (0x1F00%(z&s1))==0?0x20000000|s1
+										:(0x1F00%(z&s2))==0?0x20000000|s2
+										:(z&0x100F)==0x100F?0x20000000|15
+										:0x14000000|z;//else return flush
+							}
+							if(0x1F00%s1==0) 		return 0x10000000|s1;//high Straight
+							if(0x1F00%s2==0) 		return 0x10000000|s2;//low Straight
+							if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
+							return 0x4000000|(x&=x-1)&x-1|z<<13;// else return pair, with top 3 kickers
+							
+						}
+					}
+					else{
+						z=0;
+						int[]u=new int[5];
+						u[u0]++;u[u1]++;u[u2]++;u[u3]++;u[u4]++;u[u5]++;u[u6]++;
+						int g=u[0]>4?0:u[1]>4?1:u[2]>4?2:u[4]>4?4:3;
+						if(g!=3){
+							if(u0==g)z|=n0;if(u1==g)z|=n1;
+							if(u2==g)z|=n2;if(u3==g)z|=n3;
+							if(u4==g)z|=n4;if(u5==g)z|=n5;
+							if(u6==g)z|=n6;
+							return   (0x1F00%(z&o))==0 ?0x20000000|o
+									:(z&0x100F)==0x100F?0x20000000|15
+									:0x14000000|z;//else return flush
+						}
+						if(0x1F00%o==0) 		return 0x10000000|o;//Straight
+						if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
+						//else either 2 pair or trips:
+						if(x!=o) return 0x8000000|(x&=x-1)&x-1|z<<13;//2 pair without order
+						int trip=n0==n1||n0==n2?n0:n1==n2?n2:n3==n4||n3==n5?n3:n4==n5?n4:n6;
+						int k = o^trip;
+						return 0xC000000|(k&=k-1)&k-1|trip<<13;//trips without order
+					}
+				}else{
+					v=4;
+				}
+			}else{
+				v=3;
 			}
-			if(0x1F00%s1==0) 		return 0x10000000|s1;//high Straight
-			if(0x1F00%s2==0) 		return 0x10000000|s2;//mid Straight
-			if(0x1F00%s3==0) 		return 0x10000000|s3;//low Straight
-			if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
-			return s1;//else return high card, highest 5
 		}
-		
-		if(v==6){
-			int y = o&o-1;y&=y-1;y&=y-1;y&=y-1;y&=y-1;
-			int s1=o&o-1;//highest five
-			int s2=y^o;//mid five
-			z=0;
-			int[]u=new int[5];
-			u[u0]++;u[u1]++;u[u2]++;u[u3]++;u[u4]++;u[u5]++;u[u6]++;
-			int g=u[0]>4?0:u[1]>4?1:u[2]>4?2:u[4]>4?4:3;
-			if(g!=3){
-				if(u0==g)z|=n0;if(u1==g)z|=n1;
-				if(u2==g)z|=n2;if(u3==g)z|=n3;
-				if(u4==g)z|=n4;if(u5==g)z|=n5;
-				if(u6==g)z|=n6;
-				return   (0x1F00%(z&s1))==0?0x20000000|s1
-						:(0x1F00%(z&s2))==0?0x20000000|s2
-						:(z&0x100F)==0x100F?0x20000000|15
-						:0x14000000|z;//else return flush
-			}
-			if(0x1F00%s1==0) 		return 0x10000000|s1;//high Straight
-			if(0x1F00%s2==0) 		return 0x10000000|s2;//low Straight
-			if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
-			return 0x4000000|(x&=x-1)&x-1|z<<13;// else return pair, with top 3 kickers
+		else{
+			v=2;
 		}
-		if(v==5){
-			z=0;
-			int[]u=new int[5];
-			u[u0]++;u[u1]++;u[u2]++;u[u3]++;u[u4]++;u[u5]++;u[u6]++;
-			int g=u[0]>4?0:u[1]>4?1:u[2]>4?2:u[4]>4?4:3;
-			if(g!=3){
-				if(u0==g)z|=n0;if(u1==g)z|=n1;
-				if(u2==g)z|=n2;if(u3==g)z|=n3;
-				if(u4==g)z|=n4;if(u5==g)z|=n5;
-				if(u6==g)z|=n6;
-				return   (0x1F00%(z&o))==0 ?0x20000000|o
-						:(z&0x100F)==0x100F?0x20000000|15
-						:0x14000000|z;//else return flush
-			}
-			if(0x1F00%o==0) 		return 0x10000000|o;//Straight
-			if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
-			//else either 2 pair or trips:
-			if(x!=o) return 0x8000000|(x&=x-1)&x-1|z<<13;//2 pair without order
-			int trip=n0==n1||n0==n2?n0:n1==n2?n2:n3==n4||n3==n5?n3:n4==n5?n4:n6;
-			int k = o^trip;
-			return 0xC000000|(k&=k-1)&k-1|trip<<13;//trips without order
-		}
+
+
 		w=x;
-		v+=(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?(w&=w-1)!=0?7:6:5:4:3:2:1;
+		v+=(w&=w-1)!=0?(w&=w-1)!=0?3:2:1;
+		
+		
 		if(v==5) return 0x8000000|(x>(z^(z&z-1))?x:(z^(z&z-1)))|(z&z-1)<<13;//three pair without order
 		if(v==7)
 			if(z*4+x==n0+n1+n2+n3+n4+n5+n6)return 0x1C000000|(x&=x-1)&x-1|z<<13;//normal quads, fullhouse
