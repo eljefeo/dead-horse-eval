@@ -1,7 +1,5 @@
 package main;
 
-import java.util.ArrayList;
-
 public class DeadHorse {
 
 	public static int eval5(int a, int b, int c, int d, int e){
@@ -29,7 +27,8 @@ public class DeadHorse {
 	public static int eval7(int n0, int n1, int n2, int n3, int n4, int n5, int n6){
 		int u0=n0>>14,u1=n1>>14,u2=n2>>14,u3=n3>>14,u4=n4>>14,u5=n5>>14,u6=n6>>14;
 		int o=(n0&=8191)|(n1&=8191)|(n2&=8191)|(n3&=8191)|(n4&=8191)|(n5&=8191)|(n6&=8191);
-		int x=n0^n1^n2^n3^n4^n5^n6, z=o^x, w=o&o-1;int v=1;
+		int x=n0^n1^n2^n3^n4^n5^n6;
+		int z=o^x, w=o&o-1;int v;
 		if((w&=w-1)!=0){
 			if((w&=w-1)!=0){
 				if((w&=w-1)!=0){
@@ -48,17 +47,17 @@ public class DeadHorse {
 								if(u2==g)z|=n2;if(u3==g)z|=n3;
 								if(u4==g)z|=n4;if(u5==g)z|=n5;
 								if(u6==g)z|=n6;
-								return   (0x1F00%(z&s1))==0?0x20000000|s1
-										:(0x1F00%(z&s2))==0?0x20000000|s2
-										:(0x1F00%(z&s3))==0?0x20000000|s3
+								return   0x1F00%(z&s1)==0?0x20000000|s1
+										:0x1F00%(z&s2)==0?0x20000000|s2
+										:0x1F00%(z&s3)==0?0x20000000|s3
 										:(z&0x100F)==0x100F?0x20000000|15
 										:0x14000000|z;//else return flush
 							}
-							if(0x1F00%s1==0) 		return 0x10000000|s1;//high Straight
-							if(0x1F00%s2==0) 		return 0x10000000|s2;//mid Straight
-							if(0x1F00%s3==0) 		return 0x10000000|s3;//low Straight
-							if((o&0x100F)==0x100F) 	return 0x10000000|15;//Low ace Straight
-							return s1;//else return high card, highest 5
+							return 	 0x1F00%s1==0 ? 0x10000000|s1//high Straight
+									:0x1F00%s2==0 ? 0x10000000|s2//mid Straight
+									:0x1F00%s3==0 ? 0x10000000|s3//low Straight
+									:(o&0x100F)==0x100F ? 0x10000000|15//Low ace Straight
+									: s1;//else return high card, highest 5
 						}
 						else{
 							int y = o&o-1;y&=y-1;y&=y-1;y&=y-1;y&=y-1;
@@ -107,16 +106,9 @@ public class DeadHorse {
 						int k = o^trip;
 						return 0xC000000|(k&=k-1)&k-1|trip<<13;//trips without order
 					}
-				}else{
-					v=4;
-				}
-			}else{
-				v=3;
-			}
-		}
-		else{
-			v=2;
-		}
+				}else v=4;
+			}else v=3;
+		}else v=2;
 
 
 		w=x;
@@ -130,8 +122,7 @@ public class DeadHorse {
 		if(v==4){
 			int l = n0+n1+n2+n3+n4+n5+n6;
 			if(z*2+x*3==l)	 return 0x18000000|z|x<<13;//full house 
-			o=z&z-1;z^=o;
-			if(o*2+z*4+x==l) return 0x1C000000|(o>x?o:x)|z<<13;
+			if((o=z&z-1)*2+(z^=o)*4+x==l) return 0x1C000000|(o>x?o:x)|z<<13;
 			return 0x1C000000|(z>x?z:x)|o<<13;
 			//full house, trips and 2 pair, quads with a pair without order
 		}
