@@ -662,19 +662,17 @@ The snippet here is ugly, and beautiful in its own way. It is small and compact 
 		int y=(a|b|c|d|e)&8191;
 		int z=(y^x);
 		int v=y&y-1;
-		v=(v&=v-1)==0?2:(v&=v-1)==0?3:(v&=v-1)==0?4:5;
-		 if(v==4) return 0x4000000|x|z<<13;
-		 else if(v==3)
-			if(z!=0) return 0x8000000|x|z<<13;
-			else return 0xC000000|(v=((a&b)==(a&8191)?a:(c&d)==(c&8191)?c:e)&8191^y)|v<<13;
-		else if(v==2)
+		if((v&=v-1)==0)
 			if((a+b+c+d+e-x&8191)==(8191&(y^x)<<2)) return 0x1C000000|x|z<<13;
 			else return 0x18000000|z|x<<13;
+		else if((v&=v-1)==0)
+			if(z!=0) return 0x8000000|x|z<<13;
+			else return 0xC000000|(v=((a&b)==(a&8191)?a:(c&d)==(c&8191)?c:e)&8191^y)|v<<13;
+		else if((v&=v-1)==0)
+			 return 0x4000000|x|z<<13;
 		boolean strt=0x1F1D100%y==0;
 		boolean flsh=(a&b&c&d&e)!=0;
-		return strt&&flsh?0x20000000|(x==4111?15:x)
-				:strt?0x10000000|(x==4111?15:x):flsh?0x14000000|x:x;
-
+		return strt?(x==4111?15:x)|(flsh?0x20000000:0x10000000):flsh?0x14000000:x;
 	}
 ```
 
