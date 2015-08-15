@@ -7,18 +7,17 @@ public class DeadHorse {
 		int y=(a|b|c|d|e)&8191;
 		int z=(y^x);
 		int v=y&y-1;
-		v=(v&=v-1)==0?2:(v&=v-1)==0?3:(v&=v-1)==0?4:5;
-		 if(v==4) return 0x4000000|x|z<<13;
-		 else if(v==3)
-			if(z!=0) return 0x8000000|x|z<<13;
-			else return 0xC000000|(v=((a&b)==(a&8191)?a:(c&d)==(c&8191)?c:e)&8191^y)|v<<13;
-		else if(v==2)
+		if((v&=v-1)==0)
 			if((a+b+c+d+e-x&8191)==(8191&(y^x)<<2)) return 0x1C000000|x|z<<13;
 			else return 0x18000000|z|x<<13;
+		else if((v&=v-1)==0)
+			if(z!=0) return 0x8000000|x|z<<13;
+			else return 0xC000000|(v=((a&b)==(a&8191)?a:(c&d)==(c&8191)?c:e)&8191^y)|v<<13;
+		else if((v&=v-1)==0)
+			 return 0x4000000|x|z<<13;
 		boolean strt=0x1F1D100%y==0;
 		boolean flsh=(a&b&c&d&e)!=0;
-		return strt&&flsh?0x20000000|(x==4111?15:x)
-				:strt?0x10000000|(x==4111?15:x):flsh?0x14000000|x:x;
+		return strt?(x==4111?15:x)|(flsh?0x20000000:0x10000000):flsh?0x14000000:x;
 
 	}
 	
@@ -33,12 +32,25 @@ public class DeadHorse {
 			if((w&=w-1)!=0){
 				if((w&=w-1)!=0){
 					if((w&=w-1)!=0){
+						int y = o&o-1;y&=y-1;y&=y-1;y&=y-1;y&=y-1;
 						if((w&=w-1)!=0){
-							int y = o&o-1;y&=y-1;y&=y-1;y&=y-1;y&=y-1;
+							//int y = o&o-1;y&=y-1;y&=y-1;y&=y-1;y&=y-1;
 							int s1=o&o-1;s1&=s1-1;//highest five
 							int s2=(y&y-1)^(o&o-1);//mid five
 							int s3=y ^ o;//low five
 							z=0;
+							//since we know there are 7 distinct cards (no pairs) we can check to see if all have same suit
+							//return early flush and skip other checks
+							
+					/*		if((u0&u1&u2&u3&u4&u5&u6)!=0){
+								
+								return   0x1F00%(s1)==0?0x20000000|s1
+										:0x1F00%(s2)==0?0x20000000|s2
+										:0x1F00%(s3)==0?0x20000000|s3
+										:(o&0x100F)==0x100F?0x20000000|15
+										:0x14000000|s1;//else return flush
+							}*/
+							
 							int[]u=new int[5];
 							u[u0]++;u[u1]++;u[u2]++;u[u3]++;u[u4]++;u[u5]++;u[u6]++;
 							int g=u[0]>4?0:u[1]>4?1:u[2]>4?2:u[4]>4?4:3;
@@ -60,7 +72,7 @@ public class DeadHorse {
 									: s1;//else return high card, highest 5
 						}
 						else{
-							int y = o&o-1;y&=y-1;y&=y-1;y&=y-1;y&=y-1;
+							//int y = o&o-1;y&=y-1;y&=y-1;y&=y-1;y&=y-1;
 							int s1=o&o-1;//highest five
 							int s2=y^o;//mid five
 							z=0;
