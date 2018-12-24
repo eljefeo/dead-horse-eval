@@ -208,7 +208,7 @@ public class HandMaker {
 			  }
 				  
 			  
-			  
+			  //TODO sometimes a number gets set to 0, need to fix
 			  return new int[]{a,b,c,d,e};
 			  
 			  

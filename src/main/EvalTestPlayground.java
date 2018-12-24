@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class EvalTestPlayground {
 	
@@ -51,7 +52,25 @@ public class EvalTestPlayground {
 		  16385,16386,16388,16392,16400,16416,16448,16512,16640,16896,17408,18432,20480,
 		  8193,8194,8196,8200,8208,8224,8256,8320,8448,8704,9216,10240,12288
 	  };
+	 
+	  static int[] allCardNums7 = new int[]{
+			  4194305,4194306,4194308,4194312,4194320,4194336,4194368,4194432,4194560,4194816,4195328,4196352,4198400,
+			  524289,524290,524292,524296,524304,524320,524352,524416,524544,524800,525312,526336,528384,
+			  65537,65538,65540,65544,65552,65568,65600,65664,65792,66048,66560,67584,69632,
+			  8193,8194,8196,8200,8208,8224,8256,8320,8448,8704,9216,10240,12288
+		  };
 	
+	  public static void makeNewnums(){
+		  for(int i : allCardNums){
+			  int ne = 0;
+			  int suit = i & 122880;
+			  if(suit == 65536)ne  = (suit << 6) | (i&8191);
+			  else if (suit == 32768)ne = (suit << 4 )| (i&8191);
+			  else if (suit == 16384) ne = (suit << 2) | (i&8191);
+			  else ne = i;
+			  System.out.println(ne);
+		  }
+	  }
 	
 
 	  //there is a speed test method below
@@ -61,7 +80,7 @@ public class EvalTestPlayground {
 		  
 		  //copy of the deck to make this method more portable
 
-		  
+		  double allHandPossibilities = 0.0;
 		  int totalHands = 2598960;
 		  int[] allCards = new int[totalHands*5];
 		  int totalCounter=0;
@@ -92,8 +111,10 @@ public class EvalTestPlayground {
 		  double time = (double) (endT - startT)/1000000000;
 		  System.out.println("Did all " + totalHands + " hands in " + time +" seconds");
 		  //hands per second in millions 
-		  System.out.println((totalHands/time/1000000) + " million hands a second\n");
-		
+		  Double currentTotal = totalHands/time/1000000;
+		  allHandPossibilities += currentTotal;
+		  System.out.println(currentTotal + " million hands a second\n");
+		  System.out.println("Running Total : " + allHandPossibilities + " percent complete");
 		  //this is here to count how many of each type of hand come up.
 		  //it will re-eval each hand so we do not corrupt the timing with this extra process
 		  //this is here to show the accuracy of making/testing each hand possible
@@ -174,7 +195,10 @@ public class EvalTestPlayground {
 											  	allCardNums[n],
 											  	allCardNums[o]
 											  )>>26;
-								  
+											  	
+									  
+									
+													  
 								 /* String hand=	allCardNums[i]+","+
 										  		allCardNums[j]+","+
 												allCardNums[k]+","+
@@ -233,33 +257,117 @@ public class EvalTestPlayground {
 	  }
 	  
 	  
+
+	  
+public static void testEveryHand7n(){
+		  
+		  //copy of the deck to make this method more portable
+		  ArrayList[] lists = {
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>(),
+				  new ArrayList<String>()
+		  };
+		   int totalHands = 133784560;
+		 // int[] allCards = new int[totalHands*7];
+		  int totalCounter=0;
+		  int[] handCounter = new int[9];
+		  //this is how we create all 133,784,560 7 card hands
+		  for(int i=0;i<allCardNums7.length-1;i++)
+			  for(int j=i+1;j<allCardNums7.length;j++)
+				  for(int k=j+1;k<allCardNums7.length;k++)
+					  for(int l=k+1;l<allCardNums7.length;l++)
+						  for(int m=l+1;m<allCardNums7.length;m++)
+							  for(int n=m+1;n<allCardNums7.length;n++)
+								  for(int o=n+1;o<allCardNums7.length;o++){
+									  
+									  int res = DeadHorse.eval7n
+											  (
+											  	allCardNums7[i],
+											  	allCardNums7[j],
+											  	allCardNums7[k],
+											  	allCardNums7[l],
+											  	allCardNums7[m],
+											  	allCardNums7[n],
+											  	allCardNums7[o]
+											  )>>26;
+											  	
+									  
+									
+													  
+								 /* String hand=	allCardNums7[i]+","+
+										  		allCardNums7[j]+","+
+												allCardNums7[k]+","+
+												allCardNums7[l]+","+
+												allCardNums7[m]+","+
+												allCardNums7[n]+","+
+												allCardNums7[o];
+								  */
+								 /* lists[res].add(hand);
+								  
+								  if(lists[res].size()==1000000){
+									  atfl(files[res],lists[res]);
+									  lists[res].clear();
+								  }*/
+								  	
+								  	  handCounter[res]++;
+									  totalCounter++;
+						  }
+		 /* for(int i = 0;i<lists.length;i++)
+			  if(lists[i].size()>0)
+				atfl(files[i],lists[i]);*/
+
+		  //this is here to count how many of each type of hand come up.
+		  //it will re-eval each hand so we do not corrupt the timing with this extra process
+		  //this is here to show the accuracy of making/testing each hand possible
+		  //Since there is a known number of each type of 5 card hand with 52 cards :
+		  //High Card 		1302540
+		  //Pair 			1098240
+		  //Two Pair 		123552
+		  //Trips 			54912
+		  //Straight 		10200
+		  //Flush 			5108
+		  //Full House 		3744
+		  //Quads 			624
+		  //Straight Flush	40
+		  //Total			2598960
+		  
+		  //this is to go through and compare the number of each type of hand we created
+		  //to the number of each type of hand we expect
+		   for(int j=0;j<handCounter.length;j++){
+			   //check if expected == actual
+			   boolean checked = handCounter[j]==handFrequency7[j];
+			   String res = checked
+					   //if all hands accounted for, good news
+					   ?"PASS - All "+handFrequency7[j]+" "+handNames[j]+" hands are accounted for" 
+							   
+						//if the counts dont match, show how many failed
+					   : "FAIL - " +handCounter[j]+" out of "+handFrequency7[j]
+							   +" "+handNames[j]+" hands received!"; 
+			   
+			   System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
+		   }
+			 
+		  System.out.println("Total Count : " + totalCounter);
+		  
+	  }
+	  
+	  
+	  
 	public static void randomizerSpeedTest5CardDiagnostics(int howMany){
 		  
-		  //number of hands to burn through
-		  //pick a nice huge round number to let this sucker get warmed up
-		  // int howMany = 10000000;
-
 		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howMany);
 		  
-		  //get start time
-		 // long startT = System.nanoTime();
-		  
-		  //let er rip, go through every hand, 5 cards at a time
-		
 		  for(int i=0;i<allCards.length;i+=5){
-			 int res = DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
-			 res>>=26;
-			  System.out.println("\n"+handNames[res]);
+			int res = DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
+			res>>=26;
+		  	System.out.println("\n"+res+", "+handNames[res]);
 		  }
-		  //get end time
-		 // long endT = System.nanoTime();
-		  
-		  // Time is (end time - start time ) divided by a billion : because it is in nano seconds
-		  //double time = (double) (endT - startT)/1000000000;
-		  
-		  //System.out.println("Did " + howMany + " hands in " + time +" seconds");
-		  //hands per second in millions 
-		  //System.out.println((int)(howMany/time/1000000) + " million hands a second"); 
 	  }
 	
 	
@@ -347,11 +455,70 @@ public static void handCompareTest(int howMany){
 	int q = DeadHorse.eval5(quads[0], quads[1], quads[2], quads[3], quads[4]);
 	int sf = DeadHorse.eval5(straightFlush[0], straightFlush[1], straightFlush[2], straightFlush[3], straightFlush[4]);
 	boolean check = hc<p && p<tp && tp<t && t<s && s<f && f<fh && fh<q && q<sf;
+	
+	
+	if(hc<p && hc<tp && hc<t && hc<s && hc<f && hc<fh && hc<q && hc<sf){
+		//System.out.println("High card pass");
+	}
+	else{
+		if(highCard[0] != 0)
+			System.out.println("High card failed " + getName(highCard[0]) + " " + getName(highCard[1]) + " " + getName(highCard[2]) + " " + getName(highCard[3]) + " " + getName(highCard[4]) );
+	}
+	if(p<tp && p<t && p<s && p<f && p<fh && p<q && p<sf){
+		//System.out.println("Pair pass");
+	}
+	else{
+		System.out.println("Pair failed " + getName(pair[0]) + " " + getName(pair[1]) + " " + getName(pair[2]) + " " + getName(pair[3]) + " " + getName(pair[4]) );
+	}
+	if(tp<t && tp<s && tp<f && tp<fh && tp<q && tp<sf){
+		//System.out.println("TwoPair pass");
+	}
+	else{
+		System.out.println("TwoPair failed " + getName(twoPair[0]) + " " + getName(twoPair[1]) + " " + getName(twoPair[2]) + " " + getName(twoPair[3]) + " " + getName(twoPair[4]) );
+	}
+	if(t<s && t<f && t<fh && t<q && t<sf){
+		//System.out.println("Trips pass");
+	}
+	else{
+		System.out.println("Trips failed " + getName(trips[0]) + " " + getName(trips[1]) + " " + getName(trips[2]) + " " + getName(trips[3]) + " " + getName(trips[4]) );
+	}
+	if(s<f && s<fh && s<q && s<sf){
+		//System.out.println("Straight pass");
+	}
+	else{
+		System.out.println("Straight failed " + getName(straight[0]) + " " + getName(straight[1]) + " " + getName(straight[2]) + " " + getName(straight[3]) + " " + getName(straight[4]) );
+	}
+	if(f<fh && f<q && f<sf){
+		//System.out.println("Flush pass");
+	}
+	else{
+		System.out.println("Flush failed " + getName(flush[0]) + " " + getName(flush[1]) + " " + getName(flush[2]) + " " + getName(flush[3]) + " " + getName(flush[4]) );
+	}
+	if(fh<q && fh<sf){
+		//System.out.println("FullHouse pass");
+	}
+	else{
+		System.out.println("FullHouse failed " + getName(fullhouse[0]) + " " + getName(fullhouse[1]) + " " + getName(fullhouse[2]) + " " + getName(fullhouse[3]) + " " + getName(fullhouse[4]) );
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	if(!check){
 		System.out.println("Failed! " + hc+","+p+","+tp+","+t+","+s+","+f+","+fh+","+q+","+sf);
 	
-		System.out.println("hc " + bin(highCard[0])+ ","+bin(highCard[1])+","+ bin(highCard[2])+","+ bin(highCard[3])+","+ bin(highCard[4]));
+		//System.out.println("hc " + bin(highCard[0])+ ","+bin(highCard[1])+","+ bin(highCard[2])+","+ bin(highCard[3])+","+ bin(highCard[4]));
 	 
+	}
+	else{
+	//	System.out.println("PASS");
 	}
 }
 	
@@ -392,7 +559,7 @@ public  static int humanEncodeEval(String as, String bs, String cs, String ds, S
 }
 
 //give it human readable string cards, it will spit back a human readable hand type(pair, full house etc..)
-public static String humanDecodeEval(String as, String bs, String cs, String ds, String es){
+public static String humanEncodeFullHandEval(String as, String bs, String cs, String ds, String es){
 	int res= EvalTestPlayground.humanEncodeEval(as,bs,cs,ds,es);
 	return "unique hand value = " +res+ "\n"+ as + ", " + bs + ", " +cs+", " +ds+", "+es+"\n= "+ handNames[res>>26];
 }
@@ -430,6 +597,38 @@ public static void randomizerSpeedTest7Card(int howMany){
 	  System.out.println((int)(howMany/time/1000000) + " million hands a second"); 
 }
 
+public static void randomizerSpeedTest7nCard(int howMany){
+	  
+	  //number of hands to burn through
+	  //pick a nice huge round number to let this sucker get warmed up
+	  // int howMany = 10000000;
+	
+	
+
+	  int[] ac = HandMaker.makeLotsOfRandom7CardHands(howMany);
+	  //get start time
+	  long startTf = System.nanoTime();
+	  
+	  //these dang for loops take a while
+	  for(int v=0;v<ac.length/7;) v++;
+	  //get end time
+	  long endTf = System.nanoTime();
+	  long startT = System.nanoTime();
+	  
+	  for(int v=0;v<ac.length/7;v++)
+		  DeadHorse.eval7n(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
+
+
+	  //get end time
+	  long endT = System.nanoTime();
+	  
+	  // Time is (end time - start time  ) divided by a billion : because it is in nano seconds
+	  double time = (double) (endT - startT -(endTf - startTf))/1000000000;
+	  
+	  System.out.println("Did " + howMany + " hands in " + time +" seconds");
+	  //hands per second in millions 
+	  System.out.println((int)(howMany/time/1000000) + " million hands a second"); 
+}
 
 public static void test7(){
 	
@@ -446,6 +645,8 @@ public static void test7(){
 	int[] quadspair = {36864,20480,12288,69632,65552,8208,16640};
 	
 	int[] quadstrips = {36864,20480,12288,69632,65552,8208,16400};
+	
+	int[] sevenCardFlush = {65538,65540,65552,65600,65664,66048,67584};
 	
 	int[] sf7 = {allCardNums[21],allCardNums[16],allCardNums[20],allCardNums[18],allCardNums[19],allCardNums[17],allCardNums[22]};
 	int[] sf61 = {allCardNums[21],allCardNums[1],allCardNums[20],allCardNums[18],allCardNums[19],allCardNums[17],allCardNums[22]};
@@ -482,7 +683,7 @@ public static void test7(){
 		System.out.println(bin(test&(test-1^(~test>>1))));
 	*/
 	//int[] f7 = allTestHands[2];
-		int[] f7 =   allTestHands[6];
+		int[] f7 =   sevenCardFlush;
 	
 	System.out.println(f7[0]+" "+getName(f7[0])+", "+f7[1]+" "+getName(f7[1])+", "+f7[2]+" "+getName(f7[2])+", "
 			+f7[3]+" "+getName(f7[3])+", "+f7[4]+" "+getName(f7[4])+", "+f7[5]+" "+getName(f7[5])+", "+f7[6]+" "+getName(f7[6]));
@@ -514,7 +715,7 @@ public static String getName(int j){
 			return allCardNames[i];
 		}
 	}
-	return j+"";
+	return "error getting name " + j;
 }
 
 
@@ -539,6 +740,210 @@ public static void atfl(File f, ArrayList<String>l){
 		bw.write(s+"\n");
 	} catch (IOException e) {e.printStackTrace();}
 	finally{if(bw!=null){try{bw.close();}catch(Exception ee){}}}
+}
+
+public static void doSuitTest(){
+	
+	
+	//int[] addsuits = new int[]{8192>>13,65536>>13,1048576>>13,33554432>>13};
+	int[] addsuits = new int[]{20480,49152,458752,7864320};
+System.out.println(addsuits[0] + " " + addsuits[1] + " " + addsuits[2] + " " + addsuits[3]);
+	
+	int[] suits = new int[]{65536,65536,65536,65536,65536,65536,65536,65536,65536,65536,65536,65536,65536,32768,32768,32768,32768,32768,32768,32768,32768,32768,32768,32768,32768,32768,16384,16384,16384,16384,16384,16384,16384,16384,16384,16384,16384,16384,16384,8192,8192,8192,8192,8192,8192,8192,8192,8192,8192,8192,8192,8192}; 
+	int mask = 122880;
+	int allS =143165576;
+	int allH = 71582788;
+	int allC = 35791394;
+ 	int allD = 17895697;
+ 	int sone = 134217728;
+ 	int hone = 67108864;
+ 	int cone  =33554432;
+ 	int done = 16777216;
+ 	int[] test = new int[29];
+ 	
+ 	int count = 0;
+ 	
+ /*	
+ 	int allT = allS;
+		int tone = sone;
+ 	
+ 	for(int i = 0; i < 7-1; i ++){
+ 		for(int j = i+1; j < 7;j++){
+ 			//System.out.println( i + " " + j);
+ 			//System.out.println(bin32(sone>>(i*4)|sone>>(j*4)));
+ 			
+
+ 			int num = allT^(tone>>(i*4)|tone>>(j*4));
+ 			System.out.println(num);
+ 			test[count++] = num;
+ 		}
+ 	}
+ 	for(int i=0;i<7;i++){
+ 		test[i+21]=allT^(tone>>(i*4));
+ 	}
+ 	test[28] = allT;
+*/
+ 	
+ 	
+/*	for(int i : test){
+ 		System.out.println("mod S " + allS + " "+ i + " = " + ((allS^i)));
+ 		
+ 	}
+ 	
+ 	for(int i : test){
+ 		System.out.println("mod H " + allH + " "+ i + " = " + ((allH^i)));
+ 	}
+ 	
+	for(int i : test){
+ 		System.out.println("mod C " + allC + " "+ i + " = " + ((allC^i)));
+ 	}
+	
+	for(int i : test){
+ 		System.out.println("mod D " + allD + " "+ i + " = " + ((allD^i)));
+ 	}
+	*/
+	ArrayList<Integer> totals = new ArrayList<Integer>();
+ 	
+	for(int i=0;i<addsuits.length;i++)
+		  for(int j=0;j<addsuits.length;j++)
+			  for(int k=0;k<addsuits.length;k++)
+				  for(int l=0;l<addsuits.length;l++)
+					  for(int m=0;m<addsuits.length;m++)
+						  for(int n=0;n<addsuits.length;n++)
+							  for(int o=0;o<addsuits.length;o++)
+				  {
+								  
+								  int aa = 0, bb= 0 , cc = 0, dd = 0;
+								  if(addsuits[i]==addsuits[0])aa++;
+								  else if(addsuits[i]==addsuits[1])bb++;
+								  else if(addsuits[i]==addsuits[2])cc++;
+								  else if(addsuits[i]==addsuits[3])dd++;
+								  else System.out.println("uh oh...");
+
+								  if(addsuits[j]==addsuits[0])aa++;
+								  else if(addsuits[j]==addsuits[1])bb++;
+								  else if(addsuits[j]==addsuits[2])cc++;
+								  else if(addsuits[j]==addsuits[3])dd++;
+								  else System.out.println("uh oh...");
+
+								  if(addsuits[k]==addsuits[0])aa++;
+								  else if(addsuits[k]==addsuits[1])bb++;
+								  else if(addsuits[k]==addsuits[2])cc++;
+								  else if(addsuits[k]==addsuits[3])dd++;
+								  else System.out.println("uh oh...");
+
+								if(addsuits[l]==addsuits[0])aa++;
+								  else if(addsuits[l]==addsuits[1])bb++;
+								  else if(addsuits[l]==addsuits[2])cc++;
+								  else if(addsuits[l]==addsuits[3])dd++;
+								  else System.out.println("uh oh...");
+
+								if(addsuits[m]==addsuits[0])aa++;
+								  else if(addsuits[m]==addsuits[1])bb++;
+								  else if(addsuits[m]==addsuits[2])cc++;
+								  else if(addsuits[m]==addsuits[3])dd++;
+								  else System.out.println("uh oh...");
+
+								if(addsuits[n]==addsuits[0])aa++;
+								  else if(addsuits[n]==addsuits[1])bb++;
+								  else if(addsuits[n]==addsuits[2])cc++;
+								  else if(addsuits[n]==addsuits[3])dd++;
+								  else System.out.println("uh oh...");
+
+								if(addsuits[o]==addsuits[0])aa++;
+								  else if(addsuits[o]==addsuits[1])bb++;
+								  else if(addsuits[o]==addsuits[2])cc++;
+								  else if(addsuits[o]==addsuits[3])dd++;
+								  else System.out.println("uh oh...");
+								  
+								
+								int total= addsuits[i] + addsuits[j] + addsuits[k]+ addsuits[l]
+										  + addsuits[m] + addsuits[n]  + addsuits[o];
+								
+								if(aa > 4 || bb > 4 || cc > 4 || dd > 4)
+								//if(aa <= 4 && bb <= 4 && cc <= 4 && dd <= 4)
+								//if((total-addsuits[0]*5)%7==2 || (total-addsuits[1]*5)%7==2 || (total-addsuits[2]*5)%7==2 || (total-addsuits[3]*5)%7==2)
+									
+								{
+									  
+									  //if(total/7 >0 && total/7 < 100)
+									  {
+										  if(!totals.contains(total)){
+											  totals.add(total);
+										  
+											  
+											  int cou = 0;
+											  int v = total;
+											  
+											  while(v!=0){v&=v-1;  cou++;}
+										  System.out.println("********** Bit count = " +  cou);
+										  System.out.println(total + " " + (total-40960));
+										  System.out.println(addsuits[i] + " " + addsuits[j] + " " + addsuits[k]+ " " + addsuits[l]
+												  + " " + addsuits[m] + " " + addsuits[n]  + " " + addsuits[o]);
+									  
+										  }
+									  }
+								}
+								
+// 20971520   2621440  327680 40910
+								  
+								 //lowest highest 1 flush =7, 1029
+								
+								//lowest highest 8 flush = 82, large = 4176
+								
+								//lowest highest cc small = 1282, large = 5376
+								
+								// lowest highes dd  10242, large = 14336
+								  
+				  }
+	
+	int counte =0;
+	int small = totals.get(0), large = 0;
+	Collections.sort(totals);
+	for(Integer i : totals){
+		//System.out.println("mod7 " + i%12);
+		if(i < small)small = i;
+		if(i > large)large= i;
+		counte++;
+		int s1 = i - addsuits[0]*5;
+		int s2 = i - addsuits[1]*5;
+		int s3 = i - addsuits[2]*5;
+		int s4 = i - addsuits[3]*5;
+int modd = 116;
+		//System.out.println((s1%modd) + ", " + (s2%modd) +", " + (s3%modd) + ", " + (s4%modd) + " " + i%modd);
+	}
+	//System.out.println(counte + " small = " + small + ", large = " + large);
+	
+	
+	for(int i : addsuits)
+		for(int j : addsuits){
+			//System.out.println((i+j)%5);
+		}
+	
+	/*
+	 for(int i=0;i<allCardNums.length-1;i++)
+		  for(int j=i+1;j<allCardNums.length;j++)
+			  for(int k=j+1;k<allCardNums.length;k++)
+				  for(int l=k+1;l<allCardNums.length;l++)
+					  for(int m=l+1;m<allCardNums.length;m++)
+						  for(int n=m+1;n<allCardNums.length;n++)
+							  for(int o=n+1;o<allCardNums.length;o++){
+								  int res = 
+										  (
+												  	(allCardNums[i]&mask)>>13|
+												  	(allCardNums[j]&mask)>>9|
+												  	(allCardNums[k]&mask)>>5|
+												  	(allCardNums[l]&mask)>>1|
+												  	(allCardNums[m]&mask)<<3|
+												  	(allCardNums[n]&mask)<<7|
+												  	(allCardNums[o]&mask)<<11
+										  );
+								  System.out.println(res + "\t" + bin32(res));
+								  
+							  }
+	*/
+	
+
 }
 
 
