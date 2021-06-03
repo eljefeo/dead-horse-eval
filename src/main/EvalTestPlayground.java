@@ -28,6 +28,8 @@ public class EvalTestPlayground {
 			"Straight", "Flush", "Full House", "4 of a kind", "Straight Flush"
 		};
 	
+	static int total5CardHandCount = 2598960;
+	
 	
 	static int[] handFrequency5=
 		{
@@ -73,16 +75,9 @@ public class EvalTestPlayground {
 	  }
 	
 
-	  //there is a speed test method below
-	  //but in case you want the good ol fashion 'create every single possible hand'
-	  //here you go
-	  public static void testEveryHand5(){
+	  public static int[] createAllFiveCardHands(){
 		  
-		  //copy of the deck to make this method more portable
-
-		  double allHandPossibilities = 0.0;
-		  int totalHands = 2598960;
-		  int[] allCards = new int[totalHands*5];
+		  int[] allCards = new int[total5CardHandCount*5];
 		  int totalCounter=0;
 		  
 		  //this is how we create every possible 5 card hand
@@ -98,6 +93,36 @@ public class EvalTestPlayground {
 							  allCards[totalCounter*5+4]=allCardNums[m];
 							  totalCounter++;
 						  }
+		 return allCards;
+	  }
+	  
+	  //there is a speed test method below
+	  //but in case you want the good ol fashion 'create every single possible hand'
+	  //here you go
+	  public static void testEveryHand5(){
+		  
+		  //copy of the deck to make this method more portable
+
+		  double allHandPossibilities = 0.0;
+		 int totalHands = 2598960;
+		 /*int[] allCards = new int[totalHands*5];
+		  int totalCounter=0;
+		  
+		  //this is how we create every possible 5 card hand
+		  for(int i=0;i<allCardNums.length-1;i++)
+			  for(int j=i+1;j<allCardNums.length;j++)
+				  for(int k=j+1;k<allCardNums.length;k++)
+					  for(int l=k+1;l<allCardNums.length;l++)
+						  for(int m=l+1;m<allCardNums.length;m++){
+							  allCards[totalCounter*5]	=allCardNums[i];
+							  allCards[totalCounter*5+1]=allCardNums[j];
+							  allCards[totalCounter*5+2]=allCardNums[k];
+							  allCards[totalCounter*5+3]=allCardNums[l];
+							  allCards[totalCounter*5+4]=allCardNums[m];
+							  totalCounter++;
+						  }*/
+		  int[] allCards = createAllFiveCardHands();
+		  int totalCounter= allCards.length;
 		  
 		  //get start time
 		  long startT = System.nanoTime();
@@ -422,7 +447,7 @@ public static void testEveryHand7n(){
 		  for(int i=0;i<allCards.length;i+=5)
 			  handCounter[DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4])]++;
 		
-		  //this will show the frequence and percentages of each type of hand 
+		  //this will show the frequency and percentages of each type of hand 
 		  //these frequencies can be compared to the actual frequency percentages 
 		  //of known poker hands. This just shows the accuracy of the speed test
 		  //ths shows the speed test is testing random hands at the same handType/Frequency
@@ -536,7 +561,7 @@ public static void handCompareTest(int howMany){
 
 // can send user readable strings into here like 'As or Jc or 9h'..
 //capital letter for face cards and lower case letter for suit 
-public  static int humanEncodeEval(String as, String bs, String cs, String ds, String es){
+public  static int humanEncodeEvalLowerNoTen(String as, String bs, String cs, String ds, String es){
 
 	//convert string to numbers that the eval recognizes
 	char ac=as.charAt(0),bc=bs.charAt(0),cc=cs.charAt(0),dc=ds.charAt(0),ec=es.charAt(0);
@@ -557,6 +582,34 @@ public  static int humanEncodeEval(String as, String bs, String cs, String ds, S
 
 	return DeadHorse.eval5(a, b, c, d, e);
 }
+
+// can send user readable strings into here like 'AS or JC or 9H or TD (ten of diamonds)'..
+//capital letter for face cards and UPPER case letter for suit 
+public  static int humanEncodeEval(String as, String bs, String cs, String ds, String es){
+
+	//convert string to numbers that the eval recognizes
+	char ac=as.charAt(0),bc=bs.charAt(0),cc=cs.charAt(0),dc=ds.charAt(0),ec=es.charAt(0);
+	
+	
+	int a=((ac=='A'?1<<12:ac=='K'?1<<11:ac=='Q'?1<<10:ac=='J'?1<<9:ac=='T'?1<<8:1<<(ac-50))
+	|((ac=as.charAt(1))=='S'?0x10000:ac=='H'?0x8000:ac=='C'?0x4000:0x2000));
+	
+	int b=((bc=='A'?1<<12:bc=='K'?1<<11:bc=='Q'?1<<10:bc=='J'?1<<9:bc=='T'?1<<8:1<<(bc-50))		
+	|((bc=bs.charAt(1))=='S'?0x10000:bc=='H'?0x8000:bc=='C'?0x4000:0x2000));
+	
+	int c=((cc=='A'?1<<12:cc=='K'?1<<11:cc=='Q'?1<<10:cc=='J'?1<<9:cc=='T'?1<<8:1<<(cc-50))
+	|((cc=cs.charAt(1))=='S'?0x10000:cc=='H'?0x8000:cc=='C'?0x4000:0x2000));
+	
+	int d=((dc=='A'?1<<12:dc=='K'?1<<11:dc=='Q'?1<<10:dc=='J'?1<<9:dc=='T'?1<<8:1<<(dc-50))
+	|((dc=ds.charAt(1))=='S'?0x10000:dc=='H'?0x8000:dc=='C'?0x4000:0x2000));
+	
+	int e=((ec=='A'?1<<12:ec=='K'?1<<11:ec=='Q'?1<<10:ec=='J'?1<<9:ec=='T'?1<<8:1<<(ec-50))
+	|((ec=es.charAt(1))=='S'?0x10000:ec=='H'?0x8000:ec=='C'?0x4000:0x2000));
+	
+
+	return DeadHorse.eval5(a, b, c, d, e);
+}
+
 
 //give it human readable string cards, it will spit back a human readable hand type(pair, full house etc..)
 public static String humanEncodeFullHandEval(String as, String bs, String cs, String ds, String es){
@@ -944,6 +997,26 @@ int modd = 116;
 	*/
 	
 
+}
+
+public static void createAllPairs(int[] cards){
+	// how the hell can we test the evaluator to 100% make sure every result is actually correct
+	// currently we are able to produce every 5 card combination, and it seems after running all through the evaluator
+	//	that we have the correct counts of every hand, but can we be sure?
+	// if we can create a way to produce every single type of hand, then run them all through the evaluator and make sure they all get the right results.
+	
+	// so how do we create every possible pair for example?
+	// or what if we just create a way to verify if a hand is a pair, and a hand is a trips etc...that might be better.
+	// then we can just create every hand (which we already can do) and somehow verify
+	// 1. create every hand
+	// 2. as we create every hand, run that hand through evaluator, if it claims to comes back a pair, 
+		// run that same hand immediately through this method to validate it really is a pair and nothing else...
+	
+	
+	int[] allCards = createAllFiveCardHands();
+	int totalCounter= allCards.length;
+	
+	
 }
 
 
