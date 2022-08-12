@@ -458,8 +458,11 @@ public static void testEveryHand7n(){
 	  }
 
 public static void handCompareTest(int howMany){
-	
+	//Failed! 167772194,67117224,134299776,218138628,268437440,335544320,406848512,470810640,536872896
 	for(int i=0;i<howMany;i++){
+		
+		System.out.println("On #" + i);
+		
 	int[] highCard = HandMaker.makeHighCardHand();
 	int[] pair = HandMaker.makePairHand();
 	int[] twoPair = HandMaker.makeTwoPairHand();
