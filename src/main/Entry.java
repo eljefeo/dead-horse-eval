@@ -6,7 +6,7 @@ public class Entry {
 		{
 		 //EvalTestPlayground.showRandomizerDiagnostics(1);
 		// EvalTestPlayground.randomizerSpeedTest5CardDiagnostics(50);
-		 EvalTestPlayground.howLongUntilYouGetThisKindOfHands(2);
+		 //EvalTestPlayground.howLongUntilYouGetThisKindOfHands(2);
 		//EvalTestPlayground.handCompareTest(100);
 		 
 	//	EvalTestPlayground.randomizerSpeedTest7Card(10000000); 
@@ -24,7 +24,7 @@ public class Entry {
 		 
 		 
 		//EvalTestPlayground.testEveryHand5();
-		 
+		 EvalTestPlayground.testStatisticsManyHand5(5000000);
 		 
 		//EvalTestPlayground.testEveryHand7();
 		 

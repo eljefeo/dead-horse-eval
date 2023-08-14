@@ -99,6 +99,66 @@ public class EvalTestPlayground {
 	  //there is a speed test method below
 	  //but in case you want the good ol fashion 'create every single possible hand'
 	  //here you go
+
+public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card, 1 = pair, 2 = 2pair etc..
+	  /*
+	   * Goal with this is to run a whole bunch of hands and then check how often we get a type of hand vs expected 
+	   * so theres 2598960 different hands in a 5 card poker game/deck
+	   * 1302540 ways to make a high card hand 
+	   * 1098240 ways to make a pair
+	   * 123552 ways to make a two-pair
+	   * 54912 ways to make a 3 of a kind
+	   * 10200 ways to make a straight
+	   * 5108 ways to make a flush
+	   * 3744 ways to make a full house
+	   * 624 ways to make a 4 of a kind
+	   * 40 ways to make a straight flush
+	   * 
+	   */
+	
+	//please write code here now to do magic math stats stuff...
+	/*
+	int counter = 0;
+	while(true) {
+		counter++;
+		int[] fiveCards = HandMaker.getRandom5CardHand();
+		int res = DeadHorse.eval5(fiveCards);
+		res>>=26;
+		if(res > whatKind) {
+		  System.out.println("Finally got " + handNames[res] + " after " + counter +" hands");
+		  return;
+		}
+	}
+	*/
+}
+	  public static void testStatisticsManyHand5(int howManyHands){
+		  int totalHands5 = 2598960;
+		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howManyHands);
+		  int totalHandsNow = allCards.length / 5; 
+		  int[] handCounter = new int[9];
+		  double[] frequencyPerc = new double[handFrequency5.length];
+		  
+		 
+		  
+		  for(int i=0;i<allCards.length;i+=5){
+			  int res = DeadHorse.eval5(allCards[i],allCards[i+1],
+					  allCards[i+2],allCards[i+3],allCards[i+4])>>26;
+			  handCounter[res]++;
+		  }
+		  
+		  System.out.println("\nNow our hands:");
+		  for(int i=0; i<handFrequency5.length; i++) {
+			  frequencyPerc[i] = handFrequency5[i]/(double)totalHands5;
+			  System.out.println("hand frequency of " + handNames[i] + " : (had this many in this test: " + handCounter[i] + ")");
+			  System.out.println("expected:\t" + (frequencyPerc[i]*100) + "%");
+			  System.out.println("Actual:  \t" + ((double)( handCounter[i]/(double)totalHandsNow)*100) + "%");
+			  System.out.println();
+		  }
+		  
+		  
+		  //System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
+	  }
+	  
 	  public static void testEveryHand5(){
 		  
 		  //copy of the deck to make this method more portable
@@ -122,7 +182,7 @@ public class EvalTestPlayground {
 							  totalCounter++;
 						  }*/
 		  int[] allCards = createAllFiveCardHands();
-		  int totalCounter= allCards.length;
+		  int totalCounter= allCards.length/5;
 		  
 		  //get start time
 		  long startT = System.nanoTime();
@@ -137,9 +197,9 @@ public class EvalTestPlayground {
 		  System.out.println("Did all " + totalHands + " hands in " + time +" seconds");
 		  //hands per second in millions 
 		  Double currentTotal = totalHands/time/1000000;
-		  allHandPossibilities += currentTotal;
+		  //allHandPossibilities += currentTotal;
 		  System.out.println(currentTotal + " million hands a second\n");
-		  System.out.println("Running Total : " + allHandPossibilities + " percent complete");
+		  //System.out.println("Running Total : " + allHandPossibilities + " percent complete");
 		  //this is here to count how many of each type of hand come up.
 		  //it will re-eval each hand so we do not corrupt the timing with this extra process
 		  //this is here to show the accuracy of making/testing each hand possible
@@ -386,50 +446,25 @@ public static void testEveryHand7n(){
 public static void howLongUntilYouGetThisKindOfHands(int whatKind){ // 0 = high card, 1 = pair, 2 = 2pair etc..
 	  
 	int counter = 0;
+	int limit = 10000000;
+	if(whatKind > handNames.length-1) {
+		throw new IllegalArgumentException(whatKind + " is invalid. Please pick a hand from 0 - " + (handNames.length-1));
+	}
 	while(true) {
 		counter++;
 		int[] fiveCards = HandMaker.getRandom5CardHand();
 		int res = DeadHorse.eval5(fiveCards);
 		res>>=26;
-		if(res > whatKind) {
+		if(res == whatKind) {
 		  System.out.println("Finally got " + handNames[res] + " after " + counter +" hands");
 		  return;
+		} else if (counter > limit) {
+			System.out.println("Did not get a " + handNames[whatKind] + " after " + limit +" hands...stopping the search so it doesnt go on forever");
 		}
 	}
 
 }
 
-public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card, 1 = pair, 2 = 2pair etc..
-	  /*
-	   * Goal with this is to run a whole bunch of hands and then check how often we get a type of hand vs expected 
-	   * so theres 2598960 different hands in a 5 card poker game/deck
-	   * 1302540 ways to make a high card hand 
-	   * 1098240 ways to make a pair
-	   * 123552 ways to make a two-pair
-	   * 54912 ways to make a 3 of a kind
-	   * 10200 ways to make a straight
-	   * 5108 ways to make a flush
-	   * 3744 ways to make a full house
-	   * 624 ways to make a 4 of a kind
-	   * 40 ways to make a straight flush
-	   * 
-	   */
-	
-	//please write code here now to do magic math stats stuff...
-	/*
-	int counter = 0;
-	while(true) {
-		counter++;
-		int[] fiveCards = HandMaker.getRandom5CardHand();
-		int res = DeadHorse.eval5(fiveCards);
-		res>>=26;
-		if(res > whatKind) {
-		  System.out.println("Finally got " + handNames[res] + " after " + counter +" hands");
-		  return;
-		}
-	}
-	*/
-}
 	  
 	public static void randomizerSpeedTest5CardDiagnostics(int howMany){
 		  
