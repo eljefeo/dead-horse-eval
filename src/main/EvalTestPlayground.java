@@ -448,9 +448,9 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  //number of hands to burn through
 		  //pick a nice huge round number to let this sucker get warmed up
 		  // int howMany = 10000000;
-
+		System.out.println("Making " + howMany + " hands...");
 		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howMany);
-		  
+		  System.out.println("...Done making " + howMany + " hands");
 		 // long startTp = System.nanoTime();
 		  //let er rip, go through every hand, 5 cards at a time
 		/*  for(int i=0;i<allCards.length;i++)
@@ -459,7 +459,7 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  //get end time
 		//  long endTp = System.nanoTime();
 		  
-		  
+		  System.out.println("...Evaluating " + howMany + " hands");
 		  //get start time
 		  long startT = System.nanoTime();
 		  
