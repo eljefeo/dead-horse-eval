@@ -383,15 +383,62 @@ public static void testEveryHand7n(){
 	  }
 	  
 	  
+public static void howLongUntilYouGetThisKindOfHands(int whatKind){ // 0 = high card, 1 = pair, 2 = 2pair etc..
+	  
+	int counter = 0;
+	while(true) {
+		counter++;
+		int[] fiveCards = HandMaker.getRandom5CardHand();
+		int res = DeadHorse.eval5(fiveCards);
+		res>>=26;
+		if(res > whatKind) {
+		  System.out.println("Finally got " + handNames[res] + " after " + counter +" hands");
+		  return;
+		}
+	}
+
+}
+
+public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card, 1 = pair, 2 = 2pair etc..
+	  /*
+	   * Goal with this is to run a whole bunch of hands and then check how often we get a type of hand vs expected 
+	   * so theres 2598960 different hands in a 5 card poker game/deck
+	   * 1302540 ways to make a high card hand 
+	   * 1098240 ways to make a pair
+	   * 123552 ways to make a two-pair
+	   * 54912 ways to make a 3 of a kind
+	   * 10200 ways to make a straight
+	   * 5108 ways to make a flush
+	   * 3744 ways to make a full house
+	   * 624 ways to make a 4 of a kind
+	   * 40 ways to make a straight flush
+	   * 
+	   */
+	
+	//please write code here now to do magic math stats stuff...
+	/*
+	int counter = 0;
+	while(true) {
+		counter++;
+		int[] fiveCards = HandMaker.getRandom5CardHand();
+		int res = DeadHorse.eval5(fiveCards);
+		res>>=26;
+		if(res > whatKind) {
+		  System.out.println("Finally got " + handNames[res] + " after " + counter +" hands");
+		  return;
+		}
+	}
+	*/
+}
 	  
 	public static void randomizerSpeedTest5CardDiagnostics(int howMany){
 		  
-		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howMany);
+		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands2(howMany);
 		  
 		  for(int i=0;i<allCards.length;i+=5){
 			int res = DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
 			res>>=26;
-		  	System.out.println("\n"+res+", "+handNames[res]);
+		  	System.out.println(res+", "+handNames[res]);
 		  }
 	  }
 	
@@ -487,45 +534,38 @@ public static void handCompareTest(int howMany){
 	
 	if(hc<p && hc<tp && hc<t && hc<s && hc<f && hc<fh && hc<q && hc<sf){
 		//System.out.println("High card pass");
-	}
-	else{
+	} else{
 		if(highCard[0] != 0)
 			System.out.println("High card failed " + getName(highCard[0]) + " " + getName(highCard[1]) + " " + getName(highCard[2]) + " " + getName(highCard[3]) + " " + getName(highCard[4]) );
 	}
 	if(p<tp && p<t && p<s && p<f && p<fh && p<q && p<sf){
 		//System.out.println("Pair pass");
-	}
-	else{
+	} else{
 		System.out.println("Pair failed " + getName(pair[0]) + " " + getName(pair[1]) + " " + getName(pair[2]) + " " + getName(pair[3]) + " " + getName(pair[4]) );
 	}
 	if(tp<t && tp<s && tp<f && tp<fh && tp<q && tp<sf){
 		//System.out.println("TwoPair pass");
-	}
-	else{
+	} else{
 		System.out.println("TwoPair failed " + getName(twoPair[0]) + " " + getName(twoPair[1]) + " " + getName(twoPair[2]) + " " + getName(twoPair[3]) + " " + getName(twoPair[4]) );
 	}
 	if(t<s && t<f && t<fh && t<q && t<sf){
 		//System.out.println("Trips pass");
-	}
-	else{
+	} else{
 		System.out.println("Trips failed " + getName(trips[0]) + " " + getName(trips[1]) + " " + getName(trips[2]) + " " + getName(trips[3]) + " " + getName(trips[4]) );
 	}
 	if(s<f && s<fh && s<q && s<sf){
 		//System.out.println("Straight pass");
-	}
-	else{
+	} else{
 		System.out.println("Straight failed " + getName(straight[0]) + " " + getName(straight[1]) + " " + getName(straight[2]) + " " + getName(straight[3]) + " " + getName(straight[4]) );
 	}
 	if(f<fh && f<q && f<sf){
 		//System.out.println("Flush pass");
-	}
-	else{
+	} else{
 		System.out.println("Flush failed " + getName(flush[0]) + " " + getName(flush[1]) + " " + getName(flush[2]) + " " + getName(flush[3]) + " " + getName(flush[4]) );
 	}
 	if(fh<q && fh<sf){
 		//System.out.println("FullHouse pass");
-	}
-	else{
+	} else{
 		System.out.println("FullHouse failed " + getName(fullhouse[0]) + " " + getName(fullhouse[1]) + " " + getName(fullhouse[2]) + " " + getName(fullhouse[3]) + " " + getName(fullhouse[4]) );
 	}
 
@@ -617,7 +657,7 @@ public  static int humanEncodeEval(String as, String bs, String cs, String ds, S
 //give it human readable string cards, it will spit back a human readable hand type(pair, full house etc..)
 public static String humanEncodeFullHandEval(String as, String bs, String cs, String ds, String es){
 	int res= EvalTestPlayground.humanEncodeEval(as,bs,cs,ds,es);
-	return "unique hand value = " +res+ "\n"+ as + ", " + bs + ", " +cs+", " +ds+", "+es+"\n= "+ handNames[res>>26];
+	return "unique hand value = " + res + "\n"+ as + ", " + bs + ", " +cs+", " +ds+", "+es+"\n= "+ handNames[res>>26];
 }
 
 public static void randomizerSpeedTest7Card(int howMany){

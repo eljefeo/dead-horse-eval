@@ -15,6 +15,14 @@ public class DeadHorse {
 		return strt?(x==4111?15:x)|(flsh?0x20000000:0x10000000):flsh?0x14000000:x;
 	}  
 	
+	public static int eval5(int[] cards){
+		if(cards.length != 5) {
+			throw new IllegalArgumentException("You must pass in 5 numbers and only 5 numbers");
+		}
+		
+		return eval5(cards[0],cards[1],cards[2],cards[3],cards[4]);
+	}
+	
 	/*
  	//So ugly its beautiful
 public static int eval5(int a, int b, int c, int d, int e){

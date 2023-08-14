@@ -1,5 +1,8 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class HandMaker {
@@ -12,7 +15,68 @@ public class HandMaker {
 				  8193,8194,8196,8200,8208,8224,8256,8320,8448,8704,9216,10240,12288
 			  };
 
-	  public static int[] makeLotsOfRandom5CardHands(int howMany){
+	 
+	 public static int[] getRandom5CardHand(){ //if used a lot this can be optimized, its likely slow with the toList and boxed etc..
+
+		List<Integer> fiftyTwoCards = new ArrayList<Integer>();
+		fiftyTwoCards.addAll(Arrays.stream(allc).boxed().toList());
+
+		int[] fiveCards = new int[5];
+		
+		Random r = new Random();
+		for(int i=0;i<5;i++){
+			int randomIndex = r.nextInt(fiftyTwoCards.size());
+	        Integer randomElement = fiftyTwoCards.get(randomIndex);
+	        fiftyTwoCards.remove(randomIndex);
+	        fiveCards[i] = randomElement;
+		}
+		    
+		return fiveCards;	
+	 }
+	 
+	 public static int[] makeLotsOfRandom5CardHands2(int howMany){
+		int []allCards = new int[howMany*5];
+		Random r = new Random();
+		for (int i = 0; i < howMany; i++) {
+			int[] fiveCards = getRandom5CardHand();
+			for(int j=0;j<5;j++){
+		        allCards[5*i+j] = fiveCards[j];
+			}
+		}
+		return allCards;	
+	 }
+	 
+	 
+	 public static int[] makeLotsOfRandom5CardHands(int howMany){
+		 //List<Integer> fiftyTwoCards = Arrays.asList(allc.clone())
+				 
+		List<Integer> fiftyTwoCards = Arrays.stream(allc).boxed().toList();
+		
+		
+		//make a copy of array to do each hand
+		List<Integer> allc2 = new ArrayList<Integer>(fiftyTwoCards);
+		  //the total array with all the cards will be a 1-D array
+		  //every chunk of 5 cards will be a different random hand
+		  int []allCards = new int[howMany*5];
+		  
+		  
+		Random r = new Random();
+		for (int i = 0; i < howMany; i++) {
+			for(int j=0;j<5;j++){
+				int randomIndex = r.nextInt(allc2.size());
+		        Integer randomElement = allc2.get(randomIndex);
+		        allc2.remove(randomIndex);
+		        allCards[5*i+j] = randomElement;
+			}
+			allc2 = new ArrayList<Integer>(fiftyTwoCards);
+		        
+		}
+
+		  
+		return allCards;	
+	 }
+	 
+	  public static int[] makeLotsOfRandom5CardHandsIntArr(int howMany){
 		  
 		  //keep a copy of the original array
 		  // in case we want to use this method on its own out of this class

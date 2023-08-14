@@ -5,8 +5,9 @@ public class Entry {
 	 public static void main (String[] args) throws java.lang.Exception
 		{
 		 //EvalTestPlayground.showRandomizerDiagnostics(1);
-		 //EvalTestPlayground.randomizerSpeedTest5CardDiagnostics(50);
-		EvalTestPlayground.handCompareTest(100);
+		// EvalTestPlayground.randomizerSpeedTest5CardDiagnostics(50);
+		 EvalTestPlayground.howLongUntilYouGetThisKindOfHands(7);
+		//EvalTestPlayground.handCompareTest(100);
 		 
 	//	EvalTestPlayground.randomizerSpeedTest7Card(10000000); 
 		//EvalTestPlayground.randomizerSpeedTest7nCard(10000000); 
