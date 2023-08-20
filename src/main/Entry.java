@@ -24,8 +24,8 @@ public class Entry {
 		 
 		 
 		//EvalTestPlayground.testEveryHand5();
-		 EvalTestPlayground.testStatisticsManyHand5(5000000);
-		 
+		// EvalTestPlayground.testStatisticsManyHand5(5000000);
+		 DeadHorse7.t();
 		//EvalTestPlayground.testEveryHand7();
 		 
 		//EvalTestPlayground.testEveryHand7n();

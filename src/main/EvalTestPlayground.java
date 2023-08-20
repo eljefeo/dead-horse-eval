@@ -839,6 +839,9 @@ public static String bin(int i){
 public static String bin32(int i){
 	return String.format("%32s", Integer.toBinaryString(i)).replace(' ', '0');
 }
+public static String bin64(long l){
+	return String.format("%64s", Long.toBinaryString(l)).replace(' ', '0');
+}
 	  
 public static String getName(int j){
 	for(int i=0;i<allCardNums.length;i++){

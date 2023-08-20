@@ -3,7 +3,22 @@ package main;
 public class DeadHorse7 {
 	
 	public static void t() {
-		//001001001001001001001001001001001001001001001001001
+		
+		long singleCardMask = 78536544841L;
+		long dupCardMask = 471219269046L;
+		long suitMask = 2251250057871360L;
+		long cardMask = 549755813887L;
+		
+		long twoH = 35184372088833L;
+		String twoHString = EvalTestPlayground.bin64(twoH);
+		System.out.println("two of hearts: " + twoHString);
+		
+		//001001001001001001001001001001001001001001001001001 - mask for all single cards and single suit:  321685687669321
+		//001001001001001001001001001001001001001 - mask for all single cards 78536544841
+		//110110110110110110110110110110110110110 - mask for all cards that have duplicates: 471219269046
+		 //suit mask: 111111111111000000000000000000000000000000000000000 (decimal 2251250057871360) hopefully I got them all correct here
+		 //111111111111111111111111111111111111111 - card mask 549755813887
+		
 		/*
 		 for cards we can use 3 bits each
 		 001 - this means one of this card
@@ -24,8 +39,23 @@ public class DeadHorse7 {
 		 001001001001001001001001001001001001001001001001001
 		 S  H  C  D  A  K  Q  J 10  9  8  7  6  5  4  3  2
 		 
-		 two of hearts is 000001000000000000000000000000000000000000000000001
+		 two of hearts is 000001000000000000000000000000000000000000000000001 (decimal 35184372088833)
+		 ;
+		 That way if you have a few 2's like a 2 of hearts, 2 of spades, and 2 of clubs..
+		 	when you add them together it will be 001 (1 two) 010 (2 twos) 011 (3 twos)
+		 	
+		 	
+		 	
+		
+		 
+		 mmmm mnmmmm
+		 
+		 
+		 
 		 */
+		
+		
+		
 	}
 
 }
