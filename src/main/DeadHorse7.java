@@ -10,14 +10,21 @@ public class DeadHorse7 {
 		long cardMask = 549755813887L;
 		
 		long twoH = 35184372088833L;
-		String twoHString = EvalTestPlayground.bin64(twoH);
+		long twS = 281474976710657L;
+		String twoHString = EvalTestPlayground.bin51(twoH);
+		String twoSString = EvalTestPlayground.bin51(twS);
 		System.out.println("two of hearts: " + twoHString);
-		
+		System.out.println("two of spades: " + twoSString);
+		System.out.println("8 plus 1: " + (8 + 1));
+		System.out.println("8 OR 1: " + (8 | 1));
+		System.out.println("2h plus 2s: " + (twoH + twS));
+		System.out.println("2h OR 2s:   " + (twoH | twS));
 		//001001001001001001001001001001001001001001001001001 - mask for all single cards and single suit:  321685687669321
 		//001001001001001001001001001001001001001 - mask for all single cards 78536544841
 		//110110110110110110110110110110110110110 - mask for all cards that have duplicates: 471219269046
 		 //suit mask: 111111111111000000000000000000000000000000000000000 (decimal 2251250057871360) hopefully I got them all correct here
 		 //111111111111111111111111111111111111111 - card mask 549755813887
+
 		
 		/*
 		 for cards we can use 3 bits each
@@ -40,6 +47,7 @@ public class DeadHorse7 {
 		 S  H  C  D  A  K  Q  J 10  9  8  7  6  5  4  3  2
 		 
 		 two of hearts is 000001000000000000000000000000000000000000000000001 (decimal 35184372088833)
+		 two of spades is 001000000000000000000000000000000000000000000000001  281474976710657
 		 ;
 		 That way if you have a few 2's like a 2 of hearts, 2 of spades, and 2 of clubs..
 		 	when you add them together it will be 001 (1 two) 010 (2 twos) 011 (3 twos)
