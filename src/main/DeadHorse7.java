@@ -6,6 +6,14 @@ public class DeadHorse7 {
 	
 	public static void t() {
 		
+		String[] cardsStrings = new String [] {"AH", "5S", "7S", "AC", "2C", "TD", "4S"};
+		long[] hand = convertHumanHandToBinary7(cardsStrings);
+		for(int i=0; i<cardsStrings.length; i++) {
+			System.out.println(cardsStrings[i] + " : " + hand[i] + " :\t\t\t" + EvalTestPlayground.bin51(hand[i]));
+		}
+		long ord = hand[0] | hand[1] | hand[2] | hand[3] | hand[4] | hand[5] | hand[6];
+		long sum = hand[0] + hand[1] + hand[2] + hand[3] + hand[4] + hand[5] + hand[6];
+		
 		String testCard = "AH";
 		long converted = convertHumanToBinary7(testCard);
 		System.out.println("card : " + testCard + " : " + converted + " : " + EvalTestPlayground.bin51(converted));
@@ -28,6 +36,15 @@ public class DeadHorse7 {
 		System.out.println("8 OR 1: " + (8 | 1));
 		System.out.println("2h plus 2s: " + (twoH + twS));
 		System.out.println("2h OR 2s:   " + (twoH | twS));
+		
+		
+		
+		long pairs = sum & pairMask;
+		
+		System.out.println("ORD : " + EvalTestPlayground.bin51(ord));
+		System.out.println("SUM : " + EvalTestPlayground.bin51(sum));
+		System.out.println("sum == ord : " + (sum == ord));
+		System.out.println("PAIRS : " + EvalTestPlayground.bin51(pairs));
 		//001001001001001001001001001001001001001001001001001 - mask for all single cards and single suit:  321685687669321
 		//001001001001001001001001001001001001001 - mask for all single cards 78536544841
 		//110110110110110110110110110110110110110 - mask for all cards that have pair or trips: 471219269046 -- may not need this
@@ -80,7 +97,7 @@ public class DeadHorse7 {
 	}
 	
 	public static long[] getSomeHand() {
-		return convertHumanHandToBinary7(new String [] {"AH", "5S", "7S", "AC", "2C", "10D"});
+		return convertHumanHandToBinary7(new String [] {"AH", "5S", "7S", "AC", "2C", "TD", "4S"});
 	}
 	
 	public static long[] convertHumanHandToBinary7(String[] cards) {
@@ -100,8 +117,8 @@ public class DeadHorse7 {
 			throw new IllegalArgumentException("Card must be 2 chars long");
 		}
 		
-		char nn = '9';
-		System.out.println("char 9 : " + nn);
+		//char nn = '10';
+		//System.out.println("char 9 : " + nn);
 		
 		
 		
@@ -113,16 +130,19 @@ public class DeadHorse7 {
 		//card
 		if(ca == "A".charAt(0)) {
 			ret = (1L << (12*3));
-			System.out.println("first char A : " + EvalTestPlayground.bin51(ret));
+			//System.out.println("first char A : " + EvalTestPlayground.bin51(ret));
 		} else if(ca == "K".charAt(0)) {
 			ret = 1L << (11*3);
-			System.out.println("first char K : " + EvalTestPlayground.bin51(ret));
+			//System.out.println("first char K : " + EvalTestPlayground.bin51(ret));
 		} else if(ca == "Q".charAt(0)) {
 			ret = 1L << (10*3);
-			System.out.println("first char Q : " + EvalTestPlayground.bin51(ret));
+			//System.out.println("first char Q : " + EvalTestPlayground.bin51(ret));
 		} else if(ca == "J".charAt(0)) {
 			ret = 1L << (9*3);
-			System.out.println("first char J : " + EvalTestPlayground.bin51(ret));
+			//System.out.println("first char J : " + EvalTestPlayground.bin51(ret));
+		} else if(ca == "T".charAt(0)) {
+			ret = 1L << (8*3);
+			//System.out.println("first char J : " + EvalTestPlayground.bin51(ret));
 		} else {
 			int p = Integer.parseInt(ca + "");
 			ret = 1L << ((p-2)*3);
@@ -131,16 +151,16 @@ public class DeadHorse7 {
 		// suit
 		if(cb == "S".charAt(0)) {
 			ret |= 1L << (16*3);
-			System.out.println("second char S : " + EvalTestPlayground.bin51(ret));
-		} else if(cb == "D".charAt(0)) {
+			//System.out.println("second char S : " + EvalTestPlayground.bin51(ret));
+		} else if(cb == "H".charAt(0)) {
 			ret |= 1L << (15*3);
-			System.out.println("second char D : " + EvalTestPlayground.bin51(ret));
+			//System.out.println("second char H : " + EvalTestPlayground.bin51(ret));
 		} else if(cb == "C".charAt(0)) {
 			ret |= 1L << (14*3);
-			System.out.println("second char C : " + EvalTestPlayground.bin51(ret));
-		} else if(cb == "H".charAt(0)) {
+			//System.out.println("second char C : " + EvalTestPlayground.bin51(ret));
+		} else if(cb == "D".charAt(0)) {
 			ret |= 1L << (13*3);
-			System.out.println("second char H : " + EvalTestPlayground.bin51(ret));
+			//System.out.println("second char D : " + EvalTestPlayground.bin51(ret));
 		}
 		
 		return ret;
