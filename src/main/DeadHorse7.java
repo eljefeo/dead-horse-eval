@@ -6,6 +6,10 @@ public class DeadHorse7 {
 	
 	public static void t() {
 		
+		String testCard = "AH";
+		long converted = convertHumanToBinary7(testCard);
+		System.out.println("card : " + testCard + " : " + converted + " : " + EvalTestPlayground.bin51(converted));
+		
 		long singleCardMask = 78536544841L;
 		//long singleOrPairOrTrip = 471219269046L;
 		long pairMask = 157073089682L;
@@ -55,6 +59,8 @@ public class DeadHorse7 {
 		 
 		 two of hearts is 000001000000000000000000000000000000000000000000001 (decimal 35184372088833)
 		 two of spades is 001000000000000000000000000000000000000000000000001  281474976710657
+		 				  
+		 //7 of hearts  ? 000000000001000000000000000000000001000000000000000
 		 ;
 		 That way if you have a few 2's like a 2 of hearts, 2 of spades, and 2 of clubs..
 		 	when you add them together it will be 001 (1 two) 010 (2 twos) 011 (3 twos)
@@ -73,9 +79,71 @@ public class DeadHorse7 {
 		
 	}
 	
-	public static void convertHumanToBinary7(String card) {
+	public static long[] getSomeHand() {
+		return convertHumanHandToBinary7(new String [] {"AH", "5S", "7S", "AC", "2C", "10D"});
+	}
+	
+	public static long[] convertHumanHandToBinary7(String[] cards) {
+		if(cards.length != 7) {
+			throw new IllegalArgumentException("There must be 7 cards");
+		}
+		long[] ret = new long[cards.length];
+		for(int i = 0; i < cards.length; i++) {
+			ret[i] = convertHumanToBinary7(cards[i]);
+		}
+		return ret;
+	}
+	
+	public static long convertHumanToBinary7(String card) {
 		//like AH or 5S
+		if(card.length() != 2) {
+			throw new IllegalArgumentException("Card must be 2 chars long");
+		}
 		
+		char nn = '9';
+		System.out.println("char 9 : " + nn);
+		
+		
+		
+		char ca = card.charAt(0);
+		char cb = card.charAt(1);
+		int a = 13, k = 12, q = 11, j = 10;
+		long ret = 0;
+		
+		//card
+		if(ca == "A".charAt(0)) {
+			ret = (1L << (12*3));
+			System.out.println("first char A : " + EvalTestPlayground.bin51(ret));
+		} else if(ca == "K".charAt(0)) {
+			ret = 1L << (11*3);
+			System.out.println("first char K : " + EvalTestPlayground.bin51(ret));
+		} else if(ca == "Q".charAt(0)) {
+			ret = 1L << (10*3);
+			System.out.println("first char Q : " + EvalTestPlayground.bin51(ret));
+		} else if(ca == "J".charAt(0)) {
+			ret = 1L << (9*3);
+			System.out.println("first char J : " + EvalTestPlayground.bin51(ret));
+		} else {
+			int p = Integer.parseInt(ca + "");
+			ret = 1L << ((p-2)*3);
+		}
+		
+		// suit
+		if(cb == "S".charAt(0)) {
+			ret |= 1L << (16*3);
+			System.out.println("second char S : " + EvalTestPlayground.bin51(ret));
+		} else if(cb == "D".charAt(0)) {
+			ret |= 1L << (15*3);
+			System.out.println("second char D : " + EvalTestPlayground.bin51(ret));
+		} else if(cb == "C".charAt(0)) {
+			ret |= 1L << (14*3);
+			System.out.println("second char C : " + EvalTestPlayground.bin51(ret));
+		} else if(cb == "H".charAt(0)) {
+			ret |= 1L << (13*3);
+			System.out.println("second char H : " + EvalTestPlayground.bin51(ret));
+		}
+		
+		return ret;
 	}
 
 }
