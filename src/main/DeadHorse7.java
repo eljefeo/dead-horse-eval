@@ -6,7 +6,14 @@ public class DeadHorse7 {
 	
 	public static void t() {
 		
-		String[] cardsStrings = new String [] {"AH", "5S", "7S", "AC", "2C", "TD", "4S"};
+		//String[] cardsStrings = new String [] {"AH", "5S", "7S", "AC", "2C", "TD", "4S"}; //pair
+		//String[] cardsStrings = new String [] {"AH", "5S", "4C", "AC", "2C", "4D", "4S"}; //pair and trips
+		//String[] cardsStrings = new String [] {"AH", "5S", "4C", "AC", "2C", "4D", "6S"}; //2 pair
+		//String[] cardsStrings = new String [] {"AH", "5S", "4C", "AC", "2C", "4D", "2S"}; //3 pair
+		//String[] cardsStrings = new String [] {"AH", "5S", "4C", "AC", "4S", "4D", "AS"}; //2 trips
+		//String[] cardsStrings = new String [] {"4H", "5S", "4C", "AC", "4S", "4D", "9S"}; //Quads and pair
+		//String[] cardsStrings = new String [] {"4H", "5S", "4C", "AC", "4S", "4D", "AS"}; //Quads and pair
+		String[] cardsStrings = new String [] {"4H", "AD", "4C", "AC", "4S", "4D", "AS"}; //Quads and trips
 		long[] hand = convertHumanHandToBinary7(cardsStrings);
 		for(int i=0; i<cardsStrings.length; i++) {
 			System.out.println(cardsStrings[i] + " : " + hand[i] + " :\t\t\t" + EvalTestPlayground.bin51(hand[i]));
@@ -40,11 +47,18 @@ public class DeadHorse7 {
 		
 		
 		long pairs = sum & pairMask;
-		
+		long trips = sum & (pairs>>1);
+		long onlyPairs = (pairs>>1) ^ trips; //since pairs includes pairs and also trips, this will get rid of trips and only include pairs
+		long quads = sum & quadMask;
 		System.out.println("ORD : " + EvalTestPlayground.bin51(ord));
 		System.out.println("SUM : " + EvalTestPlayground.bin51(sum));
 		System.out.println("sum == ord : " + (sum == ord));
 		System.out.println("PAIRS : " + EvalTestPlayground.bin51(pairs));
+		System.out.println("TRIPS : " + EvalTestPlayground.bin51(trips));
+		System.out.println("ONLY PAIRS : " + EvalTestPlayground.bin51(onlyPairs));
+		System.out.println("QUADS : " + EvalTestPlayground.bin51(quads));
+		//we can find trips by getting the pairs, shift right 1, then & the original sum. only trips will be left... I think
+		
 		//001001001001001001001001001001001001001001001001001 - mask for all single cards and single suit:  321685687669321
 		//001001001001001001001001001001001001001 - mask for all single cards 78536544841
 		//110110110110110110110110110110110110110 - mask for all cards that have pair or trips: 471219269046 -- may not need this
