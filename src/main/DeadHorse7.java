@@ -2,10 +2,15 @@ package main;
 
 public class DeadHorse7 {
 	
+	
+	
 	public static void t() {
 		
 		long singleCardMask = 78536544841L;
-		long dupCardMask = 471219269046L;
+		//long singleOrPairOrTrip = 471219269046L;
+		long pairMask = 157073089682L;
+		//long tripMask = trips are combo of single card mask and pair mask
+		long quadMask = 314146179364L;
 		long suitMask = 2251250057871360L;
 		long cardMask = 549755813887L;
 		
@@ -21,7 +26,9 @@ public class DeadHorse7 {
 		System.out.println("2h OR 2s:   " + (twoH | twS));
 		//001001001001001001001001001001001001001001001001001 - mask for all single cards and single suit:  321685687669321
 		//001001001001001001001001001001001001001 - mask for all single cards 78536544841
-		//110110110110110110110110110110110110110 - mask for all cards that have duplicates: 471219269046
+		//110110110110110110110110110110110110110 - mask for all cards that have pair or trips: 471219269046 -- may not need this
+		//010010010010010010010010010010010010010 - mask for all cards that have pair: 157073089682
+		//100100100100100100100100100100100100100 - mask for quads - 314146179364
 		 //suit mask: 111111111111000000000000000000000000000000000000000 (decimal 2251250057871360) hopefully I got them all correct here
 		 //111111111111111111111111111111111111111 - card mask 549755813887
 
@@ -63,6 +70,11 @@ public class DeadHorse7 {
 		 */
 		
 		
+		
+	}
+	
+	public static void convertHumanToBinary7(String card) {
+		//like AH or 5S
 		
 	}
 
