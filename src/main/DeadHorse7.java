@@ -1,11 +1,43 @@
 package main;
 
+import java.util.Arrays;
+
 public class DeadHorse7 {
 	
+	static long singleCardMask = 78536544841L;
+	//long singleOrPairOrTrip = 471219269046L;
+	static long pairMask = 157073089682L;
+	//long tripMask = trips are combo of single card mask and pair mask
+	static long quadMask = 314146179364L;
+	static long suitMask = 2251250057871360L;
+	static long cardMask = 549755813887L;
+	/*
+	long pairs = sum & pairMask;
+	long trips = sum & (pairs>>1);
+	long onlyPairs = (pairs>>1) ^ trips; //since pairs includes pairs and also trips, this will get rid of trips and only include pairs
+	long quads = sum & quadMask;
+	 */
+	
+
+	public static void tt() {
+		long[] someCards = new long[] {convertHumanToBinary7("2H"),convertHumanToBinary7("3H"),convertHumanToBinary7("4H"),
+				convertHumanToBinary7("5H"),convertHumanToBinary7("6H"),convertHumanToBinary7("7H"),convertHumanToBinary7("8H"),
+				convertHumanToBinary7("9H"),convertHumanToBinary7("TH"),convertHumanToBinary7("JH"),convertHumanToBinary7("QH"),
+				convertHumanToBinary7("KH"),convertHumanToBinary7("AH")
+		};
+		
+		
+		for(int i=0; i<someCards.length; i++) {
+			//System.out.println("before:\t\t" + EvalTestPlayground.bin51(randomCards[i]));
+			someCards[i] &= 549755813887L;
+			System.out.println("after:\t\t" + EvalTestPlayground.bin51(someCards[i]) + " : " + someCards[i]);
+		}
+	}
 	
 	
 	public static void t() {
-		
+		tt();
+		makeAll52Cards7bin();
 		//String[] cardsStrings = new String [] {"AH", "5S", "7S", "AC", "2C", "TD", "4S"}; //pair
 		//String[] cardsStrings = new String [] {"AH", "5S", "4C", "AC", "2C", "4D", "4S"}; //pair and trips
 		//String[] cardsStrings = new String [] {"AH", "5S", "4C", "AC", "2C", "4D", "6S"}; //2 pair
@@ -15,34 +47,28 @@ public class DeadHorse7 {
 		//String[] cardsStrings = new String [] {"4H", "5S", "4C", "AC", "4S", "4D", "AS"}; //Quads and pair
 		String[] cardsStrings = new String [] {"4H", "AD", "4C", "AC", "4S", "4D", "AS"}; //Quads and trips
 		long[] hand = convertHumanHandToBinary7(cardsStrings);
-		for(int i=0; i<cardsStrings.length; i++) {
+		for(int i=0; i<hand.length; i++) {
 			System.out.println(cardsStrings[i] + " : " + hand[i] + " :\t\t\t" + EvalTestPlayground.bin51(hand[i]));
 		}
 		long ord = hand[0] | hand[1] | hand[2] | hand[3] | hand[4] | hand[5] | hand[6];
 		long sum = hand[0] + hand[1] + hand[2] + hand[3] + hand[4] + hand[5] + hand[6];
 		
-		String testCard = "AH";
-		long converted = convertHumanToBinary7(testCard);
-		System.out.println("card : " + testCard + " : " + converted + " : " + EvalTestPlayground.bin51(converted));
+		//String testCard = "AH";
+		//long converted = convertHumanToBinary7(testCard);
+		//System.out.println("card : " + testCard + " : " + converted + " : " + EvalTestPlayground.bin51(converted));
 		
-		long singleCardMask = 78536544841L;
-		//long singleOrPairOrTrip = 471219269046L;
-		long pairMask = 157073089682L;
-		//long tripMask = trips are combo of single card mask and pair mask
-		long quadMask = 314146179364L;
-		long suitMask = 2251250057871360L;
-		long cardMask = 549755813887L;
+
 		
-		long twoH = 35184372088833L;
-		long twS = 281474976710657L;
-		String twoHString = EvalTestPlayground.bin51(twoH);
-		String twoSString = EvalTestPlayground.bin51(twS);
-		System.out.println("two of hearts: " + twoHString);
-		System.out.println("two of spades: " + twoSString);
-		System.out.println("8 plus 1: " + (8 + 1));
-		System.out.println("8 OR 1: " + (8 | 1));
-		System.out.println("2h plus 2s: " + (twoH + twS));
-		System.out.println("2h OR 2s:   " + (twoH | twS));
+		//long twoH = 35184372088833L;
+		//long twS = 281474976710657L;
+		//String twoHString = EvalTestPlayground.bin51(twoH);
+		//String twoSString = EvalTestPlayground.bin51(twS);
+		//System.out.println("two of hearts: " + twoHString);
+		//System.out.println("two of spades: " + twoSString);
+		//System.out.println("8 plus 1: " + (8 + 1));
+		//System.out.println("8 OR 1: " + (8 | 1));
+		//System.out.println("2h plus 2s: " + (twoH + twS));
+		//System.out.println("2h OR 2s:   " + (twoH | twS));
 		
 		
 		
@@ -50,13 +76,23 @@ public class DeadHorse7 {
 		long trips = sum & (pairs>>1);
 		long onlyPairs = (pairs>>1) ^ trips; //since pairs includes pairs and also trips, this will get rid of trips and only include pairs
 		long quads = sum & quadMask;
+		
+		if(onlyPairs > 0) {
+			System.out.println("PAIRS : " + EvalTestPlayground.bin51(onlyPairs));
+		}
+		if(trips > 0) {
+			System.out.println("TRIPS : " + EvalTestPlayground.bin51(trips));
+		}
+		if(quads > 0) {
+			System.out.println("QUADS : " + EvalTestPlayground.bin51(quads));
+		}
 		System.out.println("ORD : " + EvalTestPlayground.bin51(ord));
 		System.out.println("SUM : " + EvalTestPlayground.bin51(sum));
-		System.out.println("sum == ord : " + (sum == ord));
-		System.out.println("PAIRS : " + EvalTestPlayground.bin51(pairs));
-		System.out.println("TRIPS : " + EvalTestPlayground.bin51(trips));
-		System.out.println("ONLY PAIRS : " + EvalTestPlayground.bin51(onlyPairs));
-		System.out.println("QUADS : " + EvalTestPlayground.bin51(quads));
+		//System.out.println("sum == ord : " + (sum == ord));
+		///System.out.println("PAIRS : " + EvalTestPlayground.bin51(pairs));
+		//System.out.println("TRIPS : " + EvalTestPlayground.bin51(trips));
+		//System.out.println("ONLY PAIRS : " + EvalTestPlayground.bin51(onlyPairs));
+		//System.out.println("QUADS : " + EvalTestPlayground.bin51(quads));
 		//we can find trips by getting the pairs, shift right 1, then & the original sum. only trips will be left... I think
 		
 		//001001001001001001001001001001001001001001001001001 - mask for all single cards and single suit:  321685687669321
@@ -125,59 +161,65 @@ public class DeadHorse7 {
 		return ret;
 	}
 	
-	public static long convertHumanToBinary7(String card) {
+	public static long[] makeAll52Cards7bin() {
+		char[] acceptableCards = new char[] {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
+		char[] acceptableSuits = new char[] {'S', 'H', 'C', 'D'};
+		int cardCount = 13;
+		int suitCount = 4;
+		long[] cards = new long[cardCount * suitCount];
+		for(int i = 0; i < cardCount; i++) {
+			for(int j = 0; j < suitCount; j++) {
+				//(1L << ((card-2)*3)) | (1L << (suit*3));
+				cards[i*j] = (1L << (13 + j) * 3) | (1L << (i*3));
+				System.out.println("Card " + i + " " + j + " : " + cards[i*j] + " :: \n" + EvalTestPlayground.bin51(cards[i*j]));
+			}
+		}
+		return cards;
+	}
+	
+	
+	//This function is not optimized, just here to make things easier. If actually needed in some performance situation, we should find faster ways to do this
+	public static long convertHumanToBinary7(String cardString) {
 		//like AH or 5S
-		if(card.length() != 2) {
-			throw new IllegalArgumentException("Card must be 2 chars long");
+		char[] acceptableCards = new char[] {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
+		char[] acceptableSuits = new char[] {'S', 'H', 'C', 'D'};
+		char ca = cardString.charAt(0);
+		char cb = cardString.charAt(1);
+		if(cardString.length() != 2 || new String(acceptableCards).indexOf(ca) == -1 || new String(acceptableSuits).indexOf(cb) == -1) {
+			throw new IllegalArgumentException("Card must be 2 chars long and must be in format AH, 6D, TS, JC, 2H etc... :  " + cardString);
 		}
 		
-		//char nn = '10';
-		//System.out.println("char 9 : " + nn);
-		
-		
-		
-		char ca = card.charAt(0);
-		char cb = card.charAt(1);
-		int a = 13, k = 12, q = 11, j = 10;
-		long ret = 0;
-		
 		//card
+		int card = 0, suit = 0;
 		if(ca == "A".charAt(0)) {
-			ret = (1L << (12*3));
-			//System.out.println("first char A : " + EvalTestPlayground.bin51(ret));
+			card = 14;
 		} else if(ca == "K".charAt(0)) {
-			ret = 1L << (11*3);
-			//System.out.println("first char K : " + EvalTestPlayground.bin51(ret));
+			card = 13;
 		} else if(ca == "Q".charAt(0)) {
-			ret = 1L << (10*3);
-			//System.out.println("first char Q : " + EvalTestPlayground.bin51(ret));
+			card = 12;
 		} else if(ca == "J".charAt(0)) {
-			ret = 1L << (9*3);
-			//System.out.println("first char J : " + EvalTestPlayground.bin51(ret));
+			card = 11;
 		} else if(ca == "T".charAt(0)) {
-			ret = 1L << (8*3);
-			//System.out.println("first char J : " + EvalTestPlayground.bin51(ret));
+			card = 10;
 		} else {
-			int p = Integer.parseInt(ca + "");
-			ret = 1L << ((p-2)*3);
+			card = Integer.parseInt(ca + "");
 		}
 		
 		// suit
 		if(cb == "S".charAt(0)) {
-			ret |= 1L << (16*3);
-			//System.out.println("second char S : " + EvalTestPlayground.bin51(ret));
+			suit = 16;
 		} else if(cb == "H".charAt(0)) {
-			ret |= 1L << (15*3);
-			//System.out.println("second char H : " + EvalTestPlayground.bin51(ret));
+			suit = 15;
 		} else if(cb == "C".charAt(0)) {
-			ret |= 1L << (14*3);
-			//System.out.println("second char C : " + EvalTestPlayground.bin51(ret));
+			suit = 14;
 		} else if(cb == "D".charAt(0)) {
-			ret |= 1L << (13*3);
-			//System.out.println("second char D : " + EvalTestPlayground.bin51(ret));
+			suit = 13;
 		}
+		return (1L << ((card-2)*3)) | (1L << (suit*3));
+	}
+	
+	public static String convertBinaryToHuman7(long card) {
 		
-		return ret;
 	}
 
 }
