@@ -56,6 +56,9 @@ public class DeadHorse7 {
 		tt();
 		long[] all52Cards = makeAll52Cards7bin();
 		for(long l : all52Cards) {
+			System.out.print(" " + l + "L,");
+		}
+		for(long l : all52Cards) {
 			System.out.println(convertBinaryToHuman7(l));
 		}
 		//String[] cardsStrings = new String [] {"AH", "5S", "7S", "AC", "2C", "TD", "4S"}; //pair
@@ -186,11 +189,12 @@ public class DeadHorse7 {
 		int cardCount = 13;
 		int suitCount = 4;
 		long[] cards = new long[cardCount * suitCount];
+		for(int j = 0; j < suitCount; j++) {
 		for(int i = 0; i < cardCount; i++) {
-			for(int j = 0; j < suitCount; j++) {
+			
 				//(1L << ((card-2)*3)) | (1L << (suit*3));
-				cards[(i*suitCount + j)] = (1L << (13 + j) * 3) | (1L << (i*3));
-				System.out.println("Card " + i + " " + j + " * " + (i*suitCount + j) +" : " + cards[(i*suitCount + j)] + " :: \n" + EvalTestPlayground.bin51(cards[i*j]));
+				cards[(j*cardCount + i)] = (1L << (13 + j) * 3) | (1L << (i*3));
+				System.out.println("Card " + i + " " + j + " * " + (j*cardCount + i) +" : " + cards[(j*cardCount + i)] + " :: \n" + EvalTestPlayground.bin51(cards[i*j]));
 			}
 		}
 		return cards;
