@@ -1,16 +1,30 @@
 package main;
 
-import java.util.Arrays;
-
 public class DeadHorse7 {
 	
-	static long singleCardMask = 78536544841L;
+	//static final char[] cardChars = new char[] {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
+	//static final String[] cardNames = new String[] {"Ace", "King", "Queen", "Jack", "Ten", "Nine", "Eight", "Seven", "Six", "Five", "Four", "Three", "Two"};
+	static final String charPlacement = "SSSHHHCCCDDDAAAKKKQQQJJJTTT999888777666555444333222";
+	static final char[] cardChars = new char[] {'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'};
+	static final String[] cardNames = new String[] {"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"};
+	
+	static final char[] suitChars = new char[] {'S', 'H', 'C', 'D'};
+	static final String[] suitNames = new String[] {"Spades", "Hearts", "Clubs", "Diamonds"};
+	
+	static final long singleCardMask = 78536544841L;
 	//long singleOrPairOrTrip = 471219269046L;
-	static long pairMask = 157073089682L;
+	static final long pairMask = 157073089682L;
 	//long tripMask = trips are combo of single card mask and pair mask
-	static long quadMask = 314146179364L;
-	static long suitMask = 2251250057871360L;
-	static long cardMask = 549755813887L;
+	static final long quadMask = 314146179364L;
+	static final long suitMask = 2251250057871360L;
+	static final long cardMask = 549755813887L;
+
+	static final long spadeMask = 281474976710656L;
+	static final long heartMask = 35184372088832L;
+	static final long clubMask = 4398046511104L;
+	static final long diamondMask = 549755813888L;
+	static final long[] suitLongs = new long[] {spadeMask, heartMask, clubMask, diamondMask };
+	static final long[] cardLongs = new long[] {1L, 8L, 64L, 512L, 4096L, 32768L, 262144L, 2097152L, 16777216L, 134217728L, 1073741824L, 8589934592L, 68719476736L };
 	/*
 	long pairs = sum & pairMask;
 	long trips = sum & (pairs>>1);
@@ -20,24 +34,30 @@ public class DeadHorse7 {
 	
 
 	public static void tt() {
-		long[] someCards = new long[] {convertHumanToBinary7("2H"),convertHumanToBinary7("3H"),convertHumanToBinary7("4H"),
-				convertHumanToBinary7("5H"),convertHumanToBinary7("6H"),convertHumanToBinary7("7H"),convertHumanToBinary7("8H"),
-				convertHumanToBinary7("9H"),convertHumanToBinary7("TH"),convertHumanToBinary7("JH"),convertHumanToBinary7("QH"),
-				convertHumanToBinary7("KH"),convertHumanToBinary7("AH")
-		};
 		
+		
+		String[] someCardCodes = new String[] {"2C", "3H", "4H", "5H", "6H", "8S", "9H", "TH", "JD", "QH", "KH","AH"};
+		long[] someCards = new long[someCardCodes.length];
+		for(int i=0; i<someCardCodes.length; i++) {
+			someCards[i] = convertHumanToBinary7(someCardCodes[i]);
+		}
 		
 		for(int i=0; i<someCards.length; i++) {
-			//System.out.println("before:\t\t" + EvalTestPlayground.bin51(randomCards[i]));
-			someCards[i] &= 549755813887L;
+			System.out.println("before:\t\t" + EvalTestPlayground.bin51(someCards[i]) + " : " + someCards[i]);
+			System.out.println("name: " + convertBinaryToHuman7(someCards[i]));
+			someCards[i] &= cardMask;
 			System.out.println("after:\t\t" + EvalTestPlayground.bin51(someCards[i]) + " : " + someCards[i]);
+			
 		}
 	}
 	
 	
 	public static void t() {
 		tt();
-		makeAll52Cards7bin();
+		long[] all52Cards = makeAll52Cards7bin();
+		for(long l : all52Cards) {
+			System.out.println(convertBinaryToHuman7(l));
+		}
 		//String[] cardsStrings = new String [] {"AH", "5S", "7S", "AC", "2C", "TD", "4S"}; //pair
 		//String[] cardsStrings = new String [] {"AH", "5S", "4C", "AC", "2C", "4D", "4S"}; //pair and trips
 		//String[] cardsStrings = new String [] {"AH", "5S", "4C", "AC", "2C", "4D", "6S"}; //2 pair
@@ -162,16 +182,15 @@ public class DeadHorse7 {
 	}
 	
 	public static long[] makeAll52Cards7bin() {
-		char[] acceptableCards = new char[] {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
-		char[] acceptableSuits = new char[] {'S', 'H', 'C', 'D'};
+		
 		int cardCount = 13;
 		int suitCount = 4;
 		long[] cards = new long[cardCount * suitCount];
 		for(int i = 0; i < cardCount; i++) {
 			for(int j = 0; j < suitCount; j++) {
 				//(1L << ((card-2)*3)) | (1L << (suit*3));
-				cards[i*j] = (1L << (13 + j) * 3) | (1L << (i*3));
-				System.out.println("Card " + i + " " + j + " : " + cards[i*j] + " :: \n" + EvalTestPlayground.bin51(cards[i*j]));
+				cards[(i*suitCount + j)] = (1L << (13 + j) * 3) | (1L << (i*3));
+				System.out.println("Card " + i + " " + j + " * " + (i*suitCount + j) +" : " + cards[(i*suitCount + j)] + " :: \n" + EvalTestPlayground.bin51(cards[i*j]));
 			}
 		}
 		return cards;
@@ -181,11 +200,11 @@ public class DeadHorse7 {
 	//This function is not optimized, just here to make things easier. If actually needed in some performance situation, we should find faster ways to do this
 	public static long convertHumanToBinary7(String cardString) {
 		//like AH or 5S
-		char[] acceptableCards = new char[] {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
-		char[] acceptableSuits = new char[] {'S', 'H', 'C', 'D'};
+		//char[] acceptableCards = new char[] {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
+		//char[] acceptableSuits = new char[] {'S', 'H', 'C', 'D'};
 		char ca = cardString.charAt(0);
 		char cb = cardString.charAt(1);
-		if(cardString.length() != 2 || new String(acceptableCards).indexOf(ca) == -1 || new String(acceptableSuits).indexOf(cb) == -1) {
+		if(cardString.length() != 2 || new String(cardChars).indexOf(ca) == -1 || new String(suitChars).indexOf(cb) == -1) {
 			throw new IllegalArgumentException("Card must be 2 chars long and must be in format AH, 6D, TS, JC, 2H etc... :  " + cardString);
 		}
 		
@@ -219,6 +238,40 @@ public class DeadHorse7 {
 	}
 	
 	public static String convertBinaryToHuman7(long card) {
+		int suit = 0;
+		String suitName = "";
+		String cardName = "";
+		for(int i = 0; i < suitLongs.length; i++) {
+			if((card & suitLongs[i]) > 0 ) {
+				//System.out.println(suitLongs[i] + " " + suitNames[i] + " " + card);
+				suit = i;
+				suitName = suitNames[i];
+				break;
+			}
+		}
+		
+		long c = singleCardMask & card;
+		for(int i=0; i<cardLongs.length; i++) {
+			if((card & cardLongs[i]) > 0) {
+				cardName = cardNames[i];
+			}
+		}
+		String ret = cardName + " of " + suitName;
+		//System.out.println(ret + " : " + card + " : " + EvalTestPlayground.bin51(card));
+		return ret;
+		/*if((card & spadeMask) == spadeMask ) {
+			System.out.println("Spade : " + card);
+			suit = 1;
+		} else if((card & heartMask) == heartMask ) {
+			System.out.println("Heart : " + card);
+			suit = 2;
+		} else if((card & clubMask) == clubMask ) {
+			System.out.println("Club : " + card);
+			suit = 3;
+		} else if((card & diamondMask) == diamondMask ) {
+			System.out.println("Diamond : " + card);
+			suit = 4;
+		}*/
 		
 	}
 
