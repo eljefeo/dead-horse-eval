@@ -7,7 +7,12 @@ public class DeadHorse7 {
 	static final String charPlacement = "SSSHHHCCCDDDAAAKKKQQQJJJTTT999888777666555444333222";
 	
 	//cards are all 2 through Ace, diamonds clubs then hearts then spades (we may change the order, Im already mixing up orders everywhere of cards and suits)
-	static final long[] all52Cards = new long[] { 549755813889L, 549755813896L, 549755813952L, 549755814400L, 549755817984L, 549755846656L, 549756076032L, 549757911040L, 549772591104L, 549890031616L, 550829555712L, 558345748480L, 618475290624L, 4398046511105L, 4398046511112L, 4398046511168L, 4398046511616L, 4398046515200L, 4398046543872L, 4398046773248L, 4398048608256L, 4398063288320L, 4398180728832L, 4399120252928L, 4406636445696L, 4466765987840L, 35184372088833L, 35184372088840L, 35184372088896L, 35184372089344L, 35184372092928L, 35184372121600L, 35184372350976L, 35184374185984L, 35184388866048L, 35184506306560L, 35185445830656L, 35192962023424L, 35253091565568L, 281474976710657L, 281474976710664L, 281474976710720L, 281474976711168L, 281474976714752L, 281474976743424L, 281474976972800L, 281474978807808L, 281474993487872L, 281475110928384L, 281476050452480L, 281483566645248L, 281543696187392L};
+	static final long[] all52Cards = new long[] {
+			549755813889L, 549755813896L, 549755813952L, 549755814400L, 549755817984L, 549755846656L, 549756076032L, 549757911040L, 549772591104L, 549890031616L, 550829555712L, 558345748480L, 618475290624L, 
+			4398046511105L, 4398046511112L, 4398046511168L, 4398046511616L, 4398046515200L, 4398046543872L, 4398046773248L, 4398048608256L, 4398063288320L, 4398180728832L, 4399120252928L, 4406636445696L, 4466765987840L, 
+			35184372088833L, 35184372088840L, 35184372088896L, 35184372089344L, 35184372092928L, 35184372121600L, 35184372350976L, 35184374185984L, 35184388866048L, 35184506306560L, 35185445830656L, 35192962023424L, 35253091565568L, 
+			281474976710657L, 281474976710664L, 281474976710720L, 281474976711168L, 281474976714752L, 281474976743424L, 281474976972800L, 281474978807808L, 281474993487872L, 281475110928384L, 281476050452480L, 281483566645248L, 281543696187392L
+			};
 
  	static final char[] cardChars = new char[] {'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'};
 	static final String[] cardNames = new String[] {"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"};
@@ -43,12 +48,12 @@ public class DeadHorse7 {
 		String[] someCardCodes = new String[] {"2C", "3H", "4H", "5H", "6H", "8S", "9H", "TH", "JD", "QH", "KH","AH"};
 		long[] someCards = new long[someCardCodes.length];
 		for(int i=0; i<someCardCodes.length; i++) {
-			someCards[i] = convertHumanToBinary7(someCardCodes[i]);
+			someCards[i] = convertHumanToDecimal7(someCardCodes[i]);
 		}
 		
 		for(int i=0; i<someCards.length; i++) {
 			System.out.println("before:\t\t" + EvalTestPlayground.bin51(someCards[i]) + " : " + someCards[i]);
-			System.out.println("name: " + convertBinaryToHuman7(someCards[i]));
+			System.out.println("name: " + convertDecimalToHuman7(someCards[i]));
 			someCards[i] &= cardMask;
 			System.out.println("after:\t\t" + EvalTestPlayground.bin51(someCards[i]) + " : " + someCards[i]);
 			
@@ -58,12 +63,12 @@ public class DeadHorse7 {
 	
 	public static void t() {
 		tt();
-		long[] all52Cards = makeAll52Cards7bin();
+		long[] all52Cards = makeAll52Cards7Decimal();
 		for(long l : all52Cards) {
 			System.out.print(" " + l + "L,");
 		}
 		for(long l : all52Cards) {
-			System.out.println(convertBinaryToHuman7(l));
+			System.out.println(convertDecimalToHuman7(l));
 		}
 		//String[] cardsStrings = new String [] {"AH", "5S", "7S", "AC", "2C", "TD", "4S"}; //pair
 		//String[] cardsStrings = new String [] {"AH", "5S", "4C", "AC", "2C", "4D", "4S"}; //pair and trips
@@ -73,7 +78,7 @@ public class DeadHorse7 {
 		//String[] cardsStrings = new String [] {"4H", "5S", "4C", "AC", "4S", "4D", "9S"}; //Quads and pair
 		//String[] cardsStrings = new String [] {"4H", "5S", "4C", "AC", "4S", "4D", "AS"}; //Quads and pair
 		String[] cardsStrings = new String [] {"4H", "AD", "4C", "AC", "4S", "4D", "AS"}; //Quads and trips
-		long[] hand = convertHumanHandToBinary7(cardsStrings);
+		long[] hand = convertHumanHandToDecimal7(cardsStrings);
 		for(int i=0; i<hand.length; i++) {
 			System.out.println(cardsStrings[i] + " : " + hand[i] + " :\t\t\t" + EvalTestPlayground.bin51(hand[i]));
 		}
@@ -174,31 +179,30 @@ public class DeadHorse7 {
 	}
 	
 	public static long[] getSomeHand() {
-		return convertHumanHandToBinary7(new String [] {"AH", "5S", "7S", "AC", "2C", "TD", "4S"});
+		return convertHumanHandToDecimal7(new String [] {"AH", "5S", "7S", "AC", "2C", "TD", "4S"});
 	}
 	
-	public static long[] convertHumanHandToBinary7(String[] cards) {
+	public static long[] convertHumanHandToDecimal7(String[] cards) {
 		if(cards.length != 7) {
 			throw new IllegalArgumentException("There must be 7 cards");
 		}
 		long[] ret = new long[cards.length];
 		for(int i = 0; i < cards.length; i++) {
-			ret[i] = convertHumanToBinary7(cards[i]);
+			ret[i] = convertHumanToDecimal7(cards[i]);
 		}
 		return ret;
 	}
 	
-	public static long[] makeAll52Cards7bin() {
+	public static long[] makeAll52Cards7Decimal() {
 		
-		int cardCount = 13;
-		int suitCount = 4;
+		int cardCount = cardChars.length;
+		int suitCount = suitChars.length;
 		long[] cards = new long[cardCount * suitCount];
-		for(int j = 0; j < suitCount; j++) {
-		for(int i = 0; i < cardCount; i++) {
-			
-				//(1L << ((card-2)*3)) | (1L << (suit*3));
-				cards[(j*cardCount + i)] = (1L << (13 + j) * 3) | (1L << (i*3));
-				System.out.println("Card " + i + " " + j + " * " + (j*cardCount + i) +" : " + cards[(j*cardCount + i)] + " :: \n" + EvalTestPlayground.bin51(cards[i*j]));
+		for(int i = 0; i < suitCount; i++) {
+			for(int j = 0; j < cardCount; j++) {
+				int index = (i*cardCount + j);
+				cards[index] = (1L << (13 + i) * 3) | (1L << (j*3));
+				System.out.println(EvalTestPlayground.bin51(cards[index]) + " Card " + j + " " + i + " * " + (index) +" : " + cards[index]);
 			}
 		}
 		return cards;
@@ -206,53 +210,56 @@ public class DeadHorse7 {
 	
 	
 	//This function is not optimized, just here to make things easier. If actually needed in some performance situation, we should find faster ways to do this
-	public static long convertHumanToBinary7(String cardString) {
+	public static long convertHumanToDecimal7(String cardString) {
 		//like AH or 5S
 		//char[] acceptableCards = new char[] {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
 		//char[] acceptableSuits = new char[] {'S', 'H', 'C', 'D'};
+		
+		if(cardString.length() != 2) {
+			throw new IllegalArgumentException("Card must be 2 chars long:  " + cardString);
+		}
+		
 		char ca = cardString.charAt(0);
 		char cb = cardString.charAt(1);
-		if(cardString.length() != 2 || new String(cardChars).indexOf(ca) == -1 || new String(suitChars).indexOf(cb) == -1) {
-			throw new IllegalArgumentException("Card must be 2 chars long and must be in format AH, 6D, TS, JC, 2H etc... :  " + cardString);
+		if(new String(cardChars).indexOf(ca) == -1 || new String(suitChars).indexOf(cb) == -1) {
+			throw new IllegalArgumentException("Card must be in format AH, 6D, TS, JC, 2H etc... :  " + cardString);
 		}
 		
 		//card
 		int card = 0, suit = 0;
 		if(ca == "A".charAt(0)) {
 			card = 14;
-		} else if(ca == "K".charAt(0)) {
+		} else if(ca == 'K') {
 			card = 13;
-		} else if(ca == "Q".charAt(0)) {
+		} else if(ca == 'Q') {
 			card = 12;
-		} else if(ca == "J".charAt(0)) {
+		} else if(ca == 'J') {
 			card = 11;
-		} else if(ca == "T".charAt(0)) {
+		} else if(ca == 'T') {
 			card = 10;
 		} else {
 			card = Integer.parseInt(ca + "");
 		}
 		
 		// suit
-		if(cb == "S".charAt(0)) {
+		if(cb == 'S') {
 			suit = 16;
-		} else if(cb == "H".charAt(0)) {
+		} else if(cb == 'H') {
 			suit = 15;
-		} else if(cb == "C".charAt(0)) {
+		} else if(cb == 'C') {
 			suit = 14;
-		} else if(cb == "D".charAt(0)) {
+		} else if(cb == 'D') {
 			suit = 13;
 		}
 		return (1L << ((card-2)*3)) | (1L << (suit*3));
 	}
 	
-	public static String convertBinaryToHuman7(long card) {
-		int suit = 0;
+	public static String convertDecimalToHuman7(long card) {
+		
 		String suitName = "";
 		String cardName = "";
 		for(int i = 0; i < suitLongs.length; i++) {
 			if((card & suitLongs[i]) > 0 ) {
-				//System.out.println(suitLongs[i] + " " + suitNames[i] + " " + card);
-				suit = i;
 				suitName = suitNames[i];
 				break;
 			}
@@ -264,22 +271,8 @@ public class DeadHorse7 {
 				cardName = cardNames[i];
 			}
 		}
-		String ret = cardName + " of " + suitName;
-		//System.out.println(ret + " : " + card + " : " + EvalTestPlayground.bin51(card));
-		return ret;
-		/*if((card & spadeMask) == spadeMask ) {
-			System.out.println("Spade : " + card);
-			suit = 1;
-		} else if((card & heartMask) == heartMask ) {
-			System.out.println("Heart : " + card);
-			suit = 2;
-		} else if((card & clubMask) == clubMask ) {
-			System.out.println("Club : " + card);
-			suit = 3;
-		} else if((card & diamondMask) == diamondMask ) {
-			System.out.println("Diamond : " + card);
-			suit = 4;
-		}*/
+		
+		return cardName + " of " + suitName;
 		
 	}
 
