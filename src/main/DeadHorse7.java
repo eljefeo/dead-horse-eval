@@ -5,7 +5,11 @@ public class DeadHorse7 {
 	//static final char[] cardChars = new char[] {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
 	//static final String[] cardNames = new String[] {"Ace", "King", "Queen", "Jack", "Ten", "Nine", "Eight", "Seven", "Six", "Five", "Four", "Three", "Two"};
 	static final String charPlacement = "SSSHHHCCCDDDAAAKKKQQQJJJTTT999888777666555444333222";
-	static final char[] cardChars = new char[] {'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'};
+	
+	//cards are all 2 through Ace, diamonds clubs then hearts then spades (we may change the order, Im already mixing up orders everywhere of cards and suits)
+	static final long[] all52Cards = new long[] { 549755813889L, 549755813896L, 549755813952L, 549755814400L, 549755817984L, 549755846656L, 549756076032L, 549757911040L, 549772591104L, 549890031616L, 550829555712L, 558345748480L, 618475290624L, 4398046511105L, 4398046511112L, 4398046511168L, 4398046511616L, 4398046515200L, 4398046543872L, 4398046773248L, 4398048608256L, 4398063288320L, 4398180728832L, 4399120252928L, 4406636445696L, 4466765987840L, 35184372088833L, 35184372088840L, 35184372088896L, 35184372089344L, 35184372092928L, 35184372121600L, 35184372350976L, 35184374185984L, 35184388866048L, 35184506306560L, 35185445830656L, 35192962023424L, 35253091565568L, 281474976710657L, 281474976710664L, 281474976710720L, 281474976711168L, 281474976714752L, 281474976743424L, 281474976972800L, 281474978807808L, 281474993487872L, 281475110928384L, 281476050452480L, 281483566645248L, 281543696187392L};
+
+ 	static final char[] cardChars = new char[] {'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'};
 	static final String[] cardNames = new String[] {"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"};
 	
 	static final char[] suitChars = new char[] {'S', 'H', 'C', 'D'};
