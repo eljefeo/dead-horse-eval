@@ -7,6 +7,13 @@ public class DeadHorse7 {
 	// static final String[] cardNames = new String[] {"Ace", "King", "Queen",
 	// "Jack", "Ten", "Nine", "Eight", "Seven", "Six", "Five", "Four", "Three",
 	// "Two"};
+	
+	//These are the bits and what they mean, everything gets 3 bits. 
+	//Starting from the rightmost bits, 222 means the 2 cards go there
+	//if we are adding up how many of each of these cards there are, like if someone has 4-of-a-kind of 2(s)
+		//then we need to count to 4, to do that we need 3 bits (100 - this is 4 in binary)
+	//same thing for the suits, if there are 7 cards total and all are 1 suit, then we need to count to 7 (111 - this is 7 in binary)
+	// so 3 bits each is enough to count whatever we want.
 	static final String charPlacement = "SSSHHHCCCDDDAAAKKKQQQJJJTTT999888777666555444333222";
 
 	// cards are all 2 through Ace, diamonds clubs then hearts then spades (we may
@@ -261,6 +268,7 @@ public class DeadHorse7 {
 
 	
 
+	//This method will take a String like "5S" or "JC" (five of clubs or Jack of Spades) and turn it into the decimal equivalent for that card
 	// This function is not optimized, just here to make things easier. If actually
 	// needed in some performance situation, we should find faster ways to do this
 	public static long convertHumanShortNameToDecimal7(String cardString) {
