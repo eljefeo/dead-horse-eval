@@ -45,3 +45,4 @@ Temporary Items
 *.class
 .project
 bin/*
+.classpath
