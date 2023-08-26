@@ -12,15 +12,33 @@ public class DeadHorse {
 			:0xC000000|(v=((a&b)==(a&8191)?a:(c&d)==(c&8191)?c:e)&8191^y)|v<<13;
 		else if((v&=v-1)==0) return 0x4000000|x|z<<13;
 		boolean strt=0x1F1D100%y==0,flsh=(a&b&c&d&e)!=0;
-		return strt?(x==4111?15:x)|(flsh?0x20000000:0x10000000):flsh?0x14000000:x;
+		return strt ? (x == 4111 ? 15 : x) | (flsh ? 0x20000000:0x10000000):flsh?0x14000000:x;
 	}  
 	
 	public static int eval5(int[] cards){
 		if(cards.length != 5) {
 			throw new IllegalArgumentException("You must pass in 5 numbers and only 5 numbers");
 		}
-		
 		return eval5(cards[0],cards[1],cards[2],cards[3],cards[4]);
+	}
+	
+	public static int eval5WithNotes(int a,int b,int c,int d,int e){
+		//& (and) is if both bits are 1, then return 1
+		//| (or) is if either of the bits are 1, then return 1
+		//^ (xor) is if one bit is 1 and the other bit is 0 then return 1
+		int x=(a^b^c^d^e)&8191; //all the cards xor'd together, and then the suits masked. We mask the suits so we just have the card (2 or Jack or 10 or Ace)
+		int y=(a|b|c|d|e)&8191; //all the cards or'd together, and then the suits masked. We mask the suits so we just have the card (2 or Jack or 10 or Ace)
+		int z=y^x; //
+		int v=y&y-1; //this is used to count the bits. We will remove bits one by one, counting as we go so we can know how many bits are set. Different hands have a unique number of bits
+		if((v&=v-1)==0)
+			return (a+b+c+d+e-x&8191)==(8191&(y^x)<<2) 
+			  ?0x1C000000|x|z<<13:0x18000000|z|x<<13; //4 of a kind or full house
+		else if((v&=v-1)==0)
+			return z!=0?0x8000000|x|z<<13
+			:0xC000000|(v=((a&b)==(a&8191)?a:(c&d)==(c&8191)?c:e)&8191^y)|v<<13;
+		else if((v&=v-1)==0) return 0x4000000|x|z<<13;
+		boolean strt=0x1F1D100%y==0,flsh=(a&b&c&d&e)!=0;
+		return strt?(x==4111?15:x)|(flsh?0x20000000:0x10000000):flsh?0x14000000:x;
 	}
 	
 	/*

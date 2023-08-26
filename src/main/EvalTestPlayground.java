@@ -839,6 +839,7 @@ public static String bin(int i){
 public static String bin32(int i){
 	return String.format("%32s", Integer.toBinaryString(i)).replace(' ', '0');
 }
+
 public static String bin51(long l){
 	return String.format("%51s", Long.toBinaryString(l)).replace(' ', '0');
 }
