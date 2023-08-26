@@ -7,12 +7,15 @@ public class DeadHorse7 {
 	// static final String[] cardNames = new String[] {"Ace", "King", "Queen",
 	// "Jack", "Ten", "Nine", "Eight", "Seven", "Six", "Five", "Four", "Three",
 	// "Two"};
-	
-	//These are the bits and what they mean, everything gets 3 bits. 
-	//Starting from the rightmost bits, 222 means the 2 cards go there
-	//if we are adding up how many of each of these cards there are, like if someone has 4-of-a-kind of 2(s)
-		//then we need to count to 4, to do that we need 3 bits (100 - this is 4 in binary)
-	//same thing for the suits, if there are 7 cards total and all are 1 suit, then we need to count to 7 (111 - this is 7 in binary)
+
+	// These are the bits and what they mean, everything gets 3 bits.
+	// Starting from the rightmost bits, 222 means the 2 cards go there
+	// if we are adding up how many of each of these cards there are, like if
+	// someone has 4-of-a-kind of 2(s)
+	// then we need to count to 4, to do that we need 3 bits (100 - this is 4 in
+	// binary)
+	// same thing for the suits, if there are 7 cards total and all are 1 suit, then
+	// we need to count to 7 (111 - this is 7 in binary)
 	// so 3 bits each is enough to count whatever we want.
 	static final String charPlacement = "SSSHHHCCCDDDAAAKKKQQQJJJTTT999888777666555444333222";
 
@@ -27,7 +30,7 @@ public class DeadHorse7 {
 			35184506306560L, 35185445830656L, 35192962023424L, 35253091565568L, 281474976710657L, 281474976710664L,
 			281474976710720L, 281474976711168L, 281474976714752L, 281474976743424L, 281474976972800L, 281474978807808L,
 			281474993487872L, 281475110928384L, 281476050452480L, 281483566645248L, 281543696187392L };
-	//static final long[] all52Cards2 = makeAll52Cards7Decimal();
+	// static final long[] all52Cards2 = makeAll52Cards7Decimal();
 
 	static final char[] cardChars = new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A' };
 	static final String[] cardLongs = new String[] { "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
@@ -35,6 +38,7 @@ public class DeadHorse7 {
 
 	static final char[] suitChars = new char[] { 'D', 'C', 'H', 'S' };
 	static final String[] suitLongs = new String[] { "Diamonds", "Clubs", "Hearts", "Spades" };
+	static final String[] suitLongsReversed = new String[] { "Spades", "Hearts", "Clubs", "Diamonds" };
 
 	static final String OF = " of ";
 	static final long singleCardMask = 78536544841L;
@@ -45,20 +49,63 @@ public class DeadHorse7 {
 	static final long suitMask = 2251250057871360L;
 	static final long cardMask = 549755813887L;
 
+	
+	
+	static final long allSpadeBits = 1970324836974592L;
+	static final long allHeartsBits = 246290604621824L;
+	static final long allClubsBits = 30786325577728L;
+	static final long allDiamondBits = 3848290697216L;
+
 	static final long spadeMask = 281474976710656L;
 	static final long heartMask = 35184372088832L;
 	static final long clubMask = 4398046511104L;
 	static final long diamondMask = 549755813888L;
-
+	static final long fourSpades = 1125899906842624L;
+	static final long fourHearts = 140737488355328L;
+	static final long fourClubs = 17592186044416L;
+	static final long fourDiamonds = 2199023255552L;
+	//static final long[] suitMasks = {allSpadeBits, allHeartsBits, allClubsBits, allDiamondBits};
+	//static final long[] almostFlush = {fourSpades, fourHearts, fourClubs, fourDiamonds}; //this is the decimal of 4 of each suit, like 1 spade is 001, this is 4 spades or 100
+	static final long[] almostFlush = {fourDiamonds, fourClubs, fourHearts, fourSpades}; //this is the decimal of 4 of each suit, like 1 spade is 001, this is 4 spades or 100
+	
+	static final long[] fullSuitMasks = {allDiamondBits, allClubsBits, allHeartsBits, allSpadeBits};//this has all 3 bits set for each suit, like 1 spade is 001, this is 111
+	
 	static final long[] suitDecimals = new long[] { diamondMask, clubMask, heartMask, spadeMask };
 	static final long[] cardDecimals = new long[] { 1L, 8L, 64L, 512L, 4096L, 32768L, 262144L, 2097152L, 16777216L,
 			134217728L, 1073741824L, 8589934592L, 68719476736L };
-	
+
 	/*
 	 * long pairs = sum & pairMask; long trips = sum & (pairs>>1); long onlyPairs =
 	 * (pairs>>1) ^ trips; //since pairs includes pairs and also trips, this will
 	 * get rid of trips and only include pairs long quads = sum & quadMask;
 	 */
+
+	public static void findStraights() {
+
+		//Here is where it gets a little tricky I think. This may even make me want to redesign the card structure of all the bits...
+		//I dont think this bit setup is nice for straights...
+		//we surely can do it, but it will take more operations than I had hoped. Theres likely a better way.
+	}
+
+	public static void findFlushes() throws Exception {
+		String[] someCardCodes = new String[] { "2C", "3D", "4D", "5S", "6D", "8D", "9D" };
+		
+		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
+
+		for(long l : hand) {
+			System.out.println("card: " + l + " : " + convertDecimalToLongName7(l) + " : " + EvalTestPlayground.bin51(l));
+		}
+		
+		long suits = sumHand(hand) & suitMask;
+		System.out.println("suits: " + suits + " : " + EvalTestPlayground.bin51(suits));
+		for(int i=0; i<fullSuitMasks.length; i++) {
+			long masked = fullSuitMasks[i] & suits;
+			if(/*masked != 0 && */ masked > almostFlush[i]) { 
+				System.out.println("Flush of " + suitLongs[i] + " :: " + i + " ");
+				return;
+			}
+		}
+	}
 
 	public static void tt() throws Exception {
 
@@ -91,8 +138,8 @@ public class DeadHorse7 {
 		}
 	}
 
-	public static void t() throws Exception {
-		tt();
+	public static void findDuplicates() throws Exception {
+		// tt();
 
 		// String[] cardsStrings = new String [] {"AH", "5S", "7S", "AC", "2C", "TD",
 		// "4S"}; //pair
@@ -219,9 +266,9 @@ public class DeadHorse7 {
 		for (int i = 0; i < suitCount; i++) {
 			for (int j = 0; j < cardCount; j++) {
 				int index = (i * cardCount + j);
-				cards[index] = makeDecimalFromIndexes(j, i);//(1L << (13 + i) * 3) | (1L << (j * 3));
-				
-				//return (1L << (cardIndex * 3)) | (1L << ((suitIndex + 13) * 3));
+				cards[index] = makeDecimalFromIndexes(j, i);// (1L << (13 + i) * 3) | (1L << (j * 3));
+
+				// return (1L << (cardIndex * 3)) | (1L << ((suitIndex + 13) * 3));
 				// System.out.println(EvalTestPlayground.bin51(cards[index]) + " Card " + j + "
 				// " + i + " * " + (index) +" : " + cards[index]);
 			}
@@ -232,7 +279,7 @@ public class DeadHorse7 {
 	public static long[] getSomeHand() throws Exception {
 		return convertHandHumanShortToDecimal7(new String[] { "AH", "5S", "7S", "AC", "2C", "TD", "4S" });
 	}
-	
+
 	public static String convertHumanShortNameToLongName7(String cardString) throws Exception {
 		// like AH or 5S
 
@@ -245,9 +292,9 @@ public class DeadHorse7 {
 
 		return cardLongs[cardIndex] + OF + suitLongs[suitIndex];
 	}
-	
-	
-	//This method will take a String like "5S" or "JC" (five of clubs or Jack of Spades) and turn it into the decimal equivalent for that card
+
+	// This method will take a String like "5S" or "JC" (five of clubs or Jack of
+	// Spades) and turn it into the decimal equivalent for that card
 	// This function is not optimized, just here to make things easier. If actually
 	// needed in some performance situation, we should find faster ways to do this
 	public static long convertHumanShortNameToDecimal7(String cardString) throws Exception {
@@ -261,7 +308,7 @@ public class DeadHorse7 {
 
 		return makeDecimalFromIndexes(cardIndex, suitIndex);
 	}
-	
+
 	public static long[] convertHandHumanShortToDecimal7(String[] cards) throws Exception {
 		if (cards.length != 7) {
 			throw new IllegalArgumentException("There must be 7 cards");
@@ -272,24 +319,37 @@ public class DeadHorse7 {
 		}
 		return ret;
 	}
+
+	public long orHand(long[] cards) {
+		if (cards.length != 7) {
+			throw new IllegalArgumentException("There must be 7 cards");
+		}
+		return cards[0] | cards[1] | cards[2] | cards[3] | cards[4] | cards[5] | cards[6];
+	}
 	
-	public static long makeDecimalFromIndexes(int cardIndex, int suitIndex ) throws Exception {
+	public static long sumHand(long[] cards) {
+		if (cards.length != 7) {
+			throw new IllegalArgumentException("There must be 7 cards");
+		}
+		return cards[0] + cards[1] + cards[2] + cards[3] + cards[4] + cards[5] + cards[6];
+	}
+
+	public static long makeDecimalFromIndexes(int cardIndex, int suitIndex) throws Exception {
 		return (1L << (cardIndex * 3)) | (1L << ((suitIndex + 13) * 3));
 	}
 
 	public static String convertDecimalToLongName7(long card) throws Exception {
 		return getCardLong(card) + OF + getSuitLong(card);
 	}
-	
 
 	public static String convertDecimalToShortName7(long card) throws Exception {
 		return (getCardChar(card) + "" + getSuitChar(card));
 	}
-	
+
 	public static String getSuitLong(long card) throws Exception {
 		return suitLongs[getSuitIndexDecimal(card)];
 	}
-	
+
 	public static String getCardLong(long card) throws Exception {
 		return cardLongs[getCardIndexDecimal(card)];
 	}
@@ -297,11 +357,11 @@ public class DeadHorse7 {
 	public static char getSuitChar(long card) throws Exception {
 		return suitChars[getSuitIndexDecimal(card)];
 	}
-	
+
 	public static char getCardChar(long card) throws Exception {
 		return cardChars[getCardIndexDecimal(card)];
 	}
-	
+
 	public static int getSuitIndexDecimal(long card) throws Exception {
 		for (int i = 0; i < suitDecimals.length; i++) {
 			if ((card & suitDecimals[i]) > 0) {
@@ -310,7 +370,7 @@ public class DeadHorse7 {
 		}
 		throw new Exception("Error retreiving suit index for card: " + card);
 	}
-	
+
 	public static int getCardIndexDecimal(long card) throws Exception {
 		for (int i = 0; i < cardDecimals.length; i++) {
 			if ((card & cardDecimals[i]) > 0) {
@@ -319,7 +379,7 @@ public class DeadHorse7 {
 		}
 		throw new Exception("Error retreiving card index for card: " + card);
 	}
-	
+
 	public static int getSuitIndexChar(char suitChar) throws Exception {
 		for (int i = 0; i < suitChars.length; i++) {
 			if (suitChar == suitChars[i]) {
@@ -328,7 +388,7 @@ public class DeadHorse7 {
 		}
 		throw new Exception("Error retreiving suit index for suit char: " + suitChar);
 	}
-	
+
 	public static int getCardIndexChar(char cardChar) throws Exception {
 		for (int i = 0; i < cardChars.length; i++) {
 			if (cardChar == cardChars[i]) {
