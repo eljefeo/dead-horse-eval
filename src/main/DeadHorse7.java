@@ -49,8 +49,6 @@ public class DeadHorse7 {
 	static final long suitMask = 2251250057871360L;
 	static final long cardMask = 549755813887L;
 
-	
-	
 	static final long allSpadeBits = 1970324836974592L;
 	static final long allHeartsBits = 246290604621824L;
 	static final long allClubsBits = 30786325577728L;
@@ -64,12 +62,23 @@ public class DeadHorse7 {
 	static final long fourHearts = 140737488355328L;
 	static final long fourClubs = 17592186044416L;
 	static final long fourDiamonds = 2199023255552L;
-	//static final long[] suitMasks = {allSpadeBits, allHeartsBits, allClubsBits, allDiamondBits};
-	//static final long[] almostFlush = {fourSpades, fourHearts, fourClubs, fourDiamonds}; //this is the decimal of 4 of each suit, like 1 spade is 001, this is 4 spades or 100
-	static final long[] almostFlush = {fourDiamonds, fourClubs, fourHearts, fourSpades}; //this is the decimal of 4 of each suit, like 1 spade is 001, this is 4 spades or 100
-	
-	static final long[] fullSuitMasks = {allDiamondBits, allClubsBits, allHeartsBits, allSpadeBits};//this has all 3 bits set for each suit, like 1 spade is 001, this is 111
-	
+	// static final long[] suitMasks = {allSpadeBits, allHeartsBits, allClubsBits,
+	// allDiamondBits};
+	// static final long[] almostFlush = {fourSpades, fourHearts, fourClubs,
+	// fourDiamonds}; //this is the decimal of 4 of each suit, like 1 spade is 001,
+	// this is 4 spades or 100
+	static final long[] almostFlush = { fourDiamonds, fourClubs, fourHearts, fourSpades }; // this is the decimal of 4
+																							// of each suit, like 1
+																							// spade is 001, this is 4
+																							// spades or 100
+
+	static final long[] fullSuitMasks = { allDiamondBits, allClubsBits, allHeartsBits, allSpadeBits };// this has all 3
+																										// bits set for
+																										// each suit,
+																										// like 1 spade
+																										// is 001, this
+																										// is 111
+
 	static final long[] suitDecimals = new long[] { diamondMask, clubMask, heartMask, spadeMask };
 	static final long[] cardDecimals = new long[] { 1L, 8L, 64L, 512L, 4096L, 32768L, 262144L, 2097152L, 16777216L,
 			134217728L, 1073741824L, 8589934592L, 68719476736L };
@@ -82,25 +91,28 @@ public class DeadHorse7 {
 
 	public static void findStraights() {
 
-		//Here is where it gets a little tricky I think. This may even make me want to redesign the card structure of all the bits...
-		//I dont think this bit setup is nice for straights...
-		//we surely can do it, but it will take more operations than I had hoped. Theres likely a better way.
+		// Here is where it gets a little tricky I think. This may even make me want to
+		// redesign the card structure of all the bits...
+		// I dont think this bit setup is nice for straights...
+		// we surely can do it, but it will take more operations than I had hoped.
+		// Theres likely a better way.
 	}
 
 	public static void findFlushes() throws Exception {
 		String[] someCardCodes = new String[] { "2C", "3D", "4D", "5S", "6D", "8D", "9D" };
-		
+
 		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
 
-		for(long l : hand) {
-			System.out.println("card: " + l + " : " + convertDecimalToLongName7(l) + " : " + EvalTestPlayground.bin51(l));
+		for (long l : hand) {
+			System.out
+					.println("card: " + l + " : " + convertDecimalToLongName7(l) + " : " + EvalTestPlayground.bin51(l));
 		}
-		
+
 		long suits = sumHand(hand) & suitMask;
 		System.out.println("suits: " + suits + " : " + EvalTestPlayground.bin51(suits));
-		for(int i=0; i<fullSuitMasks.length; i++) {
+		for (int i = 0; i < fullSuitMasks.length; i++) {
 			long masked = fullSuitMasks[i] & suits;
-			if(/*masked != 0 && */ masked > almostFlush[i]) { 
+			if (/* masked != 0 && */ masked > almostFlush[i]) {
 				System.out.println("Flush of " + suitLongs[i] + " :: " + i + " ");
 				return;
 			}
@@ -326,7 +338,7 @@ public class DeadHorse7 {
 		}
 		return cards[0] | cards[1] | cards[2] | cards[3] | cards[4] | cards[5] | cards[6];
 	}
-	
+
 	public static long sumHand(long[] cards) {
 		if (cards.length != 7) {
 			throw new IllegalArgumentException("There must be 7 cards");
