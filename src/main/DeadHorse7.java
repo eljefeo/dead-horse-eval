@@ -18,7 +18,7 @@ public class DeadHorse7 {
 
 	// cards are all 2 through Ace, diamonds clubs then hearts then spades (we may
 	// change the order, Im already mixing up orders everywhere of cards and suits)
-	static final long[] all52Cards_inline = new long[] { 549755813889L, 549755813896L, 549755813952L, 549755814400L,
+	static final long[] all52Cards2 = new long[] { 549755813889L, 549755813896L, 549755813952L, 549755814400L,
 			549755817984L, 549755846656L, 549756076032L, 549757911040L, 549772591104L, 549890031616L, 550829555712L,
 			558345748480L, 618475290624L, 4398046511105L, 4398046511112L, 4398046511168L, 4398046511616L,
 			4398046515200L, 4398046543872L, 4398046773248L, 4398048608256L, 4398063288320L, 4398180728832L,
@@ -27,6 +27,7 @@ public class DeadHorse7 {
 			35184506306560L, 35185445830656L, 35192962023424L, 35253091565568L, 281474976710657L, 281474976710664L,
 			281474976710720L, 281474976711168L, 281474976714752L, 281474976743424L, 281474976972800L, 281474978807808L,
 			281474993487872L, 281475110928384L, 281476050452480L, 281483566645248L, 281543696187392L };
+	//static final long[] all52Cards2 = makeAll52Cards7Decimal();
 
 	static final char[] cardChars = new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A' };
 	static final String[] cardLongs = new String[] { "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
@@ -52,7 +53,7 @@ public class DeadHorse7 {
 	static final long[] suitDecimals = new long[] { diamondMask, clubMask, heartMask, spadeMask };
 	static final long[] cardDecimals = new long[] { 1L, 8L, 64L, 512L, 4096L, 32768L, 262144L, 2097152L, 16777216L,
 			134217728L, 1073741824L, 8589934592L, 68719476736L };
-	static final long[] all52Cards2 = makeAll52Cards7Decimal();
+	
 	/*
 	 * long pairs = sum & pairMask; long trips = sum & (pairs>>1); long onlyPairs =
 	 * (pairs>>1) ^ trips; //since pairs includes pairs and also trips, this will
@@ -210,7 +211,7 @@ public class DeadHorse7 {
 
 	}
 
-	public static long[] makeAll52Cards7Decimal() {
+	public static long[] makeAll52Cards7Decimal() throws Exception {
 
 		int cardCount = cardChars.length;
 		int suitCount = suitChars.length;
@@ -218,7 +219,9 @@ public class DeadHorse7 {
 		for (int i = 0; i < suitCount; i++) {
 			for (int j = 0; j < cardCount; j++) {
 				int index = (i * cardCount + j);
-				cards[index] = (1L << (13 + i) * 3) | (1L << (j * 3));
+				cards[index] = makeDecimalFromIndexes(j, i);//(1L << (13 + i) * 3) | (1L << (j * 3));
+				
+				//return (1L << (cardIndex * 3)) | (1L << ((suitIndex + 13) * 3));
 				// System.out.println(EvalTestPlayground.bin51(cards[index]) + " Card " + j + "
 				// " + i + " * " + (index) +" : " + cards[index]);
 			}
@@ -256,9 +259,7 @@ public class DeadHorse7 {
 		int cardIndex = getCardIndexChar(cardString.charAt(0));
 		int suitIndex = getSuitIndexChar(cardString.charAt(1));
 
-		long ret = (1L << (cardIndex * 3)) | (1L << ((suitIndex + 13) * 3));
-		
-		return ret;
+		return makeDecimalFromIndexes(cardIndex, suitIndex);
 	}
 	
 	public static long[] convertHandHumanShortToDecimal7(String[] cards) throws Exception {
@@ -270,6 +271,10 @@ public class DeadHorse7 {
 			ret[i] = convertHumanShortNameToDecimal7(cards[i]);
 		}
 		return ret;
+	}
+	
+	public static long makeDecimalFromIndexes(int cardIndex, int suitIndex ) throws Exception {
+		return (1L << (cardIndex * 3)) | (1L << ((suitIndex + 13) * 3));
 	}
 
 	public static String convertDecimalToLongName7(long card) throws Exception {

@@ -7,6 +7,7 @@ public class Tests {
 	public static void main(String args[]) throws Exception {
 		shortToLong();
 		shortToDecimalToLong();
+		check52GeneratedSameAsInline();
 	}
 	
 	public static void shortToLong() throws Exception {
@@ -39,6 +40,23 @@ public class Tests {
 			System.out.println("Converted card: " + card + ", longName1: " + longName1 + ", longName2: " + longName2);
 		}
 		System.out.println("success: " + expected);
+	}
+	
+	
+	
+	public static void check52GeneratedSameAsInline() throws Exception {
+		long[] generated = DeadHorse7.makeAll52Cards7Decimal();
+		long[] inline = DeadHorse7.all52Cards2;
+		if(generated.length != inline.length) {
+			throw new Exception("Generated cards dont match length of inline, are there 52?");
+		}
+		for(int i=0; i<generated.length; i++) {
+			if(generated[i] != inline[i]) {
+				throw new Exception("Generated cards dont match. Generated: " + generated[i] + ", inline: " + inline[i]);
+			}
+		}
+		
+		System.out.println("Cool, 52 cards are still generated correctly....");
 	}
 
 }
