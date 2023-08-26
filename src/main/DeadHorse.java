@@ -12,7 +12,7 @@ public class DeadHorse {
 			:0xC000000|(v=((a&b)==(a&8191)?a:(c&d)==(c&8191)?c:e)&8191^y)|v<<13;
 		else if((v&=v-1)==0) return 0x4000000|x|z<<13;
 		boolean strt=0x1F1D100%y==0,flsh=(a&b&c&d&e)!=0;
-		return strt?(x==4111?15:x)|(flsh?0x20000000:0x10000000):flsh?0x14000000:x;
+		return strt ? (x == 4111 ? 15 : x) | (flsh ? 0x20000000:0x10000000):flsh?0x14000000:x;
 	}  
 	
 	public static int eval5(int[] cards){
