@@ -270,7 +270,7 @@ public class DeadHorse7 {
 
 	}
 
-	public static long[] makeAll52Cards7Decimal() throws Exception {
+	public static long[] makeAll52Cards7Decimal() {
 
 		int cardCount = cardChars.length;
 		int suitCount = suitChars.length;
