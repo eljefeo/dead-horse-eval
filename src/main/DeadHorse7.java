@@ -346,7 +346,7 @@ public class DeadHorse7 {
 		return cards[0] + cards[1] + cards[2] + cards[3] + cards[4] + cards[5] + cards[6];
 	}
 
-	public static long makeDecimalFromIndexes(int cardIndex, int suitIndex) throws Exception {
+	public static long makeDecimalFromIndexes(int cardIndex, int suitIndex) {
 		return (1L << (cardIndex * 3)) | (1L << ((suitIndex + 13) * 3));
 	}
 
