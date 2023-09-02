@@ -83,22 +83,55 @@ public class DeadHorse7 {
 	static final long[] cardDecimals = new long[] { 1L, 8L, 64L, 512L, 4096L, 32768L, 262144L, 2097152L, 16777216L,
 			134217728L, 1073741824L, 8589934592L, 68719476736L };
 
+	//static final long[] straights = new long[]{68719477321L, 4681L, 37448L, 299584L, 2396672L, 19173376L, 153387008L, 1227096064L, 9816768512L, 78534148096L};
+	static final long[] straights = new long[]{78534148096L, 9816768512L, 1227096064L, 153387008L, 19173376L, 2396672L, 299584L, 37448L, 4681L, 68719477321L};
 	/*
 	 * long pairs = sum & pairMask; long trips = sum & (pairs>>1); long onlyPairs =
 	 * (pairs>>1) ^ trips; //since pairs includes pairs and also trips, this will
 	 * get rid of trips and only include pairs long quads = sum & quadMask;
 	 */
 
-	public static void findStraights() {
+	public static void findStraights() throws Exception {
+		System.out.println("looking for straights...");
 
 		// Here is where it gets a little tricky I think. This may even make me want to
 		// redesign the card structure of all the bits...
 		// I dont think this bit setup is nice for straights...
 		// we surely can do it, but it will take more operations than I had hoped.
 		// Theres likely a better way.
+
+
+
+		String[] someCardCodes = new String[] { "8C", "3D", "4D", "8S", "6D", "2D", "9D" };
+
+		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
+
+		for (long l : hand) {
+			System.out
+					.println("card: " + l + " : " + convertDecimalToLongName7(l) + " : " + EvalTestPlayground.bin51(l));
+		}
+		long ord = orHand(hand);
+		/*long suits = sumHand(hand) & suitMask;
+		System.out.println("suits: " + suits + " : " + EvalTestPlayground.bin51(suits));
+		for (int i = 0; i < fullSuitMasks.length; i++) {
+			long masked = fullSuitMasks[i] & suits;
+			if (*//* masked != 0 && *//* masked > almostFlush[i]) {
+				System.out.println("Flush of " + suitLongs[i] + " :: " + i + " ");
+				return;
+			}
+		}*/
+
+
+		for(long l : straights){
+			if((l&ord) == l){
+				System.out.println("Found a straight: " + l);
+				break;
+			}
+		}
 	}
 
 	public static void findFlushes() throws Exception {
+		System.out.println("looking for flushes...");
 		String[] someCardCodes = new String[] { "2C", "3D", "4D", "5S", "6D", "8D", "9D" };
 
 		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
@@ -151,6 +184,7 @@ public class DeadHorse7 {
 	}
 
 	public static void findDuplicates() throws Exception {
+		System.out.println("looking for duplicates : pairs, 2pairs, trips, full houses, quads...");
 		// tt();
 
 		// String[] cardsStrings = new String [] {"AH", "5S", "7S", "AC", "2C", "TD",
@@ -331,7 +365,7 @@ public class DeadHorse7 {
 		return ret;
 	}
 
-	public long orHand(long[] cards) {
+	public static long orHand(long[] cards) {
 		if (cards.length != 7) {
 			throw new IllegalArgumentException("There must be 7 cards");
 		}
