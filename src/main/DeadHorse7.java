@@ -204,13 +204,13 @@ public class DeadHorse7 {
 												// and only include pairs
 		long quads = sum & quadMask;
 
-		if (onlyPairs > 0) {
+		if (onlyPairs != 0) {
 			System.out.println("PAIRS : " + EvalTestPlayground.bin51(onlyPairs));
 		}
-		if (trips > 0) {
+		if (trips != 0) {
 			System.out.println("TRIPS : " + EvalTestPlayground.bin51(trips));
 		}
-		if (quads > 0) {
+		if (quads != 0) {
 			System.out.println("QUADS : " + EvalTestPlayground.bin51(quads));
 		}
 		System.out.println("ORD : " + EvalTestPlayground.bin51(ord));
@@ -376,7 +376,7 @@ public class DeadHorse7 {
 
 	public static int getSuitIndexDecimal(long card) throws Exception {
 		for (int i = 0; i < suitDecimals.length; i++) {
-			if ((card & suitDecimals[i]) > 0) {
+			if ((card & suitDecimals[i]) != 0) {
 				return i;
 			}
 		}
@@ -385,7 +385,7 @@ public class DeadHorse7 {
 
 	public static int getCardIndexDecimal(long card) throws Exception {
 		for (int i = 0; i < cardDecimals.length; i++) {
-			if ((card & cardDecimals[i]) > 0) {
+			if ((card & cardDecimals[i]) != 0) {
 				return i;
 			}
 		}
