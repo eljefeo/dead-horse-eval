@@ -279,7 +279,6 @@ public class DeadHorse7 {
 			for (int j = 0; j < cardCount; j++) {
 				int index = (i * cardCount + j);
 				cards[index] = makeDecimalFromIndexes(j, i);// (1L << (13 + i) * 3) | (1L << (j * 3));
-
 				// return (1L << (cardIndex * 3)) | (1L << ((suitIndex + 13) * 3));
 				// System.out.println(EvalTestPlayground.bin51(cards[index]) + " Card " + j + "
 				// " + i + " * " + (index) +" : " + cards[index]);
