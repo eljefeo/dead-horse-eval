@@ -91,18 +91,9 @@ public class DeadHorse7 {
 	 * get rid of trips and only include pairs long quads = sum & quadMask;
 	 */
 
-	public static void findStraights() throws Exception {
-		System.out.println("looking for straights...");
 
-		// Here is where it gets a little tricky I think. This may even make me want to
-		// redesign the card structure of all the bits...
-		// I dont think this bit setup is nice for straights...
-		// we surely can do it, but it will take more operations than I had hoped.
-		// Theres likely a better way.
-
-
-
-		String[] someCardCodes = new String[] { "8C", "3D", "4D", "8S", "6D", "2D", "9D" };
+	public static void testeval7() throws Exception {
+		String[] someCardCodes = new String[] { "8C", "3D", "8D", "8S", "6D", "2S", "9D" };
 
 		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
 
@@ -111,28 +102,38 @@ public class DeadHorse7 {
 					.println("card: " + l + " : " + convertDecimalToLongName7(l) + " : " + EvalTestPlayground.bin51(l));
 		}
 		long ord = orHand(hand);
-		/*long suits = sumHand(hand) & suitMask;
-		System.out.println("suits: " + suits + " : " + EvalTestPlayground.bin51(suits));
-		for (int i = 0; i < fullSuitMasks.length; i++) {
-			long masked = fullSuitMasks[i] & suits;
-			if (*//* masked != 0 && *//* masked > almostFlush[i]) {
-				System.out.println("Flush of " + suitLongs[i] + " :: " + i + " ");
-				return;
-			}
-		}*/
+		long sum = sumHand(hand);
+
+		long straight = findStraights(ord);
+		long flush = findFlushes(sum);
+		long duplicates = findDuplicates(sum);
 
 
-		for(long l : straights){
-			if((l&ord) == l){
-				System.out.println("Found a straight: " + l);
-				break;
-			}
-		}
+
+
 	}
 
-	public static void findFlushes() throws Exception {
+	public static long findStraights(long orCards) throws Exception {
+		System.out.println("looking for straights...");
+
+		// Here is where it gets a little tricky I think. This may even make me want to
+		// redesign the card structure of all the bits...
+		// I dont think this bit setup is nice for straights...
+		// we surely can do it, but it will take more operations than I had hoped.
+		// Theres likely a better way.
+
+		for(long l : straights){
+			if((l&orCards) == l){
+				System.out.println("Found a straight: " + l);
+				return l;
+			}
+		}
+		return 0L;
+	}
+
+	public static long findFlushes(long sumCards) throws Exception {
 		System.out.println("looking for flushes...");
-		String[] someCardCodes = new String[] { "2C", "3D", "4D", "5S", "6D", "8D", "9D" };
+		/*String[] someCardCodes = new String[] { "2C", "3D", "4D", "5S", "6D", "8D", "9D" };
 
 		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
 
@@ -140,16 +141,18 @@ public class DeadHorse7 {
 			System.out
 					.println("card: " + l + " : " + convertDecimalToLongName7(l) + " : " + EvalTestPlayground.bin51(l));
 		}
-
-		long suits = sumHand(hand) & suitMask;
+*/
+		//long suits = sumHand(hand) & suitMask;
+		long suits = sumCards & suitMask;
 		System.out.println("suits: " + suits + " : " + EvalTestPlayground.bin51(suits));
 		for (int i = 0; i < fullSuitMasks.length; i++) {
 			long masked = fullSuitMasks[i] & suits;
 			if (/* masked != 0 && */ masked > almostFlush[i]) {
 				System.out.println("Flush of " + suitLongs[i] + " :: " + i + " ");
-				return;
+				return suits;
 			}
 		}
+		return suits;
 	}
 
 	public static void tt() throws Exception {
@@ -183,7 +186,7 @@ public class DeadHorse7 {
 		}
 	}
 
-	public static void findDuplicates() throws Exception {
+	public static long findDuplicates(long sumCards) throws Exception {
 		System.out.println("looking for duplicates : pairs, 2pairs, trips, full houses, quads...");
 		// tt();
 
@@ -201,7 +204,7 @@ public class DeadHorse7 {
 		// "9S"}; //Quads and pair
 		// String[] cardsStrings = new String [] {"4H", "5S", "4C", "AC", "4S", "4D",
 		// "AS"}; //Quads and pair
-		String[] cardsStrings = new String[] { "4H", "AD", "4C", "AC", "4S", "4D", "AS" }; // Quads and trips
+		/*String[] cardsStrings = new String[] { "4H", "AD", "4C", "AC", "4S", "4D", "AS" }; // Quads and trips
 		long[] hand = convertHandHumanShortToDecimal7(cardsStrings);
 		for (int i = 0; i < hand.length; i++) {
 
@@ -212,9 +215,9 @@ public class DeadHorse7 {
 			System.out.println(EvalTestPlayground.bin51(aCardm1));
 			System.out.println(EvalTestPlayground.bin51((aCard & aCardm1)));
 
-		}
-		long ord = hand[0] | hand[1] | hand[2] | hand[3] | hand[4] | hand[5] | hand[6];
-		long sum = hand[0] + hand[1] + hand[2] + hand[3] + hand[4] + hand[5] + hand[6];
+		}*/
+		//long ord = hand[0] | hand[1] | hand[2] | hand[3] | hand[4] | hand[5] | hand[6];
+		//long sum = hand[0] + hand[1] + hand[2] + hand[3] + hand[4] + hand[5] + hand[6];
 
 		// String testCard = "AH";
 		// long converted = convertHumanToBinary7(testCard);
@@ -232,11 +235,11 @@ public class DeadHorse7 {
 		// System.out.println("2h plus 2s: " + (twoH + twS));
 		// System.out.println("2h OR 2s: " + (twoH | twS));
 
-		long pairs = sum & pairMask;
-		long trips = sum & (pairs >> 1);
-		long onlyPairs = (pairs >> 1) ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
+		long pairs = (sumCards & pairMask) >> 1;
+		long trips = sumCards & pairs ;
+		long onlyPairs = pairs  ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
 												// and only include pairs
-		long quads = sum & quadMask;
+		long quads = sumCards & quadMask;
 
 		if (onlyPairs != 0) {
 			System.out.println("PAIRS : " + EvalTestPlayground.bin51(onlyPairs));
@@ -247,8 +250,8 @@ public class DeadHorse7 {
 		if (quads != 0) {
 			System.out.println("QUADS : " + EvalTestPlayground.bin51(quads));
 		}
-		System.out.println("ORD : " + EvalTestPlayground.bin51(ord));
-		System.out.println("SUM : " + EvalTestPlayground.bin51(sum));
+		//System.out.println("ORD : " + EvalTestPlayground.bin51(ord));
+		System.out.println("SUM : " + EvalTestPlayground.bin51(sumCards));
 		// System.out.println("sum == ord : " + (sum == ord));
 		/// System.out.println("PAIRS : " + EvalTestPlayground.bin51(pairs));
 		// System.out.println("TRIPS : " + EvalTestPlayground.bin51(trips));
@@ -302,6 +305,7 @@ public class DeadHorse7 {
 		 * 
 		 */
 
+		return 9L;
 	}
 
 	public static long[] makeAll52Cards7Decimal() {
@@ -442,5 +446,6 @@ public class DeadHorse7 {
 		}
 		throw new Exception("Error retreiving card index for card char: " + cardChar);
 	}
+
 
 }

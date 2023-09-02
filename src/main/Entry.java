@@ -26,10 +26,10 @@ public class Entry {
 		EvalTestPlayground.testEval5AndNotes();
 
 		// EvalTestPlayground.testStatisticsManyHand5(5000000);
-		DeadHorse7.findDuplicates();
-		DeadHorse7.findFlushes();
-		DeadHorse7.findStraights();
-
+		//DeadHorse7.findDuplicates();
+		///DeadHorse7.findFlushes();
+		//DeadHorse7.findStraights();
+		DeadHorse7.testeval7();
 
 		// EvalTestPlayground.testEveryHand7();
 
