@@ -22,10 +22,14 @@ public class Entry {
 		// System.out.println(EvalTestPlayground.humanDecodeEval("9d", "9c", "9h", "6s",
 		// "9s"));
 
-		// EvalTestPlayground.testEveryHand5();
+		 //EvalTestPlayground.testEveryHand5();
+		EvalTestPlayground.testEval5AndNotes();
+
 		// EvalTestPlayground.testStatisticsManyHand5(5000000);
-		// DeadHorse7.findDuplicates();
+		 DeadHorse7.findDuplicates();
 		DeadHorse7.findFlushes();
+
+
 		// EvalTestPlayground.testEveryHand7();
 
 		// EvalTestPlayground.testEveryHand7n();

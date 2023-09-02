@@ -1105,4 +1105,98 @@ public static void createAllPairs(int[] cards){
 }
 
 
+	public static void testEval5AndNotes() {
+
+
+
+
+
+
+		//copy of the deck to make this method more portable
+
+		double allHandPossibilities = 0.0;
+		int totalHands = 2598960;
+		 /*int[] allCards = new int[totalHands*5];
+		  int totalCounter=0;
+
+		  //this is how we create every possible 5 card hand
+		  for(int i=0;i<allCardNums.length-1;i++)
+			  for(int j=i+1;j<allCardNums.length;j++)
+				  for(int k=j+1;k<allCardNums.length;k++)
+					  for(int l=k+1;l<allCardNums.length;l++)
+						  for(int m=l+1;m<allCardNums.length;m++){
+							  allCards[totalCounter*5]	=allCardNums[i];
+							  allCards[totalCounter*5+1]=allCardNums[j];
+							  allCards[totalCounter*5+2]=allCardNums[k];
+							  allCards[totalCounter*5+3]=allCardNums[l];
+							  allCards[totalCounter*5+4]=allCardNums[m];
+							  totalCounter++;
+						  }*/
+		int[] allCards = createAllFiveCardHands();
+		int totalCounter= allCards.length/5;
+
+		//get start time
+		long startT = System.nanoTime();
+		//go through every hand, 5 cards at a time
+		for(int i=0;i<allCards.length;i+=5){
+			DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
+			//int res1 = DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
+			//int res2 = DeadHorse.eval5original(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
+			//if(res1 != res2){
+			//	System.out.println("ERROR: " + res1 + " : " + res2);
+			//}
+		}
+
+		//get end time
+		long endT = System.nanoTime();
+
+		// Time = (end time - start time ) divided by a billion : because it is in nano seconds
+		double time = (double) (endT - startT)/1000000000;
+		System.out.println("Did all " + totalHands + " hands in " + time +" seconds");
+		//hands per second in millions
+		Double currentTotal = totalHands/time/1000000;
+		//allHandPossibilities += currentTotal;
+		System.out.println(currentTotal + " million hands a second\n");
+		//System.out.println("Running Total : " + allHandPossibilities + " percent complete");
+		//this is here to count how many of each type of hand come up.
+		//it will re-eval each hand so we do not corrupt the timing with this extra process
+		//this is here to show the accuracy of making/testing each hand possible
+		//Since there is a known number of each type of 5 card hand with 52 cards :
+		//High Card 		1302540
+		//Pair 			1098240
+		//Two Pair 		123552
+		//Trips 			54912
+		//Straight 		10200
+		//Flush 			5108
+		//Full House 		3744
+		//Quads 			624
+		//Straight Flush	40
+		//Total			2598960
+		int[] handCounter = new int[9];
+		for(int i=0;i<allCards.length;i+=5){
+
+			int res = DeadHorse.eval5(allCards[i],allCards[i+1],
+					allCards[i+2],allCards[i+3],allCards[i+4])>>26;
+			handCounter[res]++;
+
+		}
+		//this is to go through and compare the number of each type of hand we created
+		//to the number of each type of hand we expect
+		for(int j=0;j<handCounter.length;j++){
+			//check if expected == actual
+			boolean checked = handCounter[j]==handFrequency5[j];
+			String res = checked
+					//if all hands accounted for, good news
+					?"All "+handFrequency5[j]+" "+handNames[j]+" hands are accounted for"
+
+					//if the counts dont match, show how many failed
+					: (handCounter[j]-handFrequency5[j])+" of "+handFrequency5[j]
+					+" "+handNames[j]+" hands failed!";
+
+			System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
+		}
+
+		System.out.println("Total Count : " + totalCounter);
+
+	}
 }
