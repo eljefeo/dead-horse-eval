@@ -8,39 +8,7 @@ public class DeadHorse7 {
 	// "Jack", "Ten", "Nine", "Eight", "Seven", "Six", "Five", "Four", "Three",
 	// "Two"};
 
-	// These are the bits and what they mean, everything gets 3 bits.
-	// Starting from the rightmost bits, 222 means the 2 cards go there
-	// if we are adding up how many of each of these cards there are, like if
-	// someone has 4-of-a-kind of 2(s)
-	// then we need to count to 4, to do that we need 3 bits (100 - this is 4 in
-	// binary)
-	// same thing for the suits, if there are 7 cards total and all are 1 suit, then
-	// we need to count to 7 (111 - this is 7 in binary)
-	// so 3 bits each is enough to count whatever we want.
-	static final String charPlacement = "SSSHHHCCCDDDAAAKKKQQQJJJTTT999888777666555444333222";
 
-	// cards are all 2 through Ace, diamonds clubs then hearts then spades (we may
-	// change the order, Im already mixing up orders everywhere of cards and suits)
-	static final long[] all52Cards2 = new long[] { 549755813889L, 549755813896L, 549755813952L, 549755814400L,
-			549755817984L, 549755846656L, 549756076032L, 549757911040L, 549772591104L, 549890031616L, 550829555712L,
-			558345748480L, 618475290624L, 4398046511105L, 4398046511112L, 4398046511168L, 4398046511616L,
-			4398046515200L, 4398046543872L, 4398046773248L, 4398048608256L, 4398063288320L, 4398180728832L,
-			4399120252928L, 4406636445696L, 4466765987840L, 35184372088833L, 35184372088840L, 35184372088896L,
-			35184372089344L, 35184372092928L, 35184372121600L, 35184372350976L, 35184374185984L, 35184388866048L,
-			35184506306560L, 35185445830656L, 35192962023424L, 35253091565568L, 281474976710657L, 281474976710664L,
-			281474976710720L, 281474976711168L, 281474976714752L, 281474976743424L, 281474976972800L, 281474978807808L,
-			281474993487872L, 281475110928384L, 281476050452480L, 281483566645248L, 281543696187392L };
-	// static final long[] all52Cards2 = makeAll52Cards7Decimal();
-
-	static final char[] cardChars = new char[] { '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A' };
-	static final String[] cardLongs = new String[] { "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
-			"Ten", "Jack", "Queen", "King", "Ace" };
-
-	static final char[] suitChars = new char[] { 'D', 'C', 'H', 'S' };
-	static final String[] suitLongs = new String[] { "Diamonds", "Clubs", "Hearts", "Spades" };
-	static final String[] suitLongsReversed = new String[] { "Spades", "Hearts", "Clubs", "Diamonds" };
-
-	static final String OF = " of ";
 	static final long singleCardMask = 78536544841L;
 	// long singleOrPairOrTrip = 471219269046L;
 	static final long pairMask = 157073089682L;
@@ -92,6 +60,10 @@ public class DeadHorse7 {
 	 */
 
 
+	public static int eval7(long a, long b, long c, long d, long e, long f, long g) {
+		return 0;
+	}
+
 	public static void testeval7() throws Exception {
 		String[] someCardCodes = new String[] { "8C", "3D", "8D", "8S", "6D", "2S", "9D" };
 
@@ -99,7 +71,7 @@ public class DeadHorse7 {
 
 		for (long l : hand) {
 			System.out
-					.println("card: " + l + " : " + convertDecimalToLongName7(l) + " : " + EvalTestPlayground.bin51(l));
+					.println("card: " + l + " : " + convertDecimalToLongName7(l) + " : " + util.bin51(l));
 		}
 		long ord = orHand(hand);
 		long sum = sumHand(hand);
@@ -144,11 +116,11 @@ public class DeadHorse7 {
 */
 		//long suits = sumHand(hand) & suitMask;
 		long suits = sumCards & suitMask;
-		System.out.println("suits: " + suits + " : " + EvalTestPlayground.bin51(suits));
+		System.out.println("suits: " + suits + " : " + util.bin51(suits));
 		for (int i = 0; i < fullSuitMasks.length; i++) {
 			long masked = fullSuitMasks[i] & suits;
 			if (/* masked != 0 && */ masked > almostFlush[i]) {
-				System.out.println("Flush of " + suitLongs[i] + " :: " + i + " ");
+				System.out.println("Flush of " + util.suitLongs[i] + " :: " + i + " ");
 				return suits;
 			}
 		}
@@ -178,10 +150,10 @@ public class DeadHorse7 {
 		}
 
 		for (int i = 0; i < someCards.length; i++) {
-			System.out.println("before:\t\t" + EvalTestPlayground.bin51(someCards[i]) + " : " + someCards[i]);
+			System.out.println("before:\t\t" + util.bin51(someCards[i]) + " : " + someCards[i]);
 			System.out.println("name: " + convertDecimalToLongName7(someCards[i]));
 			someCards[i] &= cardMask;
-			System.out.println("after:\t\t" + EvalTestPlayground.bin51(someCards[i]) + " : " + someCards[i]);
+			System.out.println("after:\t\t" + util.bin51(someCards[i]) + " : " + someCards[i]);
 
 		}
 	}
@@ -242,16 +214,16 @@ public class DeadHorse7 {
 		long quads = sumCards & quadMask;
 
 		if (onlyPairs != 0) {
-			System.out.println("PAIRS : " + EvalTestPlayground.bin51(onlyPairs));
+			System.out.println("PAIRS : " + util.bin51(onlyPairs));
 		}
 		if (trips != 0) {
-			System.out.println("TRIPS : " + EvalTestPlayground.bin51(trips));
+			System.out.println("TRIPS : " + util.bin51(trips));
 		}
 		if (quads != 0) {
-			System.out.println("QUADS : " + EvalTestPlayground.bin51(quads));
+			System.out.println("QUADS : " + util.bin51(quads));
 		}
 		//System.out.println("ORD : " + EvalTestPlayground.bin51(ord));
-		System.out.println("SUM : " + EvalTestPlayground.bin51(sumCards));
+		System.out.println("SUM : " + util.bin51(sumCards));
 		// System.out.println("sum == ord : " + (sum == ord));
 		/// System.out.println("PAIRS : " + EvalTestPlayground.bin51(pairs));
 		// System.out.println("TRIPS : " + EvalTestPlayground.bin51(trips));
@@ -310,8 +282,8 @@ public class DeadHorse7 {
 
 	public static long[] makeAll52Cards7Decimal() {
 
-		int cardCount = cardChars.length;
-		int suitCount = suitChars.length;
+		int cardCount = util.cardChars.length;
+		int suitCount = util.suitChars.length;
 		long[] cards = new long[cardCount * suitCount];
 		for (int i = 0; i < suitCount; i++) {
 			for (int j = 0; j < cardCount; j++) {
@@ -339,7 +311,7 @@ public class DeadHorse7 {
 		int cardIndex = getCardIndexChar(cardString.charAt(0));
 		int suitIndex = getSuitIndexChar(cardString.charAt(1));
 
-		return cardLongs[cardIndex] + OF + suitLongs[suitIndex];
+		return util.cardLongs[cardIndex] + util.OF + util.suitLongs[suitIndex];
 	}
 
 	// This method will take a String like "5S" or "JC" (five of clubs or Jack of
@@ -388,7 +360,7 @@ public class DeadHorse7 {
 	}
 
 	public static String convertDecimalToLongName7(long card) throws Exception {
-		return getCardLong(card) + OF + getSuitLong(card);
+		return getCardLong(card) + util.OF + getSuitLong(card);
 	}
 
 	public static String convertDecimalToShortName7(long card) throws Exception {
@@ -396,19 +368,19 @@ public class DeadHorse7 {
 	}
 
 	public static String getSuitLong(long card) throws Exception {
-		return suitLongs[getSuitIndexDecimal(card)];
+		return util.suitLongs[getSuitIndexDecimal(card)];
 	}
 
 	public static String getCardLong(long card) throws Exception {
-		return cardLongs[getCardIndexDecimal(card)];
+		return util.cardLongs[getCardIndexDecimal(card)];
 	}
 
 	public static char getSuitChar(long card) throws Exception {
-		return suitChars[getSuitIndexDecimal(card)];
+		return util.suitChars[getSuitIndexDecimal(card)];
 	}
 
 	public static char getCardChar(long card) throws Exception {
-		return cardChars[getCardIndexDecimal(card)];
+		return util.cardChars[getCardIndexDecimal(card)];
 	}
 
 	public static int getSuitIndexDecimal(long card) throws Exception {
@@ -430,8 +402,8 @@ public class DeadHorse7 {
 	}
 
 	public static int getSuitIndexChar(char suitChar) throws Exception {
-		for (int i = 0; i < suitChars.length; i++) {
-			if (suitChar == suitChars[i]) {
+		for (int i = 0; i < util.suitChars.length; i++) {
+			if (suitChar == util.suitChars[i]) {
 				return i;
 			}
 		}
@@ -439,8 +411,8 @@ public class DeadHorse7 {
 	}
 
 	public static int getCardIndexChar(char cardChar) throws Exception {
-		for (int i = 0; i < cardChars.length; i++) {
-			if (cardChar == cardChars[i]) {
+		for (int i = 0; i < util.cardChars.length; i++) {
+			if (cardChar == util.cardChars[i]) {
 				return i;
 			}
 		}

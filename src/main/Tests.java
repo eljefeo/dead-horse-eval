@@ -45,7 +45,7 @@ public class Tests {
 
 	public static void check52GeneratedSameAsInline() throws Exception {
 		long[] generated = DeadHorse7.makeAll52Cards7Decimal();
-		long[] inline = DeadHorse7.all52Cards2;
+		long[] inline = util7.all52Cards7;
 		if (generated.length != inline.length) {
 			throw new Exception("Generated cards dont match length of inline, are there 52?");
 		}

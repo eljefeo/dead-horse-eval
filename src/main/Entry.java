@@ -23,13 +23,14 @@ public class Entry {
 		// "9s"));
 
 		 //EvalTestPlayground.testEveryHand5();
-		EvalTestPlayground.testEval5AndNotes();
+		//EvalTestPlayground.testEval5AndNotes();
 
 		// EvalTestPlayground.testStatisticsManyHand5(5000000);
 		//DeadHorse7.findDuplicates();
 		///DeadHorse7.findFlushes();
 		//DeadHorse7.findStraights();
-		DeadHorse7.testeval7();
+		//DeadHorse7.testeval7();
+		util5.decode5CardHand(3);
 
 		// EvalTestPlayground.testEveryHand7();
 
