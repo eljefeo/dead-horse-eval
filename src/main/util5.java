@@ -139,7 +139,9 @@ public class util5 extends util {
         //}
         //int res = DeadHorse.eval5(allCards);
         //int res = make5CardHandsUntilThisType(2);
-        int res = humanEncodeEval("JS", "KC", "7H", "JC", "6D");
+        String[] someHand = new String[] {"JS", "7C", "7H", "7S", "KD"};
+        int res = humanEncodeEval(someHand[0], someHand[1], someHand[2], someHand[3], someHand[4]);
+        System.out.println(someHand[0] + " " + someHand[1] + " " + someHand[2] + " " + someHand[3] + " " + someHand[4]);
         int handType = res >> rightShiftForHandType;
         int importantBits = (res & leaveImportantBitMask) >> rightShiftForimportantCards;
         int kickerBits = res & leaveKickerBitMask;
@@ -149,67 +151,46 @@ public class util5 extends util {
 
         String longHandName = handNames[handType];
        //String[] longImportantName
-        List<String> importantStrings = new ArrayList<String>();
-        int impBts = importantBits;
-        int impCount = 0;
-        int someOne = 0;
+        List<String> importantStrings = parseHandBits(importantBits);
 
-        while(impBts > 0){
-
-            someOne = (int) Math.pow(2,impCount);
-            //System.out.println("checking " +  util.bin13(impBts) + " :: " + util.bin13(someOne));
-
-            int maybe1 = impBts & someOne;
-            if(maybe1 != 0){
-                //System.out.println("An important bit : " + maybe1);
-                //System.out.println("important card? " + util.cardLongs[impCount]);
-                importantStrings.add(util.cardLongs[impCount]);
-                impBts ^= maybe1;
-                //System.out.println("important bits are now: " + util.bin13(impBts));
-                /*if(impBts != 0){
-                    System.out.println("important bits still not equal zero, got more than 1 imp bits...");
-                }*/
-            }
-
-            impCount++;
-        }
         for(String importS : importantStrings){
             System.out.println("Important Card: " + importS);
         }
 
-
-        ////
-        List<String> kickerStrings = new ArrayList<String>();
-        int kickBts = kickerBits;
-        int kickCount = 0;
-        someOne = 0;
-
-        while(kickBts > 0){
-
-            someOne = (int) Math.pow(2,kickCount);
-            //System.out.println("checking " +  util.bin13(kickBts) + " :: " + util.bin13(someOne));
-
-            int maybe1 = kickBts & someOne;
-            if(maybe1 != 0){
-                //System.out.println("A kicker bit : " + maybe1);
-                //System.out.println("kicker card? " + util.cardLongs[kickCount]);
-                kickerStrings.add(util.cardLongs[kickCount]);
-                kickBts ^= maybe1;
-                //System.out.println("kicker bits are now: " + util.bin13(kickBts));
-
-            }
-
-            kickCount++;
-        }
+        List<String> kickerStrings = parseHandBits(kickerBits);
         for(String kickS : kickerStrings){
             System.out.println("Kicker Card: " + kickS);
         }
 
-
-        //getLongHandName
+        String[] cardStrings = new String[5];
+        for(int i = 0; i < importantStrings.size(); i++){
+            cardStrings[i] = importantStrings.get(i);
+        }
+        for(int i = 0; i < kickerStrings.size(); i++){
+            cardStrings[i + importantStrings.size()] = kickerStrings.get(i);
+        }
+        for(String s : cardStrings){
+            System.out.println("Card String going in: " + s);
+        }
+        System.out.println(getLongHandName(handType, cardStrings));
 
 
         return "s";
+    }
+
+    private static List<String> parseHandBits(int impKickBts) {
+        List<String> strngs = new ArrayList<String>();
+        int impKickCount = 12;
+        while(impKickBts > 0){
+            int someOne = (int) Math.pow(2,impKickCount);
+            int maybe1 = impKickBts & someOne;
+            if(maybe1 != 0){
+                strngs.add(util.cardLongs[impKickCount]);
+                impKickBts ^= maybe1;
+            }
+            impKickCount--;
+        }
+        return strngs;
     }
 
     public static String getLongHandName(int type, String[] cards){ //probably want this String array to be int array, for now just passing the card strings like Five, or Five of Hearts or whatever
@@ -218,6 +199,10 @@ public class util5 extends util {
         switch (type){
             case 1:
                 return printLongPair(cards);
+            case 2:
+                return printLongTwoPair(cards);
+            case 3:
+                return printLongTrips(cards);
 
             default:
                 return "ERROROORRRRORR";
@@ -227,9 +212,18 @@ public class util5 extends util {
 
     public static String printLongPair(String[] cards){
         String pairExplanation = handNames[1] + OF + cards[0] + "'s" + " with kickers " + cards[1] + ", " + cards[2] + ", " + cards[3];
-        System.out.println(pairExplanation);
         return pairExplanation;
 
+    }
+
+    public static String printLongTwoPair(String[] cards){
+        String pairExplanation = handNames[2] + ": " + cards[0] + "'s and " + cards[1] + "'s with a " + cards[2] + " kicker";
+        return pairExplanation;
+    }
+
+    public static String printLongTrips(String[] cards){
+        String pairExplanation = handNames[3] + OF + cards[0] + "'s with a " + cards[1] + " and " + cards[2] + " kicker";
+        return pairExplanation;
     }
 
 
