@@ -10,7 +10,6 @@ public class DeadHorse {
             return (a + b + c + d + e - x & f) == (f & (y ^ x) << 2)
                     ? 0x1C000000 | x | z << 13 : 0x18000000 | z | x << 13; //4 of a kind or full house
         else if ((v &= v - 1) == 0){
-            System.out.println("here:>:");
             return z != 0 ? 0x8000000 | x | z << 13
                     : 0xC000000 | (v = (((a&b)!=0||(a&c)!=0?a:(b&c)!=0?b:e) & f)) ^ y | (v << 13);
         }

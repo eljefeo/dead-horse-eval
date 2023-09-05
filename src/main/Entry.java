@@ -15,7 +15,7 @@ public class Entry {
 
 		// EvalTestPlayground.randomizerSpeedTest7Card(30000000);
 
-		// EvalTestPlayground.randomizerSpeedTest5Card(25000000); // speed average :
+		 //EvalTestPlayground.randomizerSpeedTest5Card(25000000); // speed average :
 		// 25000000 hands in 0.121995199 seconds = 204Mhps
 		// EvalTestPlayground.randomizerSpeedTest5Card(130000000); // Did 130000000
 		// hands in 0.6159191 seconds 211 million hands a second
@@ -25,7 +25,7 @@ public class Entry {
 		 //EvalTestPlayground.testEveryHand5();
 		//EvalTestPlayground.testEval5AndNotes();
 
-		// EvalTestPlayground.testStatisticsManyHand5(5000000);
+		 EvalTestPlayground.testStatisticsManyHand5(10000000);
 		//DeadHorse7.findDuplicates();
 		///DeadHorse7.findFlushes();
 		//DeadHorse7.findStraights();
@@ -33,7 +33,7 @@ public class Entry {
 
 
 		//util5.decode5CardHand(403701764);
-		util5.humanEncodeShortAndDecodeLongHand(new String[] {"9H", "4D", "9C", "9D", "4H"});
+		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"9H", "4D", "9C", "9D", "4H"});
 
 		// EvalTestPlayground.testEveryHand7();
 

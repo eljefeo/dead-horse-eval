@@ -4,8 +4,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 import static main.util.handNames;
 import static main.util5.*;
@@ -93,6 +95,8 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 }
 	  public static void testStatisticsManyHand5(int howManyHands){
 
+		  String thisManyString = NumberFormat.getNumberInstance(Locale.US).format(howManyHands);
+		  System.out.println("Doing this many hands: " + thisManyString);
 		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howManyHands);
 		  int totalHandsNow = allCards.length / 5; 
 		  int[] handCounter = new int[9];
@@ -326,7 +330,7 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  //pick a nice huge round number to let this sucker get warmed up
 		  // int howMany = 10000000;
 		System.out.println("Making " + howMany + " hands...");
-		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howMany);
+		int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howMany);
 		  System.out.println("...Done making " + howMany + " hands");
 		 // long startTp = System.nanoTime();
 		  //let er rip, go through every hand, 5 cards at a time

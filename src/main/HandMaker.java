@@ -43,7 +43,7 @@ public class HandMaker {
 		return allCards;
 	}
 
-	public static int[] makeLotsOfRandom5CardHands(int howMany) {
+	public static int[] makeLotsOfRandom5CardHandsSlow(int howMany) { //this is so dang slow. But a more proper way to do it I suppose...
 		// List<Integer> fiftyTwoCards = Arrays.asList(allc.clone())
 
 		List<Integer> fiftyTwoCards = Arrays.stream(allc).boxed().toList();
@@ -69,14 +69,15 @@ public class HandMaker {
 		return allCards;
 	}
 
-	public static int[] makeLotsOfRandom5CardHandsIntArr(int howMany) {
+	public static int[] makeLotsOfRandom5CardHands(int howMany) {
 
 		// keep a copy of the original array
 		// in case we want to use this method on its own out of this class
-		int[] fiftyTwoCards = new int[] { 65537, 65538, 65540, 65544, 65552, 65568, 65600, 65664, 65792, 66048, 66560,
+		/*int[] fiftyTwoCards = new int[] { 65537, 65538, 65540, 65544, 65552, 65568, 65600, 65664, 65792, 66048, 66560,
 				67584, 69632, 32769, 32770, 32772, 32776, 32784, 32800, 32832, 32896, 33024, 33280, 33792, 34816, 36864,
 				16385, 16386, 16388, 16392, 16400, 16416, 16448, 16512, 16640, 16896, 17408, 18432, 20480, 8193, 8194,
-				8196, 8200, 8208, 8224, 8256, 8320, 8448, 8704, 9216, 10240, 12288 };
+				8196, 8200, 8208, 8224, 8256, 8320, 8448, 8704, 9216, 10240, 12288 };*/
+		int[] fiftyTwoCards = util5.allCardNums;
 
 		// make a copy of array to do each hand
 		int[] allc2 = (int[]) fiftyTwoCards.clone();
