@@ -30,7 +30,10 @@ public class Entry {
 		///DeadHorse7.findFlushes();
 		//DeadHorse7.findStraights();
 		//DeadHorse7.testeval7();
-		util5.decode5CardHand(3);
+
+
+		//util5.decode5CardHand(403701764);
+		util5.humanEncodeShortAndDecodeLongHand(new String[] {"9H", "4D", "9C", "9D", "4H"});
 
 		// EvalTestPlayground.testEveryHand7();
 

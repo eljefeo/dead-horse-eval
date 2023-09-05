@@ -132,25 +132,15 @@ public class util5 extends util {
         return "unique hand value = " + res + "\n"+ as + ", " + bs + ", " +cs+", " +ds+", "+es+"\n= "+ handNames[res>>26];
     }
 
-    public static String decode5CardHand(int hand) throws Exception {
-        //int[] allCards = HandMaker.makeLotsOfRandom5CardHands(1);
-        //for(int c : allCards){
-        //    System.out.print(getCardName5(c) + ", ");
-        //}
-        //int res = DeadHorse.eval5(allCards);
-        //int res = make5CardHandsUntilThisType(2);
-        String[] someHand = new String[] {"JS", "7C", "7H", "7S", "KD"};
-        int res = humanEncodeEval(someHand[0], someHand[1], someHand[2], someHand[3], someHand[4]);
-        System.out.println(someHand[0] + " " + someHand[1] + " " + someHand[2] + " " + someHand[3] + " " + someHand[4]);
-        int handType = res >> rightShiftForHandType;
-        int importantBits = (res & leaveImportantBitMask) >> rightShiftForimportantCards;
-        int kickerBits = res & leaveKickerBitMask;
-        System.out.println("This hand: " + res + " :: " + util.bin32(res) + " :: " + handNames[handType]);
+    public static String decode5CardHand(int hand){
+        int handType = hand >> rightShiftForHandType;
+        int importantBits = (hand & leaveImportantBitMask) >> rightShiftForimportantCards;
+        int kickerBits = hand & leaveKickerBitMask;
+        System.out.println("This hand: " + hand + " :: " + util.bin32(hand) + " :: " + handType + " : " + handNames[handType]);
         System.out.println("important bits: " + importantBits + " :: " + util.bin13(importantBits));
         System.out.println("kicker bits: " + kickerBits + " :: " + util.bin13(kickerBits));
 
         String longHandName = handNames[handType];
-       //String[] longImportantName
         List<String> importantStrings = parseHandBits(importantBits);
 
         for(String importS : importantStrings){
@@ -172,10 +162,20 @@ public class util5 extends util {
         for(String s : cardStrings){
             System.out.println("Card String going in: " + s);
         }
-        System.out.println(getLongHandName(handType, cardStrings));
+        String handDescription = getLongHandName(handType, cardStrings);
+
+        System.out.println(handDescription);
+
+        return handDescription;
+    }
 
 
-        return "s";
+
+    public static String humanEncodeShortAndDecodeLongHand(String[] someHand) throws Exception {
+        //String[] someHand = new String[] {"9D", "3H", "6H", "5H", "4H"};
+        System.out.println(someHand[0] + " " + someHand[1] + " " + someHand[2] + " " + someHand[3] + " " + someHand[4]);
+        int res = humanEncodeEval(someHand[0], someHand[1], someHand[2], someHand[3], someHand[4]);
+        return decode5CardHand(res);
     }
 
     private static List<String> parseHandBits(int impKickBts) {
@@ -197,34 +197,73 @@ public class util5 extends util {
         //probably want to just pass the integer itself and have the next function figure it out, like pass the int for 2H and just have this one figure it out
 
         switch (type){
+            case 0:
+                return printLongHighCard(cards);
             case 1:
                 return printLongPair(cards);
             case 2:
                 return printLongTwoPair(cards);
             case 3:
                 return printLongTrips(cards);
+            case 4:
+                return printLongStraight(cards);
+            case 5:
+                return printLongFlush(cards);
+            case 6:
+                return printLongFullHouse(cards);
+            case 7:
+                return printLongQuads(cards);
+            case 8:
+                return printLongStraightFlush(cards);
 
             default:
-                return "ERROROORRRRORR";
+                return "ERROROORRRRORR trying to show long fun description of hand";
         }
 
     }
 
-    public static String printLongPair(String[] cards){
-        String pairExplanation = handNames[1] + OF + cards[0] + "'s" + " with kickers " + cards[1] + ", " + cards[2] + ", " + cards[3];
-        return pairExplanation;
 
+    public static String printLongHighCard(String[] cards){
+        return handNames[0] + " : " + cards[0] + " " + cards[1] + " " + cards[2] + " " + cards[3] + " " + cards[4];
+    }
+
+    public static String printLongPair(String[] cards){
+        return handNames[1] + OF + cards[0] + "'s" + " with kickers " + cards[1] + ", " + cards[2] + ", " + cards[3];
     }
 
     public static String printLongTwoPair(String[] cards){
-        String pairExplanation = handNames[2] + ": " + cards[0] + "'s and " + cards[1] + "'s with a " + cards[2] + " kicker";
-        return pairExplanation;
+        return handNames[2] + ": " + cards[0] + "'s and " + cards[1] + "'s with a " + cards[2] + " kicker";
     }
 
     public static String printLongTrips(String[] cards){
-        String pairExplanation = handNames[3] + OF + cards[0] + "'s with a " + cards[1] + " and " + cards[2] + " kicker";
-        return pairExplanation;
+        return handNames[3] + OF + cards[0] + "'s with a " + cards[1] + " and " + cards[2] + " kicker";
     }
 
+    public static String printLongStraight(String[] cards){
+        //There is a scenario where ACE,2,3,4,5 happens. In that scenario we dont put the ACE card in the bits in the result
+        // that way it wont appear higher than a 2,3,4,5,6. So here we check if that ACE is missing, and we add the word in...
+        if(cards[4] == null)
+            cards[4] = "Ace";
+        return handNames[4] + " : " + cards[4] + " " + cards[3] + " " + cards[2] + " " + cards[1] + " " + cards[0];
+    }
+
+    public static String printLongFlush(String[] cards){
+        return cards[0] + " High " + handNames[5];
+    }
+    public static String printLongFullHouse(String[] cards){
+        return handNames[6] + " : " + cards[0] + "'s full of " + cards[1] + "'s";
+    }
+
+    public static String printLongQuads(String[] cards){
+        return handNames[7] + OF + cards[0] + "'s";
+    }
+
+    public static String printLongStraightFlush(String[] cards){
+        //There is a scenario where ACE,2,3,4,5 happens. In that scenario we dont put the ACE card in the bits in the result
+        // that way it wont appear higher than a 2,3,4,5,6. So here we check if that ACE is missing, and we add the word in...
+        if(cards[4] == null)
+            cards[4] = "Ace";
+        return handNames[8] + " : " + cards[4] + " " + cards[3] + " " + cards[2] + " " + cards[1] + " " + cards[0];
+    }
 
 }

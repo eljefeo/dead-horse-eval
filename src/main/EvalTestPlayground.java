@@ -480,8 +480,8 @@ public static void handCompareTest(int howMany) throws Exception {
 }
 
 // can send user readable strings into here like 'As or Jc or 9h'..
-//capital letter for face cards and lower case letter for suit 
-public  static int humanEncodeEvalLowerNoTen(String as, String bs, String cs, String ds, String es){
+//capital letter for face cards and lower case letter for suit --- this method is old, should delete?
+/*public  static int humanEncodeEvalLowerNoTen(String as, String bs, String cs, String ds, String es){
 
 	//convert string to numbers that the eval recognizes
 	char ac=as.charAt(0),bc=bs.charAt(0),cc=cs.charAt(0),dc=ds.charAt(0),ec=es.charAt(0);
@@ -501,7 +501,7 @@ public  static int humanEncodeEvalLowerNoTen(String as, String bs, String cs, St
 	|((ec=es.charAt(1))=='s'?0x10000:ec=='h'?0x8000:ec=='c'?0x4000:0x2000));
 
 	return DeadHorse.eval5(a, b, c, d, e);
-}
+}*/
 
 
 public static void randomizerSpeedTest7Card(int howMany){
