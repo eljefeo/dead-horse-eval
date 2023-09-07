@@ -33,29 +33,29 @@ public class EvalTestPlayground {
 
 
 
-	public static int[] createAllSevenCardHands(){
+	public static long[] createAllSevenCardHands(){
 
-		int[] allCards = new int[util7.total7CardHandCount*7];
+		long[] allCards = new long[util7.total7CardHandCount*7];
 		int totalCounter=0;
 
-
+		long[] cards52_7 = util7.all52Cards7;//DeadHorse7.makeAll52Cards7Decimal();
 
 //668.922.800
 
-		for(int i=0;i<util7.all52Cards7.length-1;i++)
-			for(int j=i+1;j<util7.all52Cards7.length;j++)
-				for(int k=j+1;k<util7.all52Cards7.length;k++)
-					for(int l=k+1;l<util7.all52Cards7.length;l++)
-						for(int m=l+1;m<util7.all52Cards7.length;m++)
-							for(int n=m+1;n<util7.all52Cards7.length;n++)
-								for(int o=n+1;o<util7.all52Cards7.length;o++) {
-									allCards[totalCounter * 7] = allCardNums[i];
-									allCards[totalCounter * 7 + 1] = allCardNums[j];
-									allCards[totalCounter * 7 + 2] = allCardNums[k];
-									allCards[totalCounter * 7 + 3] = allCardNums[l];
-									allCards[totalCounter * 7 + 4] = allCardNums[m];
-									allCards[totalCounter * 7 + 5] = allCardNums[n];
-									allCards[totalCounter * 7 + 6] = allCardNums[o];
+		for(int i=0;i<cards52_7.length-1;i++)
+			for(int j=i+1;j<cards52_7.length;j++)
+				for(int k=j+1;k<cards52_7.length;k++)
+					for(int l=k+1;l<cards52_7.length;l++)
+						for(int m=l+1;m<cards52_7.length;m++)
+							for(int n=m+1;n<cards52_7.length;n++)
+								for(int o=n+1;o<cards52_7.length;o++) {
+									allCards[totalCounter * 7] = cards52_7[i];
+									allCards[totalCounter * 7 + 1] = cards52_7[j];
+									allCards[totalCounter * 7 + 2] = cards52_7[k];
+									allCards[totalCounter * 7 + 3] = cards52_7[l];
+									allCards[totalCounter * 7 + 4] = cards52_7[m];
+									allCards[totalCounter * 7 + 5] = cards52_7[n];
+									allCards[totalCounter * 7 + 6] = cards52_7[o];
 									totalCounter++;
 								}
 		System.out.println("Created " + totalCounter + " hands");

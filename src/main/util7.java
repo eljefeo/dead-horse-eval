@@ -41,7 +41,7 @@ public class util7 extends util {
 
 
 
-    public static void testEveryHand7n(){
+    public static void testEveryHand7n() throws Exception {
 
         //copy of the deck to make this method more portable
         /*ArrayList[] lists = {
@@ -62,7 +62,7 @@ public class util7 extends util {
         //int[] handCounter = new int[9];
 
 ///////////////////////////////////////////
-        int[] allCards = EvalTestPlayground.createAllSevenCardHands();
+        long[] allCards = EvalTestPlayground.createAllSevenCardHands();
         int totalCounter= allCards.length/7;
 
         //get start time
@@ -148,8 +148,32 @@ public class util7 extends util {
         for(int i=0;i<allCards.length;i+=7){
 
             int res = DeadHorse7.eval7(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4],allCards[i+5],allCards[i+6]);
-            handCounter[res]++;
+            /*System.out.println("got : " + res + " " + handNames[res] );
+            System.out.println(allCards[i] + " "
+                    + allCards[i+1] + " "
+                    + allCards[i+2] + " "
+                    + allCards[i+3] + " "
+                    + allCards[i+4] + " "
+                    + allCards[i+5] + " "
+                    + allCards[i+6] + " ");
+            System.out.println(util.bin64(allCards[i]) + " "
+                    + util.bin64(allCards[i+1]) + " "
+                    + util.bin64(allCards[i+2]) + " "
+                    + util.bin64(allCards[i+3]) + " "
+                    + util.bin64(allCards[i+4]) + " "
+                    + util.bin64(allCards[i+5]) + " "
+                    + util.bin64(allCards[i+6]) + " ");
+            System.out.println(DeadHorse7.convertDecimalToShortName7(allCards[i]) + " "
+                    + DeadHorse7.convertDecimalToShortName7(allCards[i+1]) + " "
+                    + DeadHorse7.convertDecimalToShortName7(allCards[i+2]) + " "
+                    + DeadHorse7.convertDecimalToShortName7(allCards[i+3]) + " "
+                    + DeadHorse7.convertDecimalToShortName7(allCards[i+4]) + " "
+                    + DeadHorse7.convertDecimalToShortName7(allCards[i+5]) + " "
+                    + DeadHorse7.convertDecimalToShortName7(allCards[i+6]) + " ");
 
+
+            if(i > 10) return;*/
+            handCounter[res]++;
         }
         for(int j=0;j<handCounter.length;j++){
             //check if expected == actual
