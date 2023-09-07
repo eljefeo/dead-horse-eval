@@ -58,6 +58,21 @@ public class Entry {
 		PASS - All 224848 4 of a kind hands are accounted for 0.16806722689075632%
 		FAIL - 36832 out of 41584 Straight Flush hands received! 0.02753083016455711%
 Total Count : 133784560
+
+
+
+
+
+FAIL - 50220 out of 23294460 High Card hands received! 0.03753796402215622%
+FAIL - 140077 out of 58627800 Pair hands received! 0.10470341271070444%
+FAIL - 291981 out of 31433400 Two Pair hands received! 0.21824715796800467%
+FAIL - 125004 out of 6461620 3 of a kind hands received! 0.09343679121118312%
+FAIL - 2696848 out of 6180020 Straight hands received! 2.0158140819837507%
+FAIL - 0 out of 4047644 Flush hands received! 0.0%
+FAIL - 1233944 out of 3473184 Full House hands received! 0.9223366283822289%
+FAIL - 129246486 out of 224848 4 of a kind hands received! 96.60792396372197%
+FAIL - 0 out of 41584 Straight Flush hands received! 0.0%
+Total Count : 133784560
 		 */
 
 	}
