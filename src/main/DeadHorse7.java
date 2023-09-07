@@ -60,7 +60,7 @@ public class DeadHorse7 {
 	 */
 
 	public static int eval7Checke() throws Exception {
-		String[] someCardCodes = new String[] { "9C", "7C", "8D", "TD", "3D", "2C", "3C" };
+		String[] someCardCodes = new String[] { "4C", "5C", "6D", "AC", "KC", "2C", "3C" };
 
 		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
 		int res = eval7(hand[0], hand[1], hand[2], hand[3], hand[4], hand[5], hand[6]);
@@ -105,7 +105,9 @@ public class DeadHorse7 {
 		}
 
 		long straightCards = 0;
-		for(long l : straights){
+		//for(long l : straights){
+		for(int i=0; i<straights.length; i++){
+			long l = straights[i];
 			if((l&ord) == l){
 
 				//return l | 0x10000000;
@@ -123,10 +125,18 @@ public class DeadHorse7 {
 				//System.out.println("straight cards: " + util.bin51(straightCards));
 				if(isFlush ){
 					if( (straightCards & flushCards) == straightCards){
-					//	System.out.println("straight FLUSHHH cards: " + util.bin51(straightCards));
+						//System.out.println("straight FLUSHHH cards: " + util.bin51(straightCards));
 						//need to check if the same 5 cards for flush are the same 5 cards for straight...
 						return 8;//since also a flush, its a straight flush.
 					} else {
+						//maybe here check the rest of the straights?
+						for(int j=i+1; j<straights.length; j++){
+							l = straights[j];
+							if((l&ord) == l && ((l&flushCards) == l)){
+								//System.out.println("Found lower straight flush " + util.bin51(l));
+								return 8;//found a lower straight flush than the higher straight, its a straight flush.
+							}
+						}
 						//System.out.println("normal flush");
 						return 5;
 					}
