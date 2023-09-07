@@ -59,30 +59,292 @@ public class DeadHorse7 {
 	 * get rid of trips and only include pairs long quads = sum & quadMask;
 	 */
 
+	public static int eval7Checke() throws Exception {
+		String[] someCardCodes = new String[] { "9C", "7C", "8D", "TD", "3D", "2C", "3C" };
+
+		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
+		int res = eval7(hand[0], hand[1], hand[2], hand[3], hand[4], hand[5], hand[6]);
+		System.out.println("REsult: " + util.handNames[res]);
+		return res;
+	}
 
 	public static int eval7(long a, long b, long c, long d, long e, long f, long g) {
+
+		long ord = a | b | c | d | e | f | g; //orHand(hand);
+		long sum = a + b + c + d + e + f + g; //sumHand(hand);
+		long flushCards = 0;
+		boolean isFlush = false, isStrt = false;
+		long suits = sum & suitMask;
+
+		for (int i = 0; i < fullSuitMasks.length; i++) {
+			//long masked = fullSuitMasks[i] & suits;
+			if (/* masked != 0 && */ (fullSuitMasks[i] & suits) > almostFlush[i]) {
+
+
+				if((a&fullSuitMasks[i]) != 0) flushCards |= a;
+				if((b&fullSuitMasks[i]) != 0) flushCards |= b;
+				if((c&fullSuitMasks[i]) != 0) flushCards |= c;
+				if((d&fullSuitMasks[i]) != 0) flushCards |= d;
+				if((e&fullSuitMasks[i]) != 0) flushCards |= e;
+				if((f&fullSuitMasks[i]) != 0) flushCards |= f;
+				if((g&fullSuitMasks[i]) != 0) flushCards |= g;
+				//000000111000000000000000000000000000000000000000000
+				//000000001000000000000000000001000000000000000000000
+				//000000000000000000000001001001001001000000000001000
+				//000000000000000000000001001001001001000000000000000
+				//System.out.println("fullSuitMasks[i] : " + util.bin51(fullSuitMasks[i]));
+				//System.out.println("a : " + util.bin51(a));
+				//System.out.println("b : " + util.bin51(b));
+				//System.out.println("c : " + util.bin51(c));
+				//System.out.println("flush cards: " + util.bin51(flushCards));
+				flushCards &= cardMask;
+				//System.out.println("flush cards: " + util.bin51(flushCards));
+				isFlush = true;
+				break;
+			}
+		}
+
+		long straightCards = 0;
+		for(long l : straights){
+			if((l&ord) == l){
+
+				//return l | 0x10000000;
+
+				if((a&l) != 0) straightCards |= a;
+				if((b&l) != 0) straightCards |= b;
+				if((c&l) != 0) straightCards |= c;
+				if((d&l) != 0) straightCards |= d;
+				if((e&l) != 0) straightCards |= e;
+				if((f&l) != 0) straightCards |= f;
+				if((g&l) != 0) straightCards |= g;
+
+				//System.out.println("straight cards: " + util.bin51(straightCards));
+				straightCards &= cardMask;
+				//System.out.println("straight cards: " + util.bin51(straightCards));
+				if(isFlush ){
+					if( (straightCards & flushCards) == straightCards){
+					//	System.out.println("straight FLUSHHH cards: " + util.bin51(straightCards));
+						//need to check if the same 5 cards for flush are the same 5 cards for straight...
+						return 8;//since also a flush, its a straight flush.
+					} else {
+						//System.out.println("normal flush");
+						return 5;
+					}
+
+				}
+
+				else{
+					return 4; //if no flush, just straight
+				}
+
+			}
+		}
+		if(isFlush){
+			return 5;
+		}
+
+		long pairs = (sum & pairMask) >> 1;
+		long trips = sum & pairs ;
+		long onlyPairs = pairs  ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
+		// and only include pairs
+		long quads = sum & quadMask;
+
+		if (quads != 0) {
+			//return 0x1C000000;
+			return 7;
+		}
+		if (trips != 0) {
+			long twoTrips = trips & trips-1;
+			if(twoTrips != 0 || onlyPairs != 0){
+				return 6;
+			} else{
+				return 3;
+			}
+
+		}
+		if (onlyPairs != 0) {
+			long nextPair = onlyPairs & onlyPairs - 1;
+			if(nextPair != 0){
+				return 2;
+			} else {
+				return 1;
+			}
+		}
 		return 0;
 	}
 
-	public static void testeval7() throws Exception {
-		String[] someCardCodes = new String[] { "8C", "3D", "8D", "8S", "6D", "2S", "9D" };
+	public static long testeval7() throws Exception {
+		String[] someCardCodes = new String[] { "9C", "9H", "3C", "KS", "9S", "JD", "9D" };
 
 		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
 
 		for (long l : hand) {
-			System.out
-					.println("card: " + l + " : " + convertDecimalToLongName7(l) + " : " + util.bin51(l));
+			System.out.println("card: " + l + " : " + convertDecimalToLongName7(l) + " : " + util.bin51(l));
 		}
 		long ord = orHand(hand);
 		long sum = sumHand(hand);
 
-		long straight = findStraights(ord);
+		/*long straight = findStraights(ord);
 		long flush = findFlushes(sum);
 		long duplicates = findDuplicates(sum);
 
+		if(straight != 0){
+			System.out.println("Straight!");
+		}
+		if(flush != 0){
+			System.out.println("Flush!");
+		}
+		if(duplicates != 0){
+			System.out.println("Duplicates!");
+		}
+		*/
+
+		//00000000000000000000000000 26 zeros
+		/*
+		fullhouse: 0x18000000
+		Quads: 0x1C000000
+		Flush: 0x14000000
+		Straight: 0x10000000
+
+		 - but if ace 2 3 4 5... maybe return:
+				 int straightCards = 0;
+					if (xor == 0x100F) // this is a straight ace,2,3,4,5 = 1000000001111
+						straightCards = 0xF; // this is just bits 0001111 (meaning cards 2,3,4,5) ... we omit the ace
+					 else
+						straightCards = xor; //else just use whatever straight this is..
+
+
+		Pair: 0x4000000
+		trips: 0xC000000
+		Two Pair: 0x8000000
+		High Card: 0
+
+		straight flush: 0x20000000
+
+		static String[] handNames = {
+            "High Card 0", "Pair 1", "Two Pair 2", "3 of a kind 3",
+            "Straight 4", "Flush 5", "Full House 6", "4 of a kind 7", "Straight Flush 8"
+    };
+		 */
+
+		boolean isFlush = false, isStrt = false;
+		System.out.println("First checking for a flush ");
+		long suits = sum & suitMask;
+		System.out.println("suits: " + suits + " : " + util.bin51(suits));
+		for (int i = 0; i < fullSuitMasks.length; i++) {
+			//long masked = fullSuitMasks[i] & suits;
+			if (/* masked != 0 && */ (fullSuitMasks[i] & suits) > almostFlush[i]) {
+				System.out.println("Flush of " + util.suitLongs[i] + " :: " + i + " ");
+				//return suits;
+
+
+				//need to return the highest 5 cards with this suit I guess
+				//well since there is no way to have 2 different flushes on the board...
+				//can we just return the highest card of the flush? thats all you need to know who won in case
+				//2 people both have a flush
+				for(int j=0; j<hand.length; j++){
+					if((fullSuitMasks[i] & hand[i]) != 0){
+						long returnFlush = 0x14000000 | (hand[i] & suitMask);
+						System.out.println("About to return a Flush: " + returnFlush + " :: " + util.bin64(returnFlush));
+
+
+						//return 5 ;//| (hand[i] & suitMask); //this 0x14000000 is not in the right spot.... need to recalculate, those are for 5 card..
+						//need to determine if returning a long or an int. we can get away with an int, problem is we would have to move
+						//the bits from the original card over a bunch to get it in the right spot. Might just be easier
+						//to return the long...idk.
+					}
+				}
+
+				isFlush = true;
+				break;
+			}
+		}
+		System.out.println("Checking next for straights");
+		for(long l : straights){
+			if((l&ord) == l){
+				System.out.println("Found a straight: " + l);
+
+				//return l | 0x10000000;
+
+				if(isFlush){
+					System.out.println("STraIght FluSh " + util.bin51(ord));
+					return 8;//since also a flush, its a straight flush.
+				}
+
+				else{
+					System.out.println("Normal Straight " + util.bin51(ord));
+					return 4; //if no flush, just straight
+				}
+
+			}
+		}
+		if(isFlush){
+			System.out.println("yep just returning a Flush: " + " :: " + util.bin64(ord));
+			return 5;
+		}
+
+
+		System.out.println("looking for duplicates : pairs, 2pairs, trips, full houses, quads...");
+		long pairs = (sum & pairMask) >> 1;
+		long trips = sum & pairs ;
+		long onlyPairs = pairs  ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
+		// and only include pairs
+		long quads = sum & quadMask;
+
+		if (quads != 0) {
+			System.out.println("QUADS : " + util.bin51(quads));
+			//return 0x1C000000;
+			return 7;
+		}
+		if (trips != 0) {
+			System.out.println("TRIPS : " + util.bin51(trips));
+			//here... what... it could be 1 trips or 2 trips technically..
+			long twoTrips = trips & trips-1;
+			if(twoTrips != 0 || onlyPairs != 0){
+				System.out.println("we have 2 trips or a trip and pair>?.. so fullhouse " + util.bin51(twoTrips) + " : " + util.bin51(trips^twoTrips));
+				return 6;
+			} else{
+				System.out.println("Just 1 trips : " + util.bin51(trips) );
+				return 3;
+			}
+
+		}
+		if (onlyPairs != 0) {
+			System.out.println("PAIRS : " + util.bin51(onlyPairs));
+			long nextPair = onlyPairs & onlyPairs - 1;
+			if(nextPair != 0){
+				System.out.println("Two pair... but we still need to find the top 2 pair... " + util.bin51(onlyPairs));
+				return 2;
+			} else {
+				System.out.println("single pair " + util.bin51(onlyPairs));
+				return 1;
+			}
+
+			//
+		}
+
+		System.out.println("HighCard!!!!!");
+		return 0;
 
 
 
+
+
+
+
+
+
+
+
+		/*
+		if 3 pair, quads, or two 3 of a kinds then dont bother checking straight, flush
+
+		but if 2 pair or trips, then you could still have a straight or flush
+		if
+		 */
+
+
+		//return ord;
 	}
 
 	public static long findStraights(long orCards) throws Exception {
@@ -160,6 +422,22 @@ public class DeadHorse7 {
 
 	public static long findDuplicates(long sumCards) throws Exception {
 		System.out.println("looking for duplicates : pairs, 2pairs, trips, full houses, quads...");
+		long pairs = (sumCards & pairMask) >> 1;
+		long trips = sumCards & pairs ;
+		long onlyPairs = pairs  ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
+		// and only include pairs
+		long quads = sumCards & quadMask;
+
+		if (quads != 0) {
+			System.out.println("QUADS : " + util.bin51(quads));
+
+		}
+		if (onlyPairs != 0) {
+			System.out.println("PAIRS : " + util.bin51(onlyPairs));
+		}
+		if (trips != 0) {
+			System.out.println("TRIPS : " + util.bin51(trips));
+		}
 		// tt();
 
 		// String[] cardsStrings = new String [] {"AH", "5S", "7S", "AC", "2C", "TD",
@@ -207,21 +485,8 @@ public class DeadHorse7 {
 		// System.out.println("2h plus 2s: " + (twoH + twS));
 		// System.out.println("2h OR 2s: " + (twoH | twS));
 
-		long pairs = (sumCards & pairMask) >> 1;
-		long trips = sumCards & pairs ;
-		long onlyPairs = pairs  ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
-												// and only include pairs
-		long quads = sumCards & quadMask;
 
-		if (onlyPairs != 0) {
-			System.out.println("PAIRS : " + util.bin51(onlyPairs));
-		}
-		if (trips != 0) {
-			System.out.println("TRIPS : " + util.bin51(trips));
-		}
-		if (quads != 0) {
-			System.out.println("QUADS : " + util.bin51(quads));
-		}
+
 		//System.out.println("ORD : " + EvalTestPlayground.bin51(ord));
 		System.out.println("SUM : " + util.bin51(sumCards));
 		// System.out.println("sum == ord : " + (sum == ord));
@@ -277,7 +542,7 @@ public class DeadHorse7 {
 		 * 
 		 */
 
-		return 9L;
+		return -999L;
 	}
 
 	public static long[] makeAll52Cards7Decimal() {

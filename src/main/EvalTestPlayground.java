@@ -26,14 +26,41 @@ public class EvalTestPlayground {
 		new File("allQ7.txt"),
 		new File("allSF7.txt")
 	};
-	
 
 
 
 
-	
 
 
+
+	public static int[] createAllSevenCardHands(){
+
+		int[] allCards = new int[util7.total7CardHandCount*7];
+		int totalCounter=0;
+
+
+
+//668.922.800
+
+		for(int i=0;i<util7.all52Cards7.length-1;i++)
+			for(int j=i+1;j<util7.all52Cards7.length;j++)
+				for(int k=j+1;k<util7.all52Cards7.length;k++)
+					for(int l=k+1;l<util7.all52Cards7.length;l++)
+						for(int m=l+1;m<util7.all52Cards7.length;m++)
+							for(int n=m+1;n<util7.all52Cards7.length;n++)
+								for(int o=n+1;o<util7.all52Cards7.length;o++) {
+									allCards[totalCounter * 7] = allCardNums[i];
+									allCards[totalCounter * 7 + 1] = allCardNums[j];
+									allCards[totalCounter * 7 + 2] = allCardNums[k];
+									allCards[totalCounter * 7 + 3] = allCardNums[l];
+									allCards[totalCounter * 7 + 4] = allCardNums[m];
+									allCards[totalCounter * 7 + 5] = allCardNums[n];
+									allCards[totalCounter * 7 + 6] = allCardNums[o];
+									totalCounter++;
+								}
+		System.out.println("Created " + totalCounter + " hands");
+		return allCards;
+	}
 	
 
 
@@ -209,7 +236,7 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 
 	  
 	  public static void testEveryHand7(){
-		  
+
 		  //copy of the deck to make this method more portable
 		  ArrayList[] lists = {
 				  new ArrayList<String>(),
@@ -288,6 +315,7 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  
 		  //this is to go through and compare the number of each type of hand we created
 		  //to the number of each type of hand we expect
+
 		   for(int j=0;j<handCounter.length;j++){
 			   //check if expected == actual
 			   boolean checked = handCounter[j]==handFrequency7[j];

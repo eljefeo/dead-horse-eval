@@ -40,10 +40,11 @@ public class util7 extends util {
 
 
 
+
     public static void testEveryHand7n(){
 
         //copy of the deck to make this method more portable
-        ArrayList[] lists = {
+        /*ArrayList[] lists = {
                 new ArrayList<String>(),
                 new ArrayList<String>(),
                 new ArrayList<String>(),
@@ -53,13 +54,36 @@ public class util7 extends util {
                 new ArrayList<String>(),
                 new ArrayList<String>(),
                 new ArrayList<String>()
-        };
+        };*/
+
         int totalHands = 133784560;
         // int[] allCards = new int[totalHands*7];
-        int totalCounter=0;
-        int[] handCounter = new int[9];
+        //int totalCounter=0;
+        //int[] handCounter = new int[9];
+
+///////////////////////////////////////////
+        int[] allCards = EvalTestPlayground.createAllSevenCardHands();
+        int totalCounter= allCards.length/7;
+
+        //get start time
+        long startT = System.nanoTime();
+        //go through every hand, 5 cards at a time
+        for(int i=0;i<allCards.length;i+=7)
+            DeadHorse7.eval7(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4],allCards[i+5],allCards[i+6]);
+        //get end time
+        long endT = System.nanoTime();
+
+        // Time = (end time - start time ) divided by a billion : because it is in nano seconds
+        double time = (double) (endT - startT)/1000000000;
+        System.out.println("Did all " + totalHands + " hands in " + time +" seconds");
+        //hands per second in millions
+        Double currentTotal = totalHands/time/1000000;
+        //allHandPossibilities += currentTotal;
+        System.out.println(currentTotal + " million hands a second\n");
+        //////////////////////////////////////////////////////////////
+
         //this is how we create all 133,784,560 7 card hands
-        for(int i=0;i<all52Cards7.length-1;i++)
+        /*for(int i=0;i<all52Cards7.length-1;i++)
             for(int j=i+1;j<all52Cards7.length;j++)
                 for(int k=j+1;k<all52Cards7.length;k++)
                     for(int l=k+1;l<all52Cards7.length;l++)
@@ -76,7 +100,7 @@ public class util7 extends util {
                                                     all52Cards7[m],
                                                     all52Cards7[n],
                                                     all52Cards7[o]
-                                            )>>26;
+                                            );//>>26;*/
 
 
 
@@ -96,9 +120,9 @@ public class util7 extends util {
 									  lists[res].clear();
 								  }*/
 
-                                    handCounter[res]++;
+                                   /* handCounter[res]++;
                                     totalCounter++;
-                                }
+                                }*/
 		 /* for(int i = 0;i<lists.length;i++)
 			  if(lists[i].size()>0)
 				atfl(files[i],lists[i]);*/
@@ -120,6 +144,13 @@ public class util7 extends util {
 
         //this is to go through and compare the number of each type of hand we created
         //to the number of each type of hand we expect
+        int[] handCounter = new int[9];
+        for(int i=0;i<allCards.length;i+=7){
+
+            int res = DeadHorse7.eval7(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4],allCards[i+5],allCards[i+6]);
+            handCounter[res]++;
+
+        }
         for(int j=0;j<handCounter.length;j++){
             //check if expected == actual
             boolean checked = handCounter[j]==handFrequency7[j];

@@ -122,7 +122,7 @@ public class util5 extends util {
                 |((ec=es.charAt(1))=='S'?0x10000:ec=='H'?0x8000:ec=='C'?0x4000:0x2000));
 
 
-        return DeadHorse.eval5(a, b, c, d, e);
+        return DeadHorse.eval5WithNotes(a, b, c, d, e);
     }
 
 
@@ -228,15 +228,15 @@ public class util5 extends util {
     }
 
     public static String printLongPair(String[] cards){
-        return handNames[1] + OF + cards[0] + "'s" + " with kickers " + cards[1] + ", " + cards[2] + ", " + cards[3];
+        return handNames[1] + OF + cards[0] + "s" + " with kickers " + cards[1] + ", " + cards[2] + ", " + cards[3];
     }
 
     public static String printLongTwoPair(String[] cards){
-        return handNames[2] + ": " + cards[0] + "'s and " + cards[1] + "'s with a " + cards[2] + " kicker";
+        return handNames[2] + ": " + cards[0] + "s and " + cards[1] + "s with a " + cards[2] + " kicker";
     }
 
     public static String printLongTrips(String[] cards){
-        return handNames[3] + OF + cards[0] + "'s with a " + cards[1] + " and " + cards[2] + " kicker";
+        return handNames[3] + OF + cards[0] + "s with a " + cards[1] + " and " + cards[2] + " kicker";
     }
 
     public static String printLongStraight(String[] cards){
@@ -251,11 +251,11 @@ public class util5 extends util {
         return cards[0] + " High " + handNames[5];
     }
     public static String printLongFullHouse(String[] cards){
-        return handNames[6] + " : " + cards[0] + "'s full of " + cards[1] + "'s";
+        return handNames[6] + " : " + cards[0] + "s full of " + cards[1] + "s";
     }
 
     public static String printLongQuads(String[] cards){
-        return handNames[7] + OF + cards[0] + "'s";
+        return handNames[7] + OF + cards[0] + "s";
     }
 
     public static String printLongStraightFlush(String[] cards){
