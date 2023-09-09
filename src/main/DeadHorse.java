@@ -4,31 +4,19 @@ public class DeadHorse {
 
 
     public static int eval5(int a, int b, int c, int d, int e) {
-        int f = 0x1FFF;
-        int x = (a ^ b ^ c ^ d ^ e) & f, y = (a | b | c | d | e) & f, z = y ^ x, v = y & y - 1;
+        int m = 0x1FFF;
+        int x = (a ^ b ^ c ^ d ^ e) & m, y = (a | b | c | d | e) & m, z = y ^ x, v = y & y - 1;
         if ((v &= v - 1) == 0)
-            return (a + b + c + d + e - x & f) == (f & (y ^ x) << 2)
+            return (a + b + c + d + e - x & m) == (m & (y ^ x) << 2)
                     ? 0x1C000000 | x | z << 13 : 0x18000000 | z | x << 13; //4 of a kind or full house
         else if ((v &= v - 1) == 0)
             return z != 0 ? 0x8000000 | x | z << 13
-                    : 0xC000000 | (v = (((a&b)!=0||(a&c)!=0?a:(b&c)!=0?b:e) & f)) ^ y | (v << 13);
+                    : 0xC000000 | (v = (((a&b)!=0||(a&c)!=0?a:(b&c)!=0?b:e) & m)) ^ y | (v << 13);
         else if ((v &= v - 1) == 0) return 0x4000000 | x | z << 13;
-        boolean strt = 0x1F1D100 % y == 0, flsh = (a & b & c & d & e) != 0;
-        return strt ? (x == 0x100F ? 15 : x) | (flsh ? 0x20000000 : 0x10000000) : flsh ? 0x14000000 | x : x;
+        boolean s = 0x1F1D100 % y == 0, f = (a & b & c & d & e) != 0;
+        return s ? (x == 0x100F ? 15 : x) | (f ? 0x20000000 : 0x10000000) : f ? 0x14000000 | x : x;
     }
 
-    public static int eval5original(int a, int b, int c, int d, int e) {
-        int x = (a ^ b ^ c ^ d ^ e) & 8191, y = (a | b | c | d | e) & 8191, z = y ^ x, v = y & y - 1;
-        if ((v &= v - 1) == 0)
-            return (a + b + c + d + e - x & 8191) == (8191 & (y ^ x) << 2)
-                    ? 0x1C000000 | x | z << 13 : 0x18000000 | z | x << 13; //4 of a kind or full house
-        else if ((v &= v - 1) == 0)
-            return z != 0 ? 0x8000000 | x | z << 13
-                    : 0xC000000 | (v = ((a & b) == (a & 8191) ? a : (c & d) == (c & 8191) ? c : e) & 8191 ^ y) | v << 13;
-        else if ((v &= v - 1) == 0) return 0x4000000 | x | z << 13;
-        boolean strt = 0x1F1D100 % y == 0, flsh = (a & b & c & d & e) != 0;
-        return strt ? (x == 4111 ? 15 : x) | (flsh ? 0x20000000 : 0x10000000) : flsh ? 0x14000000 : x;
-    }
 
     public static int eval5(int[] cards) {
         if (cards.length != 5) {
@@ -41,16 +29,20 @@ public class DeadHorse {
         //& (and) is if both bits are 1, then return 1
         //| (or) is if either of the bits are 1, then return 1
         //^ (xor) is if one bit is 1 and the other bit is 0 then return 1
-        int first13Bits = 0x1FFF; //in binary this is 00001111111111111 (13 1's). This will be used to separate the card from the suit. if we OR this then we keep the card that is in bits 1-13 and lose the suit, cause the suit is bits 14-17
+        int first13Bits = 0x1FFF; //in binary this is 00001111111111111 (13 1's). This will be used to separate the card from the suit. if we AND (&) this then we keep the card that is in bits 1-13 and lose the suit, cause the suit is bits 14-17
         int importantBitShift = 13; //we will use this to shift the important card over 13 bits when we return the result;
         int xor = (a ^ b ^ c ^ d ^ e) & first13Bits; //all the cards xor'd together, and then the suits masked. We mask the suits so we just have the card (2 or Jack or 10 or Ace)
         int or = (a | b | c | d | e) & first13Bits; //all the cards or'd together, and then the suits masked. We mask the suits so we just have the card (2 or Jack or 10 or Ace)
         int orXorXor = or ^ xor; //
-        int bitCntr = or & or - 1; //this is used to count the bits. We will remove bits one by one, counting as we go so we can know how many bits are set. Different hands have a unique number of bits
+        int bitCntr = or & or - 1; //this is used to count the bits. We will remove bits one by one, counting as we go so we can know how many bits are set.
+        // Different hands have a unique number of bits, there will always be between 2 and 5 unique bits.
+        //for example: four of a kind or a fullhouse have 2 unique bits/cards, a straight has 5 unique cards
+        //since minimum there will be 2 bits, we start by taking away the lowest bit by doing or & or - 1.
+        //we imagine the bit count is 1 at this point...
 
-        bitCntr &= bitCntr - 1;
+        bitCntr &= bitCntr - 1; //take away the second bit
 
-        if (bitCntr == 0) {
+        if (bitCntr == 0) { //if we have no bits left, that means we had 2 bits. Only 4of a kind and fullhouse have only 2 bits
             if ((a + b + c + d + e - xor & first13Bits) == (first13Bits & (or ^ xor) << 2)) {
                 System.out.println("Returning here 4 of a kind "+ util.handNames[(0x1C000000 >> 26)]);
                 return 0x1C000000 | xor | orXorXor << importantBitShift;
@@ -58,7 +50,7 @@ public class DeadHorse {
                 System.out.println("Returning here Full house "+ util.handNames[(0x18000000 >> 26)]);
                 return 0x18000000 | orXorXor | xor << importantBitShift; //4 of a kind or full house
             }
-        } else if ((bitCntr &= bitCntr - 1) == 0) {
+        } else if ((bitCntr &= bitCntr - 1) == 0) { //take away the 3rd bit.. 2 pair or 3 of a kind would have 3 bits like we see here.
             if (orXorXor != 0) {
                 System.out.println("Returning here Two Pair "+ util.handNames[(0x8000000 >> 26)]);
                 return 0x8000000 | xor | orXorXor << importantBitShift;
@@ -99,18 +91,19 @@ public class DeadHorse {
             }
         }
 
-        int tempV = bitCntr & bitCntr - 1;
+        int tempV = bitCntr & bitCntr - 1; //take away a 4th bit.. only a pair could be here if we had only 4 unique bits
         if (tempV == 0) {
             System.out.println("Returning here Pair "+ util.handNames[(0x4000000 >> 26)]);
             return 0x4000000 | xor | orXorXor << importantBitShift;
 
         }
 
-        boolean strt = 0x1F1D100 % or == 0;
-        boolean flsh = (a & b & c & d & e) != 0;
+        //if we get to this point, that means we had 5 unique bits.
+        // So that leaves us with a straight, a flush, straight-flush, or just a high card hand
+        boolean straight = 0x1F1D100 % or == 0;
+        boolean flush = (a & b & c & d & e) != 0;
 
-        if (strt) {
-
+        if (straight) {
 
             //this is to check if the straight is a 2,3,4,5,ACE
             //if this is the case, when we put the ACE in the important bits section
@@ -126,7 +119,7 @@ public class DeadHorse {
             }
 
             int typeOfHand = 0;
-            if (flsh) {
+            if (flush) {
                 System.out.println("Returning here Straight Flush!");
                 typeOfHand = 0x20000000; //this means this hand is a straight AND a flush, a STRAIGHT FLUSH!!!
             } else {
@@ -137,7 +130,7 @@ public class DeadHorse {
             return straightCards | typeOfHand;
             //straightCards are the 5 (or 4 if ace,2,3,4,5) cards, typeOfHand is whether it's a straight or straight flush
 
-        } else if (flsh) {
+        } else if (flush) {
             System.out.println("Returning here Flush "+ util.handNames[(0x14000000 >> 26)]);
             return 0x14000000 | xor; //this is just the type of hand for Flush, and xor are just the 5 cards (we could use OR cards here too, same result)
         } else {
