@@ -68,7 +68,122 @@ public class DeadHorse7 {
 		return res;
 	}
 
+
 	public static int eval7(long a, long b, long c, long d, long e, long f, long g) {
+
+		long ord = a | b | c | d | e | f | g; //orHand(hand);
+		long sum = a + b + c + d + e + f + g; //sumHand(hand);
+		long flushCards = 0;
+		boolean isFlush = false, isStrt = false;
+		long suits = sum & suitMask;
+
+		for (int i = 0; i < fullSuitMasks.length; i++) {
+			//long masked = fullSuitMasks[i] & suits;
+			if (/* masked != 0 && */ (fullSuitMasks[i] & suits) > almostFlush[i]) {
+
+				long fm = fullSuitMasks[i];
+				if((a&fm) != 0) flushCards |= a;
+				if((b&fm) != 0) flushCards |= b;
+				if((c&fm) != 0) flushCards |= c;
+				if((d&fm) != 0) flushCards |= d;
+				if((e&fm) != 0) flushCards |= e;
+				if((f&fm) != 0) flushCards |= f;
+				if((g&fm) != 0) flushCards |= g;
+				//000000111000000000000000000000000000000000000000000
+				//000000001000000000000000000001000000000000000000000
+				//000000000000000000000001001001001001000000000001000
+				//000000000000000000000001001001001001000000000000000
+				//System.out.println("fullSuitMasks[i] : " + util.bin51(fullSuitMasks[i]));
+				//System.out.println("a : " + util.bin51(a));
+				//System.out.println("b : " + util.bin51(b));
+				//System.out.println("c : " + util.bin51(c));
+				//System.out.println("flush cards: " + util.bin51(flushCards));
+				flushCards &= cardMask;
+				//System.out.println("flush cards: " + util.bin51(flushCards));
+				isFlush = true;
+				break;
+			}
+		}
+
+		long straightCards = 0;
+		//for(long l : straights){
+		for(int i=0; i<straights.length; i++){
+			long l = straights[i];
+			if((l&ord) == l){
+
+				//return l | 0x10000000;
+
+				if((a&l) != 0) straightCards |= a;
+				if((b&l) != 0) straightCards |= b;
+				if((c&l) != 0) straightCards |= c;
+				if((d&l) != 0) straightCards |= d;
+				if((e&l) != 0) straightCards |= e;
+				if((f&l) != 0) straightCards |= f;
+				if((g&l) != 0) straightCards |= g;
+
+				//System.out.println("straight cards: " + util.bin51(straightCards));
+				straightCards &= cardMask;
+				//System.out.println("straight cards: " + util.bin51(straightCards));
+				if(isFlush ){
+					if( (straightCards & flushCards) == straightCards){
+						//System.out.println("straight FLUSH cards: " + util.bin51(straightCards));
+						//need to check if the same 5 cards for flush are the same 5 cards for straight...
+						return 8;//since also a flush, its a straight flush.
+					} else {
+						//maybe here check the rest of the straights?
+						for(; i<straights.length; i++){
+							l = straights[i];
+							if((l&ord) == l && ((l&flushCards) == l)){
+								//System.out.println("Found lower straight flush " + util.bin51(l));
+								return 8;//found a lower straight flush than the higher straight, its a straight flush.
+							}
+						}
+						//System.out.println("normal flush");
+						return 5;
+					}
+				}
+
+				else{
+					return 4; //if no flush, just straight
+				}
+			}
+		}
+		if(isFlush){
+			return 5;
+		}
+
+		long pairs = (sum & pairMask) >> 1;
+		long trips = sum & pairs ;
+		long onlyPairs = pairs  ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
+		// and only include pairs
+		long quads = sum & quadMask;
+
+		if (quads != 0) {
+			//return 0x1C000000;
+			return 7;
+		}
+		if (trips != 0) {
+			long twoTrips = trips & trips-1;
+			if(twoTrips != 0 || onlyPairs != 0){
+				return 6;
+			} else{
+				return 3;
+			}
+
+		}
+		if (onlyPairs != 0) {
+			long nextPair = onlyPairs & onlyPairs - 1;
+			if(nextPair != 0){
+				return 2;
+			} else {
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+
+	public static int eval7WorkingIThink(long a, long b, long c, long d, long e, long f, long g) {
 
 		long ord = a | b | c | d | e | f | g; //orHand(hand);
 		long sum = a + b + c + d + e + f + g; //sumHand(hand);
@@ -140,13 +255,11 @@ public class DeadHorse7 {
 						//System.out.println("normal flush");
 						return 5;
 					}
-
 				}
 
 				else{
 					return 4; //if no flush, just straight
 				}
-
 			}
 		}
 		if(isFlush){
