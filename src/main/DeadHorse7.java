@@ -133,15 +133,17 @@ public static long[] maskCards(long[] hand){
 		}
 
 		long straightCards = 0;
-		/*if((ord & (ord >>> 3 & ord >>> 6 & ord >>> 9 & ord >>> 12)) != 0){
+		long or = ord & cardMask;
+		if((or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12)) != 0
+				|| ((or & 68719477321L) == 68719477321L)) {
 			return 4;
-		}*/
-		for(int i=0; i<straights.length; i++){
+		}
+		/*for(int i=0; i<straights.length; i++){
 			long l = straights[i];
 			if((l&ord) == l){
 				return 4;
 			}
-		}
+		}*/
 
 		long pairs = (sum & pairMask) >> 1;
 		long trips = sum & pairs ;
