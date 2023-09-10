@@ -45,4 +45,21 @@ public class util {
     }
 
 
+    public static int countBits(int i){
+        int counter = 0;
+        while(i != 0){
+            i &= i-1;
+            counter++;
+        }
+        return counter;
+    }
+
+    public static int countBits(long i){
+        int counter = 0;
+        while(i != 0){
+            i &= i-1;
+            counter++;
+        }
+        return counter;
+    }
 }

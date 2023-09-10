@@ -124,7 +124,7 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 
 		  String thisManyString = NumberFormat.getNumberInstance(Locale.US).format(howManyHands);
 		  System.out.println("Doing this many hands: " + thisManyString);
-		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howManyHands);
+		  int[] allCards = HandMaker.makeThisManyRandom5CardHands(howManyHands);
 		  int totalHandsNow = allCards.length / 5; 
 		  int[] handCounter = new int[9];
 		  double[] frequencyPerc = new double[handFrequency5.length];
@@ -342,7 +342,7 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 	  
 	public static void randomizerSpeedTest5CardDiagnostics(int howMany){
 		  
-		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands2(howMany);
+		  int[] allCards = HandMaker.makeThisManyRandom5CardHands(howMany);
 		  
 		  for(int i=0;i<allCards.length;i+=5){
 			int res = DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
@@ -358,34 +358,18 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  //pick a nice huge round number to let this sucker get warmed up
 		  // int howMany = 10000000;
 		System.out.println("Making " + howMany + " hands...");
-		int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howMany);
+		int[] allCards = HandMaker.makeThisManyRandom5CardHands(howMany);
 		  System.out.println("...Done making " + howMany + " hands");
-		 // long startTp = System.nanoTime();
-		  //let er rip, go through every hand, 5 cards at a time
-		/*  for(int i=0;i<allCards.length;i++)
-			  {i++;i++;i++;i++;}
-		*/  
-		  //get end time
-		//  long endTp = System.nanoTime();
-		  
 		  System.out.println("...Evaluating " + howMany + " hands");
-		  //get start time
 		  long startT = System.nanoTime();
 		  
 		  //let er rip, go through every hand, 5 cards at a time
 		  for(int i=0;i<allCards.length;i+=5)
 			  DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
-		  
-		  //get end time
 		  long endT = System.nanoTime();
-		  
-		  
-		    
-		  // Time is (end time - start time ) divided by a billion : because it is in nano seconds
 		  double time = (double) (endT - startT )/1000000000;
 		  
 		  System.out.println("Did " + howMany + " hands in " + time +" seconds");
-		  //hands per second in millions 
 		  System.out.println((int)(howMany/time/1000000) + " million hands a second"); 
 	  }
 	
@@ -393,7 +377,7 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  //how many hands do you want to test? choose a few million to be sure..
 		 // int howMany = 10000000;
 
-		  int[] allCards = HandMaker.makeLotsOfRandom5CardHands(howMany);
+		  int[] allCards = HandMaker.makeThisManyRandom5CardHands(howMany);
 		  
 		  //create an array of size 9. 0-8 for each type of hand
 		  //this will hold the count of each type of hand that gets created/evaluated
@@ -544,7 +528,7 @@ public static void randomizerSpeedTest7Card(int howMany){
 	
 	
 
-	  int[] ac = HandMaker.makeLotsOfRandom7CardHands(howMany);
+	  long[] ac = util7.makeThisManyRandom7CardHands(howMany);
 	  //get start time
 	  long startTf = System.nanoTime();
 	  
@@ -555,7 +539,7 @@ public static void randomizerSpeedTest7Card(int howMany){
 	  long startT = System.nanoTime();
 	  
 	  for(int v=0;v<ac.length/7;v++)
-		  oldBad7Code.eval7(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
+		  DeadHorse7.eval7(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
 
 
 	  //get end time
@@ -577,7 +561,7 @@ public static void randomizerSpeedTest7nCard(int howMany){
 	
 	
 
-	  int[] ac = HandMaker.makeLotsOfRandom7CardHands(howMany);
+	  long[] ac = util7.makeThisManyRandom7CardHands(howMany);
 	  //get start time
 	  long startTf = System.nanoTime();
 	  
@@ -588,7 +572,7 @@ public static void randomizerSpeedTest7nCard(int howMany){
 	  long startT = System.nanoTime();
 	  
 	  for(int v=0;v<ac.length/7;v++)
-		  oldBad7Code.eval7n(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
+		  DeadHorse7.eval7(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
 
 
 	  //get end time

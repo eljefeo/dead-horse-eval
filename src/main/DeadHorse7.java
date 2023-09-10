@@ -1,5 +1,7 @@
 package main;
 
+import static main.util7.*;
+
 public class DeadHorse7 {
 
 	// static final char[] cardChars = new char[] {'A', 'K', 'Q', 'J', 'T', '9',
@@ -9,50 +11,7 @@ public class DeadHorse7 {
 	// "Two"};
 
 
-	static final long singleCardMask = 78536544841L;
-	// long singleOrPairOrTrip = 471219269046L;
-	static final long pairMask = 157073089682L;
-	// long tripMask = trips are combo of single card mask and pair mask
-	static final long quadMask = 314146179364L;
-	static final long suitMask = 2251250057871360L;
-	static final long cardMask = 549755813887L;
 
-	static final long allSpadeBits = 1970324836974592L;
-	static final long allHeartsBits = 246290604621824L;
-	static final long allClubsBits = 30786325577728L;
-	static final long allDiamondBits = 3848290697216L;
-
-	static final long spadeMask = 281474976710656L;
-	static final long heartMask = 35184372088832L;
-	static final long clubMask = 4398046511104L;
-	static final long diamondMask = 549755813888L;
-	static final long fourSpades = 1125899906842624L;
-	static final long fourHearts = 140737488355328L;
-	static final long fourClubs = 17592186044416L;
-	static final long fourDiamonds = 2199023255552L;
-	// static final long[] suitMasks = {allSpadeBits, allHeartsBits, allClubsBits,
-	// allDiamondBits};
-	// static final long[] almostFlush = {fourSpades, fourHearts, fourClubs,
-	// fourDiamonds}; //this is the decimal of 4 of each suit, like 1 spade is 001,
-	// this is 4 spades or 100
-	static final long[] almostFlush = { fourDiamonds, fourClubs, fourHearts, fourSpades }; // this is the decimal of 4
-																							// of each suit, like 1
-																							// spade is 001, this is 4
-																							// spades or 100
-
-	static final long[] fullSuitMasks = { allDiamondBits, allClubsBits, allHeartsBits, allSpadeBits };// this has all 3
-																										// bits set for
-																										// each suit,
-																										// like 1 spade
-																										// is 001, this
-																										// is 111
-
-	static final long[] suitDecimals = new long[] { diamondMask, clubMask, heartMask, spadeMask };
-	static final long[] cardDecimals = new long[] { 1L, 8L, 64L, 512L, 4096L, 32768L, 262144L, 2097152L, 16777216L,
-			134217728L, 1073741824L, 8589934592L, 68719476736L };
-
-	//static final long[] straights = new long[]{68719477321L, 4681L, 37448L, 299584L, 2396672L, 19173376L, 153387008L, 1227096064L, 9816768512L, 78534148096L};
-	static final long[] straights = new long[]{78534148096L, 9816768512L, 1227096064L, 153387008L, 19173376L, 2396672L, 299584L, 37448L, 4681L, 68719477321L};
 	/*
 	 * long pairs = sum & pairMask; long trips = sum & (pairs>>1); long onlyPairs =
 	 * (pairs>>1) ^ trips; //since pairs includes pairs and also trips, this will
@@ -75,26 +34,27 @@ public class DeadHorse7 {
 			System.out.println();
 		}
 
+		long[] handc = util7.getRandomThisType7CardHand(4);
+		eval7(handc);
 
-		long ord = orHand(hand);
-		long or = ord;
-		System.out.println("ord = " + ord + " : " + util.bin51(ord));
-		for(int i=0; i<4; i++){
-			ord &= ord >>> 3;
-			System.out.println(i + " ord = " + ord + " : " + util.bin51(ord));
+		long ord = orHand(handc);
+		long sum = sumHand(handc);
+		long ordMasked = ord & cardMask;
+		try {
+			System.out.println("got : "
+					+ util7.convertDecimalToShortName7(handc[0]) + ", "
+					+ util7.convertDecimalToShortName7(handc[1]) + ", "
+					+ util7.convertDecimalToShortName7(handc[2]) + ", "
+					+ util7.convertDecimalToShortName7(handc[3]) + ", "
+					+ util7.convertDecimalToShortName7(handc[4]) + ", "
+					+ util7.convertDecimalToShortName7(handc[5]) + ", "
+					+ util7.convertDecimalToShortName7(handc[6]));
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
 		}
-		System.out.println("ord = " + ord + " : " + util.bin51(ord) + " :: straight? " + (ord != 0));
-		or &= or >>> 3;
-		or &= or >>> 3;
-		or &= or >>> 3;
-		or &= or >>> 3;
-		System.out.println("or = " + or + " : " + util.bin51(or) + " :: straight? " + (or != 0));
-		long t = 4608L;
-		System.out.println(":::" + util.bin51(t));
-		//System.out.println("math log: " + Math.log(1));
-		int res = eval7(hand[0], hand[1], hand[2], hand[3], hand[4], hand[5], hand[6]);
-		System.out.println("REsult: " + util.handNames[res]);
-		return res;
+		System.out.println("ord bit counts: " + util.countBits(ordMasked) + " : " + util.bin51(ordMasked));
+
+		return 0;
 	}
 public static long[] maskCards(long[] hand){
 		long[] masked = new long[hand.length];
@@ -103,11 +63,33 @@ public static long[] maskCards(long[] hand){
 		}
 		return masked;
 }
+/*
+number of bits possible in each type of hand
+High card - 7
+Pair - 6
+Two pair - 4,5
+Trips - 5
+Straight - 5,6,7
+Flush - 5,6,7
+Full house - 3,4
+Quads - 2,3,4
+Straight flush - 5,6,7
+
+ */
+
+	public static int eval7(long[] hand) throws Exception {
+		if(hand.length != 7){
+			throw new Exception("Hand must have exactly 7 cards");
+		}
+		return eval7(hand[0],hand[1],hand[2],hand[3],hand[4],hand[5],hand[6]);
+	}
 
 	public static int eval7(long a, long b, long c, long d, long e, long f, long g) {
 
 		long ord = a | b | c | d | e | f | g; //orHand(hand);
 		long sum = a + b + c + d + e + f + g; //sumHand(hand);
+
+		long bitCounter = (ord & ord - 1);
 		long flushCards = 0;
 		boolean isFlush = false, isStrt = false;
 		long suits = sum & suitMask;
@@ -176,7 +158,7 @@ public static long[] maskCards(long[] hand){
 	}
 
 
-	public static int eval7WorkingIThink(long a, long b, long c, long d, long e, long f, long g) {
+	public static int eval7Working(long a, long b, long c, long d, long e, long f, long g) {
 
 		long ord = a | b | c | d | e | f | g; //orHand(hand);
 		long sum = a + b + c + d + e + f + g; //sumHand(hand);
@@ -186,78 +168,36 @@ public static long[] maskCards(long[] hand){
 
 		for (int i = 0; i < fullSuitMasks.length; i++) {
 			//long masked = fullSuitMasks[i] & suits;
-			if (/* masked != 0 && */ (fullSuitMasks[i] & suits) > almostFlush[i]) {
-
-
-				if((a&fullSuitMasks[i]) != 0) flushCards |= a;
-				if((b&fullSuitMasks[i]) != 0) flushCards |= b;
-				if((c&fullSuitMasks[i]) != 0) flushCards |= c;
-				if((d&fullSuitMasks[i]) != 0) flushCards |= d;
-				if((e&fullSuitMasks[i]) != 0) flushCards |= e;
-				if((f&fullSuitMasks[i]) != 0) flushCards |= f;
-				if((g&fullSuitMasks[i]) != 0) flushCards |= g;
-				//000000111000000000000000000000000000000000000000000
-				//000000001000000000000000000001000000000000000000000
-				//000000000000000000000001001001001001000000000001000
-				//000000000000000000000001001001001001000000000000000
-				//System.out.println("fullSuitMasks[i] : " + util.bin51(fullSuitMasks[i]));
-				//System.out.println("a : " + util.bin51(a));
-				//System.out.println("b : " + util.bin51(b));
-				//System.out.println("c : " + util.bin51(c));
-				//System.out.println("flush cards: " + util.bin51(flushCards));
+			long fm = fullSuitMasks[i];
+			if (/* masked != 0 && */ (fm & suits) > almostFlush[i]) {
+				if((a&fm) != 0) flushCards |= a;
+				if((b&fm) != 0) flushCards |= b;
+				if((c&fm) != 0) flushCards |= c;
+				if((d&fm) != 0) flushCards |= d;
+				if((e&fm) != 0) flushCards |= e;
+				if((f&fm) != 0) flushCards |= f;
+				if((g&fm) != 0) flushCards |= g;
 				flushCards &= cardMask;
-				//System.out.println("flush cards: " + util.bin51(flushCards));
-				isFlush = true;
-				break;
+				if((flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12) != 0
+						|| ((flushCards & 68719477321L) == 68719477321L)) { //gotta check the stupid A,2,3,4,5 straight
+					return 8; //return straight flush
+				}
+				return 5; //return flush
 			}
 		}
 
 		long straightCards = 0;
-		//for(long l : straights){
-		for(int i=0; i<straights.length; i++){
+		long or = ord & cardMask;
+		if((or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12)) != 0
+				|| ((or & 68719477321L) == 68719477321L)) {
+			return 4;
+		}
+		/*for(int i=0; i<straights.length; i++){
 			long l = straights[i];
 			if((l&ord) == l){
-
-				//return l | 0x10000000;
-
-				if((a&l) != 0) straightCards |= a;
-				if((b&l) != 0) straightCards |= b;
-				if((c&l) != 0) straightCards |= c;
-				if((d&l) != 0) straightCards |= d;
-				if((e&l) != 0) straightCards |= e;
-				if((f&l) != 0) straightCards |= f;
-				if((g&l) != 0) straightCards |= g;
-
-				//System.out.println("straight cards: " + util.bin51(straightCards));
-				straightCards &= cardMask;
-				//System.out.println("straight cards: " + util.bin51(straightCards));
-				if(isFlush ){
-					if( (straightCards & flushCards) == straightCards){
-						//System.out.println("straight FLUSHHH cards: " + util.bin51(straightCards));
-						//need to check if the same 5 cards for flush are the same 5 cards for straight...
-						return 8;//since also a flush, its a straight flush.
-					} else {
-						//maybe here check the rest of the straights?
-						for(int j=i+1; j<straights.length; j++){
-							l = straights[j];
-							if((l&ord) == l && ((l&flushCards) == l)){
-								//System.out.println("Found lower straight flush " + util.bin51(l));
-								return 8;//found a lower straight flush than the higher straight, its a straight flush.
-							}
-						}
-						//System.out.println("normal flush");
-						return 5;
-					}
-				}
-
-				else{
-					return 4; //if no flush, just straight
-				}
+				return 4;
 			}
-		}
-		if(isFlush){
-			return 5;
-		}
+		}*/
 
 		long pairs = (sum & pairMask) >> 1;
 		long trips = sum & pairs ;
@@ -661,144 +601,13 @@ public static long[] maskCards(long[] hand){
 		return -999L;
 	}
 
-	public static long[] makeAll52Cards7Decimal() {
 
-		int cardCount = util.cardChars.length;
-		int suitCount = util.suitChars.length;
-		long[] cards = new long[cardCount * suitCount];
-		for (int i = 0; i < suitCount; i++) {
-			for (int j = 0; j < cardCount; j++) {
-				int index = (i * cardCount + j);
-				cards[index] = makeDecimalFromIndexes(j, i);// (1L << (13 + i) * 3) | (1L << (j * 3));
-				// return (1L << (cardIndex * 3)) | (1L << ((suitIndex + 13) * 3));
-				// System.out.println(EvalTestPlayground.bin51(cards[index]) + " Card " + j + "
-				// " + i + " * " + (index) +" : " + cards[index]);
-			}
-		}
-		return cards;
-	}
 
 	public static long[] getSomeHand() throws Exception {
 		return convertHandHumanShortToDecimal7(new String[] { "AH", "5S", "7S", "AC", "2C", "TD", "4S" });
 	}
 
-	public static String convertHumanShortNameToLongName7(String cardString) throws Exception {
-		// like AH or 5S
 
-		if (cardString.length() != 2) {
-			throw new IllegalArgumentException("Card must be 2 chars long:  " + cardString);
-		}
-
-		int cardIndex = getCardIndexChar(cardString.charAt(0));
-		int suitIndex = getSuitIndexChar(cardString.charAt(1));
-
-		return util.cardLongs[cardIndex] + util.OF + util.suitLongs[suitIndex];
-	}
-
-	// This method will take a String like "5S" or "JC" (five of clubs or Jack of
-	// Spades) and turn it into the decimal equivalent for that card
-	// This function is not optimized, just here to make things easier. If actually
-	// needed in some performance situation, we should find faster ways to do this
-	public static long convertHumanShortNameToDecimal7(String cardString) throws Exception {
-		// like AH or 5S
-		if (cardString.length() != 2) {
-			throw new IllegalArgumentException("Card must be 2 chars long:  " + cardString);
-		}
-
-		int cardIndex = getCardIndexChar(cardString.charAt(0));
-		int suitIndex = getSuitIndexChar(cardString.charAt(1));
-
-		return makeDecimalFromIndexes(cardIndex, suitIndex);
-	}
-
-	public static long[] convertHandHumanShortToDecimal7(String[] cards) throws Exception {
-		if (cards.length != 7) {
-			throw new IllegalArgumentException("There must be 7 cards");
-		}
-		long[] ret = new long[cards.length];
-		for (int i = 0; i < cards.length; i++) {
-			ret[i] = convertHumanShortNameToDecimal7(cards[i]);
-		}
-		return ret;
-	}
-
-	public static long orHand(long[] cards) {
-		if (cards.length != 7) {
-			throw new IllegalArgumentException("There must be 7 cards");
-		}
-		return cards[0] | cards[1] | cards[2] | cards[3] | cards[4] | cards[5] | cards[6];
-	}
-
-	public static long sumHand(long[] cards) {
-		if (cards.length != 7) {
-			throw new IllegalArgumentException("There must be 7 cards");
-		}
-		return cards[0] + cards[1] + cards[2] + cards[3] + cards[4] + cards[5] + cards[6];
-	}
-
-	public static long makeDecimalFromIndexes(int cardIndex, int suitIndex) {
-		return (1L << (cardIndex * 3)) | (1L << ((suitIndex + 13) * 3));
-	}
-
-	public static String convertDecimalToLongName7(long card) throws Exception {
-		return getCardLong(card) + util.OF + getSuitLong(card);
-	}
-
-	public static String convertDecimalToShortName7(long card) throws Exception {
-		return (getCardChar(card) + "" + getSuitChar(card));
-	}
-
-	public static String getSuitLong(long card) throws Exception {
-		return util.suitLongs[getSuitIndexDecimal(card)];
-	}
-
-	public static String getCardLong(long card) throws Exception {
-		return util.cardLongs[getCardIndexDecimal(card)];
-	}
-
-	public static char getSuitChar(long card) throws Exception {
-		return util.suitChars[getSuitIndexDecimal(card)];
-	}
-
-	public static char getCardChar(long card) throws Exception {
-		return util.cardChars[getCardIndexDecimal(card)];
-	}
-
-	public static int getSuitIndexDecimal(long card) throws Exception {
-		for (int i = 0; i < suitDecimals.length; i++) {
-			if ((card & suitDecimals[i]) != 0) {
-				return i;
-			}
-		}
-		throw new Exception("Error retreiving suit index for card: " + card);
-	}
-
-	public static int getCardIndexDecimal(long card) throws Exception {
-		for (int i = 0; i < cardDecimals.length; i++) {
-			if ((card & cardDecimals[i]) != 0) {
-				return i;
-			}
-		}
-		throw new Exception("Error retreiving card index for card: " + card);
-	}
-
-	public static int getSuitIndexChar(char suitChar) throws Exception {
-		for (int i = 0; i < util.suitChars.length; i++) {
-			if (suitChar == util.suitChars[i]) {
-				return i;
-			}
-		}
-		throw new Exception("Error retreiving suit index for suit char: " + suitChar);
-	}
-
-	public static int getCardIndexChar(char cardChar) throws Exception {
-		for (int i = 0; i < util.cardChars.length; i++) {
-			if (cardChar == util.cardChars[i]) {
-				return i;
-			}
-		}
-		throw new Exception("Error retreiving card index for card char: " + cardChar);
-	}
 
 
 }

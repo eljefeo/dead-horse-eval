@@ -43,29 +43,37 @@ public class util5 extends util {
         }
     }
 
-    public static void howLongUntilYouGetThisKindOf5CardHand(int whatKind) { // 0 = high card, 1 = pair, 2 = 2pair etc..
+    public static int[] getRandomThisType5CardHand(int whatKind) { // 0 = high card, 1 = pair, 2 = 2pair etc..
 
         int counter = 0;
-        int limit = 10000000;
+        int limit = 100000000;
+        int batchSize = 10000;//make this many hands at a time, go through them all looking for the desired outcome (instead of making 1 hand at a time, slower)
         if (whatKind > handNames.length - 1) {
             throw new IllegalArgumentException(whatKind + " is invalid. Please pick a hand from 0 - " + (handNames.length - 1));
         }
         while (true) {
-            counter++;
-            int[] fiveCards = HandMaker.getRandom5CardHand();
-            int res = DeadHorse.eval5(fiveCards);
-            res >>= 26;
-            if (res == whatKind) {
-                System.out.println("Finally got " + handNames[res] + " after " + counter + " hands");
-                return;
-            } else if (counter > limit) {
-                System.out.println("Did not get a " + handNames[whatKind] + " after " + limit + " hands...stopping the search so it doesnt go on forever");
+
+            int[] allCards = HandMaker.makeThisManyRandom5CardHands(10000);
+            for(int i=0; i < batchSize; i+=5){
+                counter++;
+               // int[] fiveCards = new allCards[i*5]
+                int res = DeadHorse.eval5(allCards[i*5], allCards[i*5+1], allCards[i*5+2], allCards[i*5+3], allCards[i*5+4]);
+                //System.out.println("Cards: " + allCards[i*5] + ", " + allCards[i*5+1] + ", " + allCards[i*5+2] + ", " + allCards[i*5+3] + ", " + allCards[i*5+4]);
+                res >>= 26;
+                if (res == whatKind) {
+                    System.out.println("Finally got " + handNames[res] + " after " + counter + " hands");
+                    return new int[]{allCards[i*5], allCards[i*5+1], allCards[i*5+2], allCards[i*5+3], allCards[i*5+4]};
+                } else if (counter > limit) {
+                    System.out.println("Did not get a " + handNames[whatKind] + " after " + limit + " hands...stopping the search so it doesnt go on forever. something doesnt seem right, it shouldnt take this long");
+                    return new int[]{};
+                }
             }
+
         }
 
     }
 
-    public static int make5CardHandsUntilThisType(int whatKind) { // 0 = high card, 1 = pair, 2 = 2pair etc..
+   /* public static int getRandomThisType5CardHand(int whatKind) { // 0 = high card, 1 = pair, 2 = 2pair etc..
 
         int counter = 0;
         int limit = 10000000;
@@ -74,9 +82,9 @@ public class util5 extends util {
         }
         while (true) {
             counter++;
-            int[] fiveCards = HandMaker.getRandom5CardHand();
+            int[] fiveCards = HandMaker.makeThisManyRandom5CardHands();
             int res = DeadHorse.eval5(fiveCards);
-            int type = res >> 26;
+            int type = res >>> 26;
             if (type == whatKind) {
                 System.out.println("Finally got " + handNames[type] + " after " + counter + " hands");
                 return res;
@@ -86,7 +94,7 @@ public class util5 extends util {
             }
         }
 
-    }
+    }*/
 
     public static String getCardName5(int j) throws Exception {
         for(int i=0;i<allCardNums.length;i++){
