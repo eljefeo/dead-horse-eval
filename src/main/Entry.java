@@ -46,35 +46,23 @@ public class Entry {
 
 		// EvalTestPlayground.makeNewnums();
 
-		/*
-		initial tests for 7 card eval
-		PASS - All 23294460 High Card hands are accounted for 17.411919581751437%
-		PASS - All 58627800 Pair hands are accounted for 43.822545740704314%
-		PASS - All 31433400 Two Pair hands are accounted for 23.495536405695844%
-		PASS - All 6461620 3 of a kind hands are accounted for 4.8298697547758875%
-		PASS - All 6180020 Straight hands are accounted for 4.619382087140698%
-		FAIL - 4052396 out of 4047644 Flush hands received! 3.029046102180999%
-		PASS - All 3473184 Full House hands are accounted for 2.5961022706955124%
-		PASS - All 224848 4 of a kind hands are accounted for 0.16806722689075632%
-		FAIL - 36832 out of 41584 Straight Flush hands received! 0.02753083016455711%
-Total Count : 133784560
 
 
 
 
-
-Did all 133784560 hands in 0.9937316 seconds
-134.6284650704476 million hands a second
+/*
+Did all 133784560 hands in 0.9339746 seconds
+143.24218238911422 million hands a second
 
 PASS - All 23294460 High Card hands are accounted for 17.411919581751437%
 PASS - All 58627800 Pair hands are accounted for 43.822545740704314%
 PASS - All 31433400 Two Pair hands are accounted for 23.495536405695844%
 PASS - All 6461620 3 of a kind hands are accounted for 4.8298697547758875%
 PASS - All 6180020 Straight hands are accounted for 4.619382087140698%
-FAIL - 4052396 out of 4047644 Flush hands received! 3.029046102180999%
+PASS - All 4047644 Flush hands are accounted for 3.0254941227896555%
 PASS - All 3473184 Full House hands are accounted for 2.5961022706955124%
 PASS - All 224848 4 of a kind hands are accounted for 0.16806722689075632%
-FAIL - 36832 out of 41584 Straight Flush hands received! 0.02753083016455711%
+PASS - All 41584 Straight Flush hands are accounted for 0.03108280955590092%
 Total Count : 133784560
 		 */
 
