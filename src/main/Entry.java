@@ -21,7 +21,7 @@ public class Entry {
 		// hands in 0.6159191 seconds 211 million hands a second
 		 //System.out.println(EvalTestPlayground.humanDecodeEval("9d", "9c", "9h", "6s","9s"));
 
-		 EvalTestPlayground.testEveryHand5();
+		 //EvalTestPlayground.testEveryHand5();
 		//EvalTestPlayground.testEval5AndNotes();
 
 		 //EvalTestPlayground.testStatisticsManyHand5(10000000);

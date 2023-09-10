@@ -60,14 +60,49 @@ public class DeadHorse7 {
 	 */
 
 	public static int eval7Checke() throws Exception {
-		String[] someCardCodes = new String[] { "4C", "5C", "6D", "AC", "KC", "2C", "3C" };
+		String[] someCardCodes = new String[] { "4C", "5C", "6D", "7C", "KC", "4C", "3C" };
 
 		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
+		long[] handm = maskCards(hand);
+		for(int i=0; i<hand.length; i++){
+			long c = hand[i];
+			long cm = handm[i];
+			long b = 63 - Long.numberOfLeadingZeros(cm);
+			String s = someCardCodes[i];
+			System.out.println(s + " :\t" + c + " :\t" + util.bin51(c));
+			System.out.println(s + " :\t" + cm + " :\t" + util.bin51(cm) + " :\t" + b + " : " + (b/3));
+			//System.out.println(Math.pow(2,b));
+			System.out.println();
+		}
+
+
+		long ord = orHand(hand);
+		long or = ord;
+		System.out.println("ord = " + ord + " : " + util.bin51(ord));
+		for(int i=0; i<4; i++){
+			ord &= ord >>> 3;
+			System.out.println(i + " ord = " + ord + " : " + util.bin51(ord));
+		}
+		System.out.println("ord = " + ord + " : " + util.bin51(ord) + " :: straight? " + (ord != 0));
+		or &= or >>> 3;
+		or &= or >>> 3;
+		or &= or >>> 3;
+		or &= or >>> 3;
+		System.out.println("or = " + or + " : " + util.bin51(or) + " :: straight? " + (or != 0));
+		long t = 4608L;
+		System.out.println(":::" + util.bin51(t));
+		//System.out.println("math log: " + Math.log(1));
 		int res = eval7(hand[0], hand[1], hand[2], hand[3], hand[4], hand[5], hand[6]);
 		System.out.println("REsult: " + util.handNames[res]);
 		return res;
 	}
-
+public static long[] maskCards(long[] hand){
+		long[] masked = new long[hand.length];
+		for(int i=0; i<hand.length; i++){
+			masked[i] = hand[i] & cardMask;
+		}
+		return masked;
+}
 
 	public static int eval7(long a, long b, long c, long d, long e, long f, long g) {
 
@@ -79,9 +114,8 @@ public class DeadHorse7 {
 
 		for (int i = 0; i < fullSuitMasks.length; i++) {
 			//long masked = fullSuitMasks[i] & suits;
-			if (/* masked != 0 && */ (fullSuitMasks[i] & suits) > almostFlush[i]) {
-
-				long fm = fullSuitMasks[i];
+			long fm = fullSuitMasks[i];
+			if (/* masked != 0 && */ (fm & suits) > almostFlush[i]) {
 				if((a&fm) != 0) flushCards |= a;
 				if((b&fm) != 0) flushCards |= b;
 				if((c&fm) != 0) flushCards |= c;
@@ -89,67 +123,25 @@ public class DeadHorse7 {
 				if((e&fm) != 0) flushCards |= e;
 				if((f&fm) != 0) flushCards |= f;
 				if((g&fm) != 0) flushCards |= g;
-				//000000111000000000000000000000000000000000000000000
-				//000000001000000000000000000001000000000000000000000
-				//000000000000000000000001001001001001000000000001000
-				//000000000000000000000001001001001001000000000000000
-				//System.out.println("fullSuitMasks[i] : " + util.bin51(fullSuitMasks[i]));
-				//System.out.println("a : " + util.bin51(a));
-				//System.out.println("b : " + util.bin51(b));
-				//System.out.println("c : " + util.bin51(c));
-				//System.out.println("flush cards: " + util.bin51(flushCards));
 				flushCards &= cardMask;
-				//System.out.println("flush cards: " + util.bin51(flushCards));
-				isFlush = true;
-				break;
+				long gg = flushCards;
+				gg &= gg >>> 3;
+				gg &= gg >>> 3;
+				gg &= gg >>> 3;
+				gg &= gg >>> 3;
+				if(gg != 0 || ((flushCards & 68719477321L) == 68719477321L)){ //gotta check the stupid A,2,3,4,5 straight
+					return 8; //return straight flush
+				}
+				return 5; //return flush
 			}
 		}
 
 		long straightCards = 0;
-		//for(long l : straights){
 		for(int i=0; i<straights.length; i++){
 			long l = straights[i];
 			if((l&ord) == l){
-
-				//return l | 0x10000000;
-
-				if((a&l) != 0) straightCards |= a;
-				if((b&l) != 0) straightCards |= b;
-				if((c&l) != 0) straightCards |= c;
-				if((d&l) != 0) straightCards |= d;
-				if((e&l) != 0) straightCards |= e;
-				if((f&l) != 0) straightCards |= f;
-				if((g&l) != 0) straightCards |= g;
-
-				//System.out.println("straight cards: " + util.bin51(straightCards));
-				straightCards &= cardMask;
-				//System.out.println("straight cards: " + util.bin51(straightCards));
-				if(isFlush ){
-					if( (straightCards & flushCards) == straightCards){
-						//System.out.println("straight FLUSH cards: " + util.bin51(straightCards));
-						//need to check if the same 5 cards for flush are the same 5 cards for straight...
-						return 8;//since also a flush, its a straight flush.
-					} else {
-						//maybe here check the rest of the straights?
-						for(; i<straights.length; i++){
-							l = straights[i];
-							if((l&ord) == l && ((l&flushCards) == l)){
-								//System.out.println("Found lower straight flush " + util.bin51(l));
-								return 8;//found a lower straight flush than the higher straight, its a straight flush.
-							}
-						}
-						//System.out.println("normal flush");
-						return 5;
-					}
-				}
-
-				else{
-					return 4; //if no flush, just straight
-				}
+				return 4;
 			}
-		}
-		if(isFlush){
-			return 5;
 		}
 
 		long pairs = (sum & pairMask) >> 1;
