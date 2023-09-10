@@ -124,12 +124,8 @@ public static long[] maskCards(long[] hand){
 				if((f&fm) != 0) flushCards |= f;
 				if((g&fm) != 0) flushCards |= g;
 				flushCards &= cardMask;
-				long gg = flushCards;
-				gg &= gg >>> 3;
-				gg &= gg >>> 3;
-				gg &= gg >>> 3;
-				gg &= gg >>> 3;
-				if(gg != 0 || ((flushCards & 68719477321L) == 68719477321L)){ //gotta check the stupid A,2,3,4,5 straight
+				if((flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12) != 0
+						|| ((flushCards & 68719477321L) == 68719477321L)) { //gotta check the stupid A,2,3,4,5 straight
 					return 8; //return straight flush
 				}
 				return 5; //return flush
@@ -137,6 +133,9 @@ public static long[] maskCards(long[] hand){
 		}
 
 		long straightCards = 0;
+		/*if((ord & (ord >>> 3 & ord >>> 6 & ord >>> 9 & ord >>> 12)) != 0){
+			return 4;
+		}*/
 		for(int i=0; i<straights.length; i++){
 			long l = straights[i];
 			if((l&ord) == l){
