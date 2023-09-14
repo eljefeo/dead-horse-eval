@@ -18,12 +18,19 @@ public class DeadHorse7 {
 	 * get rid of trips and only include pairs long quads = sum & quadMask;
 	 */
 
-	public static int eval7Checke() throws Exception {
-		String[] someCardCodes = new String[] { "4C", "5C", "6D", "7C", "KC", "4C", "3C" };
+	public static int getPwrTwo(long n){
+		double m = Math.log(n);
+		double t = Math.log(2);
+		return (int) ( m/t);
+		//System.out.println("m: " + m + " t: " + t + " d: " + d);
+	}
 
+	public static int eval7Checke() throws Exception {
+		String[] someCardCodes = new String[] { "8C", "5C", "6C", "7C", "9C", "4C", "3C" };
+		String[] someCardCodes2 = new String[] { "4D", "5C", "6C", "7C", "KC", "4C", "3C" };
 		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
-		long[] handm = maskCards(hand);
-		for(int i=0; i<hand.length; i++){
+		long[] handm = util.maskCards(hand, cardMask);
+		/*for(int i=0; i<hand.length; i++){
 			long c = hand[i];
 			long cm = handm[i];
 			long b = 63 - Long.numberOfLeadingZeros(cm);
@@ -32,8 +39,13 @@ public class DeadHorse7 {
 			System.out.println(s + " :\t" + cm + " :\t" + util.bin51(cm) + " :\t" + b + " : " + (b/3));
 			//System.out.println(Math.pow(2,b));
 			System.out.println();
-		}
+		}*/
 
+		long res = eval7(hand);
+		int resi = (int) res >>> 51;
+		System.out.println("RES : " + res + " : " + resi + " : " + util.bin51(resi) + " : " + DeadHorse7.getPwrTwo(resi) );
+		System.out.println(util.bin51(res));
+		System.out.println(" : " + util7.handNames[resi]);
 		long[] handc = util7.getRandomThisType7CardHand(4);
 		eval7(handc);
 
@@ -54,15 +66,27 @@ public class DeadHorse7 {
 		}
 		System.out.println("ord bit counts: " + util.countBits(ordMasked) + " : " + util.bin51(ordMasked));
 
+
+		int nn = 256;
+		//long ee =
+		double m = Math.log(nn);
+		double t = Math.log(2);
+		double d = m/t;
+		System.out.println("m: " + m + " t: " + t + " d: " + d + " ::: " + getPwrTwo(nn));
+
+
+		/*for(int i=0; i<4; i++){
+			System.out.println();
+			for(int j=0; j < 13; j++){
+				int ind = 13*i + j;
+				long c = all52Cards7[ind];
+				System.out.println(ind + " : " + c + " :\t" + util.bin51(c));
+			}
+		}*/
+
 		return 0;
 	}
-public static long[] maskCards(long[] hand){
-		long[] masked = new long[hand.length];
-		for(int i=0; i<hand.length; i++){
-			masked[i] = hand[i] & cardMask;
-		}
-		return masked;
-}
+
 /*
 number of bits possible in each type of hand
 High card - 7
@@ -77,14 +101,102 @@ Straight flush - 5,6,7
 
  */
 
-	public static int eval7(long[] hand) throws Exception {
+	public static long eval7(long[] hand) throws Exception {
 		if(hand.length != 7){
 			throw new Exception("Hand must have exactly 7 cards");
 		}
 		return eval7(hand[0],hand[1],hand[2],hand[3],hand[4],hand[5],hand[6]);
 	}
 
-	public static int eval7(long a, long b, long c, long d, long e, long f, long g) {
+	public static long eval7(long a, long b, long c, long d, long e, long f, long g) {
+		//int aa  = getPwrTwo(a&cardMask), bb  = getPwrTwo(b&cardMask), cc  = getPwrTwo(c&cardMask), dd  = getPwrTwo(d&cardMask),
+		//		ee  = getPwrTwo(e&cardMask), ff  = getPwrTwo(f&cardMask), gg  = getPwrTwo(g&cardMask);
+		long ord = a | b | c | d | e | f | g; //orHand(hand);
+		long sum = a + b + c + d + e + f + g; //sumHand(hand);
+
+		long bitCounter = (ord & ord - 1);
+		long flushCards = 0;
+		boolean isFlush = false, isStrt = false;
+		long suits = sum & suitMask;
+
+		for (int i = 0; i < fullSuitMasks.length; i++) {
+			//long masked = fullSuitMasks[i] & suits;
+			long fm = fullSuitMasks[i];
+			if (/* masked != 0 && */ (fm & suits) > almostFlush[i]) {
+				if ((a & fm) != 0) flushCards |= a;
+				if ((b & fm) != 0) flushCards |= b;
+				if ((c & fm) != 0) flushCards |= c;
+				if ((d & fm) != 0) flushCards |= d;
+				if ((e & fm) != 0) flushCards |= e;
+				if ((f & fm) != 0) flushCards |= f;
+				if ((g & fm) != 0) flushCards |= g;
+				flushCards &= cardMask;
+				long ff = (flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12);
+				if (ff != 0 ) { //gotta check the stupid A,2,3,4,5 straight
+
+					//111111111000000000000000000000000000000000000000000000000000
+					//return 8; //return straight flush
+					System.out.println("binnn : " + util.bin51(flushCards) + " : " + util.bin51(ff));
+					System.out.println("::33 " + util.bin51(18014398509481984L | flushCards) + " : " + (util.bin51((18014398509481984L >>> 51))));
+					//return ((8 << 51) | flushCards);
+					return 18014398509481984L | flushCards;
+				} else if((flushCards & 68719477321L) == 68719477321L){
+					return (18014398509481984L | 585); //585 is just the 2,3,4,5 without the ACE
+				}
+				return 5; //return flush
+			}
+		}
+
+		long straightCards = 0;
+		long or = ord & cardMask;
+		if ((or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12)) != 0
+				|| ((or & 68719477321L) == 68719477321L)) {
+			return 4;
+		}
+		/*for(int i=0; i<straights.length; i++){
+			long l = straights[i];
+			if((l&ord) == l){
+				return 4;
+			}
+		}*/
+
+		long pairs = (sum & pairMask) >> 1;
+		long trips = sum & pairs;
+		long onlyPairs = pairs ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
+		// and only include pairs
+		long quads = sum & quadMask;
+
+		if (quads != 0) {
+			//return 0x1C000000;
+			return 7;
+		}
+		if (trips != 0) {
+			long twoTrips = trips & trips - 1;
+			if (twoTrips != 0 || onlyPairs != 0) {
+				return 6;
+			} else {
+				return 3;
+			}
+
+		}
+		if (onlyPairs != 0) {
+			long nextPair = onlyPairs & onlyPairs - 1;
+			if (nextPair != 0) {
+				long finalPair = nextPair & nextPair - 1;
+				//return nextPair | (finalPair != 0) ? finalPair :  ;
+				if(finalPair != 0){
+
+				}
+				return 2;
+			} else {
+				return 1;//<<(40);
+			}
+		}
+		//return bitCounter;
+		return 0;
+	}
+
+	public static int eval7Working(long a, long b, long c, long d, long e, long f, long g) {
 
 		long ord = a | b | c | d | e | f | g; //orHand(hand);
 		long sum = a + b + c + d + e + f + g; //sumHand(hand);
@@ -98,15 +210,15 @@ Straight flush - 5,6,7
 			//long masked = fullSuitMasks[i] & suits;
 			long fm = fullSuitMasks[i];
 			if (/* masked != 0 && */ (fm & suits) > almostFlush[i]) {
-				if((a&fm) != 0) flushCards |= a;
-				if((b&fm) != 0) flushCards |= b;
-				if((c&fm) != 0) flushCards |= c;
-				if((d&fm) != 0) flushCards |= d;
-				if((e&fm) != 0) flushCards |= e;
-				if((f&fm) != 0) flushCards |= f;
-				if((g&fm) != 0) flushCards |= g;
+				if ((a & fm) != 0) flushCards |= a;
+				if ((b & fm) != 0) flushCards |= b;
+				if ((c & fm) != 0) flushCards |= c;
+				if ((d & fm) != 0) flushCards |= d;
+				if ((e & fm) != 0) flushCards |= e;
+				if ((f & fm) != 0) flushCards |= f;
+				if ((g & fm) != 0) flushCards |= g;
 				flushCards &= cardMask;
-				if((flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12) != 0
+				if ((flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12) != 0
 						|| ((flushCards & 68719477321L) == 68719477321L)) { //gotta check the stupid A,2,3,4,5 straight
 					return 8; //return straight flush
 				}
@@ -116,7 +228,7 @@ Straight flush - 5,6,7
 
 		long straightCards = 0;
 		long or = ord & cardMask;
-		if((or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12)) != 0
+		if ((or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12)) != 0
 				|| ((or & 68719477321L) == 68719477321L)) {
 			return 4;
 		}
@@ -128,8 +240,8 @@ Straight flush - 5,6,7
 		}*/
 
 		long pairs = (sum & pairMask) >> 1;
-		long trips = sum & pairs ;
-		long onlyPairs = pairs  ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
+		long trips = sum & pairs;
+		long onlyPairs = pairs ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
 		// and only include pairs
 		long quads = sum & quadMask;
 
@@ -138,94 +250,28 @@ Straight flush - 5,6,7
 			return 7;
 		}
 		if (trips != 0) {
-			long twoTrips = trips & trips-1;
-			if(twoTrips != 0 || onlyPairs != 0){
+			long twoTrips = trips & trips - 1;
+			if (twoTrips != 0 || onlyPairs != 0) {
 				return 6;
-			} else{
+			} else {
 				return 3;
 			}
 
 		}
 		if (onlyPairs != 0) {
 			long nextPair = onlyPairs & onlyPairs - 1;
-			if(nextPair != 0){
-				return 2;
-			} else {
-				return 1;
-			}
-		}
-		return 0;
-	}
+			if (nextPair != 0) {
+				long finalPair = nextPair & nextPair - 1;
+				//return nextPair | (finalPair != 0) ? finalPair :  ;
+				if(finalPair != 0){
 
-
-	public static int eval7Working(long a, long b, long c, long d, long e, long f, long g) {
-
-		long ord = a | b | c | d | e | f | g; //orHand(hand);
-		long sum = a + b + c + d + e + f + g; //sumHand(hand);
-		long flushCards = 0;
-		boolean isFlush = false, isStrt = false;
-		long suits = sum & suitMask;
-
-		for (int i = 0; i < fullSuitMasks.length; i++) {
-			//long masked = fullSuitMasks[i] & suits;
-			long fm = fullSuitMasks[i];
-			if (/* masked != 0 && */ (fm & suits) > almostFlush[i]) {
-				if((a&fm) != 0) flushCards |= a;
-				if((b&fm) != 0) flushCards |= b;
-				if((c&fm) != 0) flushCards |= c;
-				if((d&fm) != 0) flushCards |= d;
-				if((e&fm) != 0) flushCards |= e;
-				if((f&fm) != 0) flushCards |= f;
-				if((g&fm) != 0) flushCards |= g;
-				flushCards &= cardMask;
-				if((flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12) != 0
-						|| ((flushCards & 68719477321L) == 68719477321L)) { //gotta check the stupid A,2,3,4,5 straight
-					return 8; //return straight flush
 				}
-				return 5; //return flush
-			}
-		}
-
-		long straightCards = 0;
-		long or = ord & cardMask;
-		if((or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12)) != 0
-				|| ((or & 68719477321L) == 68719477321L)) {
-			return 4;
-		}
-		/*for(int i=0; i<straights.length; i++){
-			long l = straights[i];
-			if((l&ord) == l){
-				return 4;
-			}
-		}*/
-
-		long pairs = (sum & pairMask) >> 1;
-		long trips = sum & pairs ;
-		long onlyPairs = pairs  ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
-		// and only include pairs
-		long quads = sum & quadMask;
-
-		if (quads != 0) {
-			//return 0x1C000000;
-			return 7;
-		}
-		if (trips != 0) {
-			long twoTrips = trips & trips-1;
-			if(twoTrips != 0 || onlyPairs != 0){
-				return 6;
-			} else{
-				return 3;
-			}
-
-		}
-		if (onlyPairs != 0) {
-			long nextPair = onlyPairs & onlyPairs - 1;
-			if(nextPair != 0){
 				return 2;
 			} else {
-				return 1;
+				return 1;//<<(40);
 			}
 		}
+		//return bitCounter;
 		return 0;
 	}
 

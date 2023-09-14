@@ -62,4 +62,20 @@ public class util {
         }
         return counter;
     }
+
+    public static long[] maskCards(long[] hand, long mask){
+        long[] masked = new long[hand.length];
+        for(int i=0; i<hand.length; i++){
+            masked[i] = hand[i] & mask;
+        }
+        return masked;
+    }
+
+    public static int[] maskCards(int[] hand, int mask){
+        int[] masked = new int[hand.length];
+        for(int i=0; i<hand.length; i++){
+            masked[i] = hand[i] & mask;
+        }
+        return masked;
+    }
 }
