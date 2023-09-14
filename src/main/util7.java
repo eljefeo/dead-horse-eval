@@ -189,7 +189,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         for(int i=0;i<allCards.length;i+=7){
 
             long res = DeadHorse7.eval7(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4],allCards[i+5],allCards[i+6]);
-            int resi = (int) res >>> 51;
+            int resi = (int) (res >>> 51);
 
             handCounter[resi]++;
         }
@@ -243,7 +243,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
                 counter++;
                 //int res = DeadHorse7.eval7(allCards[i*7], allCards[i*7+1], allCards[i*7+2], allCards[i*7+3], allCards[i*7+4], allCards[i*7+5], allCards[i*7+6]);
                 long res = DeadHorse7.eval7(allCards[i*7], allCards[i*7+1], allCards[i*7+2], allCards[i*7+3], allCards[i*7+4], allCards[i*7+5], allCards[i*7+6]);
-                int resi = (int) res >>> 51;
+                int resi = (int) (res >>> 51);
                 //System.out.println("Cards: " + allCards[i*5] + ", " + allCards[i*5+1] + ", " + allCards[i*5+2] + ", " + allCards[i*5+3] + ", " + allCards[i*5+4]);
                 //res >>= 26;
                 if (res == whatKind) {

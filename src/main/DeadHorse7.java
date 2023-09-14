@@ -42,11 +42,11 @@ public class DeadHorse7 {
 		}*/
 
 		long res = eval7(hand);
-		int resi = (int) res >>> 51;
+		int resi = (int) (res >>> 51);
 		System.out.println("RES : " + res + " : " + resi + " : " + util.bin51(resi) + " : " + DeadHorse7.getPwrTwo(resi) );
 		System.out.println(util.bin51(res));
 		System.out.println(" : " + util7.handNames[resi]);
-		long[] handc = util7.getRandomThisType7CardHand(4);
+		long[] handc = util7.getRandomThisType7CardHand(1);
 		eval7(handc);
 
 		long ord = orHand(handc);
@@ -133,17 +133,24 @@ Straight flush - 5,6,7
 				flushCards &= cardMask;
 				long ff = (flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12);
 				if (ff != 0 ) { //gotta check the stupid A,2,3,4,5 straight
+					//crappy extra check to get rid of extra straight cards:
+					if((ff & ff-1) != 0)
+						ff &= ff-1;
+						if((ff & ff-1) != 0)
+							ff &= ff-1;
 
-					//111111111000000000000000000000000000000000000000000000000000
+					ff <<= 12;
+
 					//return 8; //return straight flush
-					System.out.println("binnn : " + util.bin51(flushCards) + " : " + util.bin51(ff));
-					System.out.println("::33 " + util.bin51(18014398509481984L | flushCards) + " : " + (util.bin51((18014398509481984L >>> 51))));
+					//System.out.println("binnn : " + util.bin51(flushCards) + " : " + util.bin51(ff));
+					//System.out.println("::33 " + util.bin51(18014398509481984L | ff) + " : " + (util.bin51(((18014398509481984L | ff) >>> 51))) + " :: " + ((18014398509481984L | ff) >>> 51));
 					//return ((8 << 51) | flushCards);
-					return 18014398509481984L | flushCards;
+					return (18014398509481984L | ff);
 				} else if((flushCards & 68719477321L) == 68719477321L){
-					return (18014398509481984L | 585); //585 is just the 2,3,4,5 without the ACE
+					return (18014398509481984L | 512); //512 is just the 5 high straight flush
 				}
-				return 5; //return flush
+				//return 5; //return flush
+				return 11258999068426240L;
 			}
 		}
 
@@ -151,7 +158,8 @@ Straight flush - 5,6,7
 		long or = ord & cardMask;
 		if ((or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12)) != 0
 				|| ((or & 68719477321L) == 68719477321L)) {
-			return 4;
+			return 9007199254740992L;
+			//return 4;
 		}
 		/*for(int i=0; i<straights.length; i++){
 			long l = straights[i];
@@ -168,14 +176,17 @@ Straight flush - 5,6,7
 
 		if (quads != 0) {
 			//return 0x1C000000;
-			return 7;
+			//return 7;
+			return 15762598695796736L;
 		}
 		if (trips != 0) {
 			long twoTrips = trips & trips - 1;
 			if (twoTrips != 0 || onlyPairs != 0) {
-				return 6;
+				//return 6;
+				return 13510798882111488L;
 			} else {
-				return 3;
+				//return 3;
+				return 6755399441055744L;
 			}
 
 		}
@@ -187,9 +198,11 @@ Straight flush - 5,6,7
 				if(finalPair != 0){
 
 				}
-				return 2;
+				//return 2;
+				return 4503599627370496L;
 			} else {
-				return 1;//<<(40);
+				//return 1;//<<(40);
+				return 2251799813685248L;
 			}
 		}
 		//return bitCounter;

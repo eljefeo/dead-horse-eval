@@ -32,8 +32,8 @@ public class Entry {
 		///DeadHorse7.findFlushes();
 		//DeadHorse7.findStraights();
 		//DeadHorse7.testeval7();
-		DeadHorse7.eval7Checke();
-		//util7.testEveryHand7n();
+		//DeadHorse7.eval7Checke();
+		util7.testEveryHand7n();
 		//util5.humanEncodeEval("2S", "8S", "6S", "5S", "3S" );
 
 
