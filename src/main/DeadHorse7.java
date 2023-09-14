@@ -134,10 +134,15 @@ Straight flush - 5,6,7
 				long ff = (flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12);
 				if (ff != 0 ) { //gotta check the stupid A,2,3,4,5 straight
 					//crappy extra check to get rid of extra straight cards:
-					if((ff & ff-1) != 0)
-						ff &= ff-1;
-						if((ff & ff-1) != 0)
-							ff &= ff-1;
+					long u=ff;
+					if((u &= u-1) != 0){
+						ff = u;
+						long uu=u;
+						if((uu &= uu-1) != 0) {
+							ff = uu;
+						}
+					}
+
 
 					ff <<= 12;
 
@@ -147,10 +152,20 @@ Straight flush - 5,6,7
 					//return ((8 << 51) | flushCards);
 					return (18014398509481984L | ff);
 				} else if((flushCards & 68719477321L) == 68719477321L){
+
 					return (18014398509481984L | 512); //512 is just the 5 high straight flush
 				}
+
+				long u=flushCards;
+				if((u &= u-1) != 0){
+					flushCards = u;
+					long uu=u;
+					if((uu &= uu-1) != 0) {
+						flushCards = uu;
+					}
+				}
 				//return 5; //return flush
-				return 11258999068426240L;
+				return 11258999068426240L | flushCards;
 			}
 		}
 

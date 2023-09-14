@@ -230,38 +230,46 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
 
     public static long[] getRandomThisType7CardHand(int whatKind) throws Exception { // 0 = high card, 1 = pair, 2 = 2pair etc..
 
+
+        System.out.println("looking for this type of hand: " + whatKind + " : " + util.handNames[whatKind]);
+
         int counter = 0;
-        int limit = 100000000;
+        int limit = 20000000;
         int batchSize = 10000;//make this many hands at a time, go through them all looking for the desired outcome (instead of making 1 hand at a time, slower)
-        if (whatKind > handNames.length - 1) {
+        if (whatKind > handNames.length - 1 || whatKind < 0) {
             throw new IllegalArgumentException(whatKind + " is invalid. Please pick a hand from 0 - " + (handNames.length - 1));
         }
         while (true) {
 
             long[] allCards = util7.makeThisManyRandom7CardHands(10000);
             for(int i=0; i < batchSize-7; i+=7){
+                if(counter % 1000000 == 0){
+                    System.out.println("counter is now : " + counter);
+                }
                 counter++;
                 //int res = DeadHorse7.eval7(allCards[i*7], allCards[i*7+1], allCards[i*7+2], allCards[i*7+3], allCards[i*7+4], allCards[i*7+5], allCards[i*7+6]);
                 long res = DeadHorse7.eval7(allCards[i*7], allCards[i*7+1], allCards[i*7+2], allCards[i*7+3], allCards[i*7+4], allCards[i*7+5], allCards[i*7+6]);
                 int resi = (int) (res >>> 51);
+                //System.out.println("resi: " + resi + " :: " + util.bin51(res) + " : " + res);
                 //System.out.println("Cards: " + allCards[i*5] + ", " + allCards[i*5+1] + ", " + allCards[i*5+2] + ", " + allCards[i*5+3] + ", " + allCards[i*5+4]);
                 //res >>= 26;
-                if (res == whatKind) {
+                if(counter > 10) return null;
+                if (resi == whatKind) {
                     System.out.println("Finally got " + handNames[resi] + " after " + counter + " hands");
                     return new long[]{allCards[i*7], allCards[i*7+1], allCards[i*7+2], allCards[i*7+3], allCards[i*7+4], allCards[i*7+5], allCards[i*7+6]};
                 } else if (counter > limit) {
                     System.out.println("Did not get a " + handNames[whatKind] + " after " + limit + " hands...stopping the search so it doesnt go on forever. something doesnt seem right, it shouldnt take this long");
                     return new long[]{};
-               /* } else {
-                    System.out.println("got : " + handNames[res] + " : "
+                } /*else {
+                    System.out.println("got : " + handNames[resi] + " : " + whatKind + " : "  + resi + " : "
                             + util7.convertDecimalToShortName7(allCards[i*7]) + ", "
                             + util7.convertDecimalToShortName7(allCards[i*7+1]) + ", "
                             + util7.convertDecimalToShortName7(allCards[i*7+2]) + ", "
                             + util7.convertDecimalToShortName7(allCards[i*7+3]) + ", "
                             + util7.convertDecimalToShortName7(allCards[i*7+4]) + ", "
                             + util7.convertDecimalToShortName7(allCards[i*7+5]) + ", "
-                            + util7.convertDecimalToShortName7(allCards[i*7+6]));*/
-                }
+                            + util7.convertDecimalToShortName7(allCards[i*7+6]));
+                }*/
             }
 
         }
