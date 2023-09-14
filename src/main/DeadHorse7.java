@@ -119,6 +119,7 @@ Straight flush - 5,6,7
 		boolean isFlush = false, isStrt = false;
 		long suits = sum & suitMask;
 
+		//check for flushes and straight flushes
 		for (int i = 0; i < fullSuitMasks.length; i++) {
 			//long masked = fullSuitMasks[i] & suits;
 			long fm = fullSuitMasks[i];
@@ -136,10 +137,12 @@ Straight flush - 5,6,7
 					//crappy extra check to get rid of extra straight cards:
 					long u=ff;
 					if((u &= u-1) != 0){
-						ff = u;
+						//ff = u;
 						long uu=u;
 						if((uu &= uu-1) != 0) {
 							ff = uu;
+						} else {
+							ff = u;
 						}
 					}
 
@@ -158,10 +161,12 @@ Straight flush - 5,6,7
 
 				long u=flushCards;
 				if((u &= u-1) != 0){
-					flushCards = u;
+
 					long uu=u;
 					if((uu &= uu-1) != 0) {
 						flushCards = uu;
+					} else {
+						flushCards = u;
 					}
 				}
 				//return 5; //return flush
@@ -169,12 +174,26 @@ Straight flush - 5,6,7
 			}
 		}
 
+
+		//check for straights
 		long straightCards = 0;
 		long or = ord & cardMask;
-		if ((or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12)) != 0
-				|| ((or & 68719477321L) == 68719477321L)) {
-			return 9007199254740992L;
+		long ors = (or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12));
+		if (ors != 0) {
+			long u = ors;
+			if((u &= u-1) != 0){
+
+				long uu=u;
+				if((uu &= uu-1) != 0) {
+					ors = uu;
+				} else {
+					ors = u;
+				}
+			}
+			return 9007199254740992L | ors;
 			//return 4;
+		} else if ((or & 68719477321L) == 68719477321L){
+			return 9007199254740992L | 512;
 		}
 		/*for(int i=0; i<straights.length; i++){
 			long l = straights[i];
@@ -182,6 +201,9 @@ Straight flush - 5,6,7
 				return 4;
 			}
 		}*/
+
+
+		//check pairs, trips, quads, fullhouse, two pair....
 
 		long pairs = (sum & pairMask) >> 1;
 		long trips = sum & pairs;
