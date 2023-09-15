@@ -18,6 +18,9 @@ public class DeadHorse7 {
 	 * get rid of trips and only include pairs long quads = sum & quadMask;
 	 */
 
+
+
+
 	public static int getPwrTwo(long n){
 		double m = Math.log(n);
 		double t = Math.log(2);
@@ -47,8 +50,9 @@ public class DeadHorse7 {
 		System.out.println(util.bin51(res));
 		System.out.println(" : " + util7.handNames[resi]);
 		long[] handc = util7.getRandomThisType7CardHand(1);
+		System.out.println(" go this random hand " + handc);
 		eval7(handc);
-
+		System.out.println(" evald this random hand " + handc);
 		long ord = orHand(handc);
 		long sum = sumHand(handc);
 		long ordMasked = ord & cardMask;
@@ -108,13 +112,279 @@ Straight flush - 5,6,7
 		return eval7(hand[0],hand[1],hand[2],hand[3],hand[4],hand[5],hand[6]);
 	}
 
+	public static long checkFlush(long a, long b, long c, long d, long e, long f, long g, long suits ) {
+		long flushCards = 0;
+		for (int i = 0; i < fullSuitMasks.length; i++) {
+			//long masked = fullSuitMasks[i] & suits;
+			long fm = fullSuitMasks[i];
+			if (/* masked != 0 && */ (fm & suits) > almostFlush[i]) {
+				if ((a & fm) != 0) flushCards |= a;
+				if ((b & fm) != 0) flushCards |= b;
+				if ((c & fm) != 0) flushCards |= c;
+				if ((d & fm) != 0) flushCards |= d;
+				if ((e & fm) != 0) flushCards |= e;
+				if ((f & fm) != 0) flushCards |= f;
+				if ((g & fm) != 0) flushCards |= g;
+				flushCards &= cardMask;
+				long ff = (flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12);
+				if (ff != 0 ) { //gotta check the stupid A,2,3,4,5 straight
+					//crappy extra check to get rid of extra straight cards:
+					long u=ff;
+					if((u &= u-1) != 0){
+						//ff = u;
+						long uu=u;
+						if((uu &= uu-1) != 0) {
+							ff = uu;
+						} else {
+							ff = u;
+						}
+					}
+					ff <<= 12;
+
+					//return 8; //return straight flush
+					//System.out.println("binnn : " + util.bin51(flushCards) + " : " + util.bin51(ff));
+					//System.out.println("::33 " + util.bin51(18014398509481984L | ff) + " : " + (util.bin51(((18014398509481984L | ff) >>> 51))) + " :: " + ((18014398509481984L | ff) >>> 51));
+					//return ((8 << 51) | flushCards);
+					return (18014398509481984L | ff);
+				} else if((flushCards & 68719477321L) == 68719477321L){
+
+					return (18014398509481984L | 512); //512 is just the 5 high straight flush
+				}
+
+				long u=flushCards;
+				if((u &= u-1) != 0){
+
+					long uu=u;
+					if((uu &= uu-1) != 0) {
+						flushCards = uu;
+					} else {
+						flushCards = u;
+					}
+				}
+				//return 5; //return flush
+				return 11258999068426240L | flushCards;
+			}
+		}
+		return 0;
+	}
+	public static long checkStraight(long a, long b, long c, long d, long e, long f, long g, long ord) {
+		long straightCards = 0;
+		long or = ord & cardMask;
+		long ors = (or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12));
+		if (ors != 0) {
+			long u = ors;
+			if((u &= u-1) != 0){
+
+				long uu=u;
+				if((uu &= uu-1) != 0) {
+					ors = uu;
+				} else {
+					ors = u;
+				}
+			}
+			return 9007199254740992L | ors;
+			//return 4;
+		} else if ((or & 68719477321L) == 68719477321L){
+			return 9007199254740992L | 512;
+		}
+		return 0;
+	}
+
 	public static long eval7(long a, long b, long c, long d, long e, long f, long g) {
+		//int aa  = getPwrTwo(a&cardMask), bb  = getPwrTwo(b&cardMask), cc  = getPwrTwo(c&cardMask), dd  = getPwrTwo(d&cardMask),
+		//		ee  = getPwrTwo(e&cardMask), ff  = getPwrTwo(f&cardMask), gg  = getPwrTwo(g&cardMask);
+		long ord = a | b | c | d | e | f | g; //orHand(hand);
+
+		long sum = a + b + c + d + e + f + g; //sumHand(hand);
+		long tord = ord & cardMask;
+		//System.out.println(util.countBits(tord) + " this many Starting bits");
+		long bitCounter = (tord & (tord - 1)); //remove 1 bit
+		//System.out.println(util.countBits(bitCounter) + " this many bt bits");
+		bitCounter &= bitCounter - 1; //remove 2nd bit
+		long flushCards = 0;
+		boolean isFlush = false, isStrt = false;
+		long suits = sum & suitMask;
+		long quads = sum & quadMask;
+		long pairs = (sum & pairMask) >> 1;
+		long trips = sum & pairs;
+		long onlyPairs = pairs ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
+		boolean isTrips = false;
+
+		if((bitCounter &= bitCounter - 1) == 0 || (bitCounter &= bitCounter - 1) == 0){//2 or 3 or 4 bits. this could be fullhouse or quads or twoPair
+			/*if(util.countBits(tord) >  4){
+				System.out.println("ok got here with 4 as baaddddd:");
+				return 0;
+			}*/
+			//System.out.println(util.countBits(bitCounter) + " this should be 2 bits or 3 or 4 " + util.countBits(tord));
+			if (quads != 0)
+				return 15762598695796736L;
+
+			if (trips != 0) { //checking for fullhouse
+				isTrips = true;
+				long twoTrips = trips & trips - 1;
+				if (twoTrips != 0 || onlyPairs != 0) {
+					return 13510798882111488L;//return 6; fullhouse
+				}
+			}
+
+			long multPairs = onlyPairs & onlyPairs - 1; //this would be a second pair
+			if((multPairs =  multPairs - 1) != 0){ //this actually means there were 3 pairs (only need top 2 pairs)
+				return 4503599627370496L | (multPairs<<1);//return 2pair and oring the top 2 pair, still need to add the highest card as a kicker though...
+			}
+		} else if((bitCounter &= bitCounter - 1) == 0 ){ //this is 5 bits - 2pair, trips, straight, flush, straight flush... damn ...
+
+			if (onlyPairs != 0) { //2pair check first, since if we have 5 bits, and there is a pair, then that means the last card is another unique card
+				// and we would actually have more than 5 bits if the hand was a flush, straight, or straight flush.
+				//meaning if we get 5 bits and have a pair, theres no way it would be flush, straight, or straight flush so dont bother checking them first
+				long nextPair = onlyPairs & onlyPairs - 1;
+				if (nextPair != 0) {
+					long finalPair = nextPair & nextPair - 1;
+					//return nextPair | (finalPair != 0) ? finalPair :  ;
+					if(finalPair != 0){
+						return 4503599627370496L | nextPair;
+					}
+					//return 2;
+					return 4503599627370496L | onlyPairs;
+				}
+			}
+
+			//check for flushes and straight flushes
+			long flsh = checkFlush(a,b,c,d,e,f,g,suits);
+			if(flsh != 0) return flsh;
+
+			//check for straights
+			long strs = checkStraight(a,b,c,d,e,f,g,ord);
+			if(strs != 0)
+				return strs;
+
+			if (trips != 0) {
+				long twoTrips = trips & trips - 1;
+				if (twoTrips != 0 || onlyPairs != 0) {
+					//return 6;
+					return 13510798882111488L;
+				} else {
+					//return 3;
+					return 6755399441055744L;
+				}
+			}
+		}  else if((bitCounter &= bitCounter - 1) == 0 ){ //this is 6 bits - pair, straight, flush, straight flush...
+
+			//check for flushes and straight flushes
+			long flsh = checkFlush(a,b,c,d,e,f,g,suits);
+			if(flsh != 0) return flsh;
+
+			//check for straights
+			long strs = checkStraight(a,b,c,d,e,f,g,ord);
+			if(strs != 0)
+				return strs;
+
+			if (onlyPairs != 0) {
+				/*long nextPair = onlyPairs & onlyPairs - 1;
+				if (nextPair != 0) {
+					long finalPair = nextPair & nextPair - 1;
+					//return nextPair | (finalPair != 0) ? finalPair :  ;
+					if(finalPair != 0){
+						return 4503599627370496L;
+					}
+					//return 2;
+					return 4503599627370496L;
+				} else {*/
+				//return 1;//<<(40);
+				return 2251799813685248L;
+				//}
+			}
+
+		} else if((bitCounter &= bitCounter - 1) == 0 ) { //this is 7 bits - highcard, straight, flush, straight flush...
+			/*if(util.countBits(tord) ==  7){
+				System.out.println("ok got here with 7as expected:");
+				return 0;
+			}*/
+			//000000000000001001000001001000000000001000000001001
+			//000000000000001001000001001000000000001000000001001
+			//System.out.println("7 bitsssss " + util.bin51(tord));
+			//check for flushes and straight flushes
+			long flsh = checkFlush(a,b,c,d,e,f,g,suits);
+			if(flsh != 0) return flsh;
+
+			//check for straights
+			long strs = checkStraight(a,b,c,d,e,f,g,ord);
+			if(strs != 0)
+				return strs;
+			//return 0;
+
+
+
+		} else if((bitCounter &= bitCounter - 1) == 0){
+			System.out.println("8 bits? " + util.bin51(tord));
+		} else {
+			System.out.println("how the hell did we even get here " + util.bin51(tord));
+		}
+
+
+
+
+		long flsh = checkFlush(a,b,c,d,e,f,g,suits);
+		if(flsh != 0) return flsh;
+
+		//check for straights
+		long strs = checkStraight(a,b,c,d,e,f,g,ord);
+		if(strs != 0)
+			return strs;
+
+		/*for(int i=0; i<straights.length; i++){
+			long l = straights[i];
+			if((l&ord) == l){
+				return 4;
+			}
+		}*/
+
+
+		//check pairs, trips, quads, fullhouse, two pair....
+
+
+		// and only include pairs
+		if (quads != 0) {
+			//return 0x1C000000;
+			//return 7;
+			return 15762598695796736L;
+		}
+		if (trips != 0) {
+			long twoTrips = trips & trips - 1;
+			if (twoTrips != 0 || onlyPairs != 0) {
+				//return 6;
+				return 13510798882111488L;
+			} else {
+				//return 3;
+				return 6755399441055744L;
+			}
+		}
+		if (onlyPairs != 0) {
+			long nextPair = onlyPairs & onlyPairs - 1;
+			if (nextPair != 0) {
+				long finalPair = nextPair & nextPair - 1;
+				//return nextPair | (finalPair != 0) ? finalPair :  ;
+				if(finalPair != 0){
+					return 4503599627370496L;
+				}
+				//return 2;
+				return 4503599627370496L;
+			} else {
+				//return 1;//<<(40);
+				return 2251799813685248L;
+			}
+		}
+		//return bitCounter;
+		return 0;
+	}
+
+	public static long eval7Working140Million(long a, long b, long c, long d, long e, long f, long g) {
 		//int aa  = getPwrTwo(a&cardMask), bb  = getPwrTwo(b&cardMask), cc  = getPwrTwo(c&cardMask), dd  = getPwrTwo(d&cardMask),
 		//		ee  = getPwrTwo(e&cardMask), ff  = getPwrTwo(f&cardMask), gg  = getPwrTwo(g&cardMask);
 		long ord = a | b | c | d | e | f | g; //orHand(hand);
 		long sum = a + b + c + d + e + f + g; //sumHand(hand);
 
-		long bitCounter = (ord & ord - 1);
+		//long bitCounter = (ord & ord - 1); //remove 1 bit
+		//bitCounter &= bitCounter - 1; //remove 2nd bit
 		long flushCards = 0;
 		boolean isFlush = false, isStrt = false;
 		long suits = sum & suitMask;
@@ -176,6 +446,10 @@ Straight flush - 5,6,7
 
 
 		//check for straights
+		/*long strs = checkStraight(a,b,c,d,e,f,g,ord);
+		if(strs != 0){
+			return strs;
+		}*/
 		long straightCards = 0;
 		long or = ord & cardMask;
 		long ors = (or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12));
@@ -240,85 +514,6 @@ Straight flush - 5,6,7
 			} else {
 				//return 1;//<<(40);
 				return 2251799813685248L;
-			}
-		}
-		//return bitCounter;
-		return 0;
-	}
-
-	public static int eval7Working(long a, long b, long c, long d, long e, long f, long g) {
-
-		long ord = a | b | c | d | e | f | g; //orHand(hand);
-		long sum = a + b + c + d + e + f + g; //sumHand(hand);
-
-		long bitCounter = (ord & ord - 1);
-		long flushCards = 0;
-		boolean isFlush = false, isStrt = false;
-		long suits = sum & suitMask;
-
-		for (int i = 0; i < fullSuitMasks.length; i++) {
-			//long masked = fullSuitMasks[i] & suits;
-			long fm = fullSuitMasks[i];
-			if (/* masked != 0 && */ (fm & suits) > almostFlush[i]) {
-				if ((a & fm) != 0) flushCards |= a;
-				if ((b & fm) != 0) flushCards |= b;
-				if ((c & fm) != 0) flushCards |= c;
-				if ((d & fm) != 0) flushCards |= d;
-				if ((e & fm) != 0) flushCards |= e;
-				if ((f & fm) != 0) flushCards |= f;
-				if ((g & fm) != 0) flushCards |= g;
-				flushCards &= cardMask;
-				if ((flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12) != 0
-						|| ((flushCards & 68719477321L) == 68719477321L)) { //gotta check the stupid A,2,3,4,5 straight
-					return 8; //return straight flush
-				}
-				return 5; //return flush
-			}
-		}
-
-		long straightCards = 0;
-		long or = ord & cardMask;
-		if ((or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12)) != 0
-				|| ((or & 68719477321L) == 68719477321L)) {
-			return 4;
-		}
-		/*for(int i=0; i<straights.length; i++){
-			long l = straights[i];
-			if((l&ord) == l){
-				return 4;
-			}
-		}*/
-
-		long pairs = (sum & pairMask) >> 1;
-		long trips = sum & pairs;
-		long onlyPairs = pairs ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
-		// and only include pairs
-		long quads = sum & quadMask;
-
-		if (quads != 0) {
-			//return 0x1C000000;
-			return 7;
-		}
-		if (trips != 0) {
-			long twoTrips = trips & trips - 1;
-			if (twoTrips != 0 || onlyPairs != 0) {
-				return 6;
-			} else {
-				return 3;
-			}
-
-		}
-		if (onlyPairs != 0) {
-			long nextPair = onlyPairs & onlyPairs - 1;
-			if (nextPair != 0) {
-				long finalPair = nextPair & nextPair - 1;
-				//return nextPair | (finalPair != 0) ? finalPair :  ;
-				if(finalPair != 0){
-
-				}
-				return 2;
-			} else {
-				return 1;//<<(40);
 			}
 		}
 		//return bitCounter;
@@ -665,33 +860,33 @@ Straight flush - 5,6,7
 		/*
 		 * for cards we can use 3 bits each 001 - this means one of this card 010 - two
 		 * of this card (like we have a pair) 011 - three of a kind 100 - quads
-		 * 
+		 *
 		 * all cards get 3 bits so 13 cards * 3 bits = 39 bits. need to use a long,
 		 * 64bit 39 for cards, another 12 (3*4 suits) for suits so 51 bits
-		 * 
+		 *
 		 * that way if we had a pair of twos, when we add it will just 001 -> 010 and we
 		 * can check every group of 3 cards to tell which ones there were multiples of
-		 * 
-		 * 
+		 *
+		 *
 		 * all cards look like this 001001001001001001001001001001001001001001001001001
 		 * S H C D A K Q J 10 9 8 7 6 5 4 3 2
-		 * 
+		 *
 		 * two of hearts is 000001000000000000000000000000000000000000000000001 (decimal
 		 * 35184372088833) two of spades is
 		 * 001000000000000000000000000000000000000000000000001 281474976710657
-		 * 
+		 *
 		 * //7 of hearts ? 000000000001000000000000000000000001000000000000000 ; That
 		 * way if you have a few 2's like a 2 of hearts, 2 of spades, and 2 of clubs..
 		 * when you add them together it will be 001 (1 two) 010 (2 twos) 011 (3 twos)
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
+		 *
+		 *
 		 * mmmm mnmmmm
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
 		 */
 
 		return -999L;

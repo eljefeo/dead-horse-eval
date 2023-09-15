@@ -8,6 +8,16 @@ public class util7 extends util {
     final static int[] handFrequency7 = {
             23294460, 58627800, 31433400, 6461620, 6180020, 4047644, 3473184, 224848, 41584
     };
+    final static long highCardRet = 0;
+    final static long pairRet = 2251799813685248L;
+    final static long twoPairRet = 4503599627370496L;
+    final static long tripsRet = 6755399441055744L;
+    final static long straightRet = 9007199254740992L;
+    final static long flushRet = 11258999068426240L;
+    final static long fullhouseRet = 13510798882111488L;
+    final static long quadsRet = 15762598695796736L;
+    final static long straightFlushRet = 18014398509481984L;
+
 
     // cards are all 2 through Ace, diamonds clubs then hearts then spades (we may
     // change the order, Im already mixing up orders everywhere of cards and suits)
@@ -129,6 +139,8 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
     static final long[] straights = new long[]{78534148096L, 9816768512L, 1227096064L, 153387008L, 19173376L, 2396672L, 299584L, 37448L, 4681L, 68719477321L};
     // static final long[] all52Cards2 = makeAll52Cards7Decimal();
 
+
+
     // These are the bits and what they mean, everything gets 3 bits.
     // Starting from the rightmost bits, 222 means the 2 cards go there
     // if we are adding up how many of each of these cards there are, like if
@@ -146,7 +158,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
 
 
     public static void testEveryHand7n() throws Exception {
-
+        System.out.println("testing every hand 7 cards");
         int totalHands = 133784560;
 
         long[] allCards = EvalTestPlayground.createAllSevenCardHands();
@@ -253,7 +265,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
                 //System.out.println("resi: " + resi + " :: " + util.bin51(res) + " : " + res);
                 //System.out.println("Cards: " + allCards[i*5] + ", " + allCards[i*5+1] + ", " + allCards[i*5+2] + ", " + allCards[i*5+3] + ", " + allCards[i*5+4]);
                 //res >>= 26;
-                if(counter > 10) return null;
+                //if(counter > 10) return null;
                 if (resi == whatKind) {
                     System.out.println("Finally got " + handNames[resi] + " after " + counter + " hands");
                     return new long[]{allCards[i*7], allCards[i*7+1], allCards[i*7+2], allCards[i*7+3], allCards[i*7+4], allCards[i*7+5], allCards[i*7+6]};
