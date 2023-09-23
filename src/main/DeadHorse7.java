@@ -190,7 +190,7 @@ Straight flush - 5,6,7
 		return 0;
 	}
 
-	public static long eval7(long a, long b, long c, long d, long e, long f, long g) {
+	public static long eval7Working140Million(long a, long b, long c, long d, long e, long f, long g) {
 		//int aa  = getPwrTwo(a&cardMask), bb  = getPwrTwo(b&cardMask), cc  = getPwrTwo(c&cardMask), dd  = getPwrTwo(d&cardMask),
 		//		ee  = getPwrTwo(e&cardMask), ff  = getPwrTwo(f&cardMask), gg  = getPwrTwo(g&cardMask);
 		long ord = a | b | c | d | e | f | g; //orHand(hand);
@@ -231,7 +231,19 @@ Straight flush - 5,6,7
 			if((multPairs =  multPairs - 1) != 0){ //this actually means there were 3 pairs (only need top 2 pairs)
 				return 4503599627370496L | (multPairs<<1);//return 2pair and oring the top 2 pair, still need to add the highest card as a kicker though...
 			}
-		} else if((bitCounter &= bitCounter - 1) == 0 ){ //this is 5 bits - 2pair, trips, straight, flush, straight flush... damn ...
+		}
+		if((bitCounter &= bitCounter - 1) == 0 ){ //this is 5 bits - 2pair, trips, straight, flush, straight flush... damn ...
+
+
+
+			//check for flushes and straight flushes
+			long flsh = checkFlush(a,b,c,d,e,f,g,suits);
+			if(flsh != 0) return flsh;
+
+			//check for straights
+			long strs = checkStraight(a,b,c,d,e,f,g,ord);
+			if(strs != 0) return strs;
+
 
 			if (onlyPairs != 0) { //2pair check first, since if we have 5 bits, and there is a pair, then that means the last card is another unique card
 				// and we would actually have more than 5 bits if the hand was a flush, straight, or straight flush.
@@ -247,16 +259,6 @@ Straight flush - 5,6,7
 					return 4503599627370496L | onlyPairs;
 				}
 			}
-
-			//check for flushes and straight flushes
-			long flsh = checkFlush(a,b,c,d,e,f,g,suits);
-			if(flsh != 0) return flsh;
-
-			//check for straights
-			long strs = checkStraight(a,b,c,d,e,f,g,ord);
-			if(strs != 0)
-				return strs;
-
 			if (trips != 0) {
 				long twoTrips = trips & trips - 1;
 				if (twoTrips != 0 || onlyPairs != 0) {
@@ -377,7 +379,8 @@ Straight flush - 5,6,7
 		return 0;
 	}
 
-	public static long eval7Working140Million(long a, long b, long c, long d, long e, long f, long g) {
+	//public static long eval7Working140Million(long a, long b, long c, long d, long e, long f, long g) {
+	public static long eval7(long a, long b, long c, long d, long e, long f, long g) {
 		//int aa  = getPwrTwo(a&cardMask), bb  = getPwrTwo(b&cardMask), cc  = getPwrTwo(c&cardMask), dd  = getPwrTwo(d&cardMask),
 		//		ee  = getPwrTwo(e&cardMask), ff  = getPwrTwo(f&cardMask), gg  = getPwrTwo(g&cardMask);
 		long ord = a | b | c | d | e | f | g; //orHand(hand);
@@ -407,13 +410,8 @@ Straight flush - 5,6,7
 					//crappy extra check to get rid of extra straight cards:
 					long u=ff;
 					if((u &= u-1) != 0){
-						//ff = u;
 						long uu=u;
-						if((uu &= uu-1) != 0) {
-							ff = uu;
-						} else {
-							ff = u;
-						}
+						ff = ((uu &= uu-1) != 0) ? uu : u;
 					}
 
 
@@ -431,13 +429,8 @@ Straight flush - 5,6,7
 
 				long u=flushCards;
 				if((u &= u-1) != 0){
-
 					long uu=u;
-					if((uu &= uu-1) != 0) {
-						flushCards = uu;
-					} else {
-						flushCards = u;
-					}
+					flushCards = ((uu &= uu-1) != 0) ? uu : u;
 				}
 				//return 5; //return flush
 				return 11258999068426240L | flushCards;
@@ -450,7 +443,7 @@ Straight flush - 5,6,7
 		if(strs != 0){
 			return strs;
 		}*/
-		long straightCards = 0;
+
 		long or = ord & cardMask;
 		long ors = (or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12));
 		if (ors != 0) {
@@ -479,20 +472,20 @@ Straight flush - 5,6,7
 
 		//check pairs, trips, quads, fullhouse, two pair....
 
-		long pairs = (sum & pairMask) >> 1;
-		long trips = sum & pairs;
-		long onlyPairs = pairs ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
+		long pairsAndTrips = (sum & pairMask) >> 1;
+		long trips = sum & pairsAndTrips;
+		long pairs = pairsAndTrips ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
 		// and only include pairs
 		long quads = sum & quadMask;
 
 		if (quads != 0) {
 			//return 0x1C000000;
 			//return 7;
-			return 15762598695796736L;
+			return 15762598695796736L | (quads << 1);
 		}
 		if (trips != 0) {
 			long twoTrips = trips & trips - 1;
-			if (twoTrips != 0 || onlyPairs != 0) {
+			if (twoTrips != 0 || pairs != 0) {
 				//return 6;
 				return 13510798882111488L;
 			} else {
@@ -501,8 +494,9 @@ Straight flush - 5,6,7
 			}
 
 		}
-		if (onlyPairs != 0) {
-			long nextPair = onlyPairs & onlyPairs - 1;
+		if (pairs != 0) {
+			long nextPair = pairs & pairs - 1;
+
 			if (nextPair != 0) {
 				long finalPair = nextPair & nextPair - 1;
 				//return nextPair | (finalPair != 0) ? finalPair :  ;

@@ -183,16 +183,16 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         //this is here to count how many of each type of hand come up.
         //it will re-eval each hand so we do not corrupt the timing with this extra process
         //this is here to show the accuracy of making/testing each hand possible
-        //Since there is a known number of each type of 7 card hand with 52 cards
-        //High Card 		23294460
-        //Pair 			58627800
-        //Two Pair 		31433400
-        //Trips 			6461620
-        //Straight 		6180020
-        //Flush 			4047644
-        //Full House 		3473184
-        //Quads 			224848
-        //Straight Flush	41584
+        //Since there is a known number of each type of 7 card hand with 52 cards (52 choose 7)
+        //High Card 		23,294,460
+        //Pair 			    58,627,800
+        //Two Pair 		    31,433,400
+        //Trips 			6,461,620
+        //Straight 		    6,180,020
+        //Flush 			4,047,644
+        //Full House 		3,473,184
+        //Quads 			224,848
+        //Straight Flush	41,584
         //Total			133,784,560
 
         //this is to go through and compare the number of each type of hand we created
