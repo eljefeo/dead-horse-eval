@@ -91,6 +91,27 @@ public class DeadHorse7 {
 		return 0;
 	}
 
+	public static int eval7Checke2() throws Exception {
+		String[] someCardCodes = new String[] { "8C", "8S", "6S", "7C", "8D", "8H", "4D" };
+		String[] someCardCodes2 = new String[] { "4D", "5C", "6C", "7C", "KC", "4C", "3C" };
+		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
+		long[] handm = util.maskCards(hand, cardMask);
+		for(int i=0; i<hand.length; i++){
+			long c = hand[i];
+
+
+			System.out.println("card " + i + " : " + util.bin51(c) + " : " + someCardCodes[i]);
+
+		}
+
+		long res = eval7(hand);
+		int resi = (int) (res >>> 51);
+		System.out.println("RES : " + res + " : " + resi + " : " + util.bin51(resi) + " : " + DeadHorse7.getPwrTwo(resi) );
+		System.out.println("binn: " + util.bin51(res));
+		System.out.println(" : " + util7.handNames[resi]);
+		System.out.println("Checke 2");
+		return 0;
+	}
 /*
 number of bits possible in each type of hand
 High card - 7
@@ -190,7 +211,7 @@ Straight flush - 5,6,7
 		return 0;
 	}
 
-	public static long eval7Working140Million(long a, long b, long c, long d, long e, long f, long g) {
+	public static long eval7beta(long a, long b, long c, long d, long e, long f, long g) {
 		//int aa  = getPwrTwo(a&cardMask), bb  = getPwrTwo(b&cardMask), cc  = getPwrTwo(c&cardMask), dd  = getPwrTwo(d&cardMask),
 		//		ee  = getPwrTwo(e&cardMask), ff  = getPwrTwo(f&cardMask), gg  = getPwrTwo(g&cardMask);
 		long ord = a | b | c | d | e | f | g; //orHand(hand);
@@ -385,18 +406,11 @@ Straight flush - 5,6,7
 		//		ee  = getPwrTwo(e&cardMask), ff  = getPwrTwo(f&cardMask), gg  = getPwrTwo(g&cardMask);
 		long ord = a | b | c | d | e | f | g; //orHand(hand);
 		long sum = a + b + c + d + e + f + g; //sumHand(hand);
-
-		//long bitCounter = (ord & ord - 1); //remove 1 bit
-		//bitCounter &= bitCounter - 1; //remove 2nd bit
-		long flushCards = 0;
-		boolean isFlush = false, isStrt = false;
-		long suits = sum & suitMask;
-
+		long suits = sum & suitMask, flushCards = 0;
 		//check for flushes and straight flushes
 		for (int i = 0; i < fullSuitMasks.length; i++) {
-			//long masked = fullSuitMasks[i] & suits;
 			long fm = fullSuitMasks[i];
-			if (/* masked != 0 && */ (fm & suits) > almostFlush[i]) {
+			if ((fm & suits) > almostFlush[i]) {
 				if ((a & fm) != 0) flushCards |= a;
 				if ((b & fm) != 0) flushCards |= b;
 				if ((c & fm) != 0) flushCards |= c;
@@ -405,117 +419,87 @@ Straight flush - 5,6,7
 				if ((f & fm) != 0) flushCards |= f;
 				if ((g & fm) != 0) flushCards |= g;
 				flushCards &= cardMask;
-				long ff = (flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12);
-				if (ff != 0 ) { //gotta check the stupid A,2,3,4,5 straight
-					//crappy extra check to get rid of extra straight cards:
-					long u=ff;
+				long straightFlushCards = (flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12);
+				if (straightFlushCards != 0 ) {//crappy extra check to get rid of extra straight cards:
+					long u=straightFlushCards;
 					if((u &= u-1) != 0){
 						long uu=u;
-						ff = ((uu &= uu-1) != 0) ? uu : u;
+						straightFlushCards = (((uu &= uu-1) != 0) ? uu : u) /*<< 12*/;
 					}
-
-
-					ff <<= 12;
-
-					//return 8; //return straight flush
-					//System.out.println("binnn : " + util.bin51(flushCards) + " : " + util.bin51(ff));
-					//System.out.println("::33 " + util.bin51(18014398509481984L | ff) + " : " + (util.bin51(((18014398509481984L | ff) >>> 51))) + " :: " + ((18014398509481984L | ff) >>> 51));
-					//return ((8 << 51) | flushCards);
-					return (18014398509481984L | ff);
-				} else if((flushCards & 68719477321L) == 68719477321L){
-
-					return (18014398509481984L | 512); //512 is just the 5 high straight flush
+					return (18014398509481984L | straightFlushCards);//returns the lowest card in the straight (for 5,6,7,8,9 it will be 5)
+				} else if((flushCards & 68719477321L) == 68719477321L){//gotta check the stupid A,2,3,4,5 straight
+					return (18014398509481984L /*| 512*/); //if we dont or anything that means lowest possible strt. a2345
 				}
 
-				long u=flushCards;
+				long u = flushCards;
 				if((u &= u-1) != 0){
 					long uu=u;
 					flushCards = ((uu &= uu-1) != 0) ? uu : u;
 				}
-				//return 5; //return flush
 				return 11258999068426240L | flushCards;
 			}
 		}
-
-
-		//check for straights
-		/*long strs = checkStraight(a,b,c,d,e,f,g,ord);
-		if(strs != 0){
-			return strs;
-		}*/
 
 		long or = ord & cardMask;
 		long ors = (or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12));
 		if (ors != 0) {
 			long u = ors;
 			if((u &= u-1) != 0){
-
 				long uu=u;
-				if((uu &= uu-1) != 0) {
-					ors = uu;
-				} else {
-					ors = u;
-				}
+				ors = ((uu &= uu-1) != 0) ? uu : u;
 			}
 			return 9007199254740992L | ors;
-			//return 4;
 		} else if ((or & 68719477321L) == 68719477321L){
 			return 9007199254740992L | 512;
 		}
-		/*for(int i=0; i<straights.length; i++){
-			long l = straights[i];
-			if((l&ord) == l){
-				return 4;
-			}
-		}*/
-
 
 		//check pairs, trips, quads, fullhouse, two pair....
+		long quads = (sum & quadMask) >> 2;
+		if (quads != 0) {
+			long kickers = or ^ quads;
+			kickers &= kickers - 1;
+			return 15762598695796736L | (quads << 1) | (kickers & kickers - 1);
+		}
 
 		long pairsAndTrips = (sum & pairMask) >> 1;
 		long trips = sum & pairsAndTrips;
-		long pairs = pairsAndTrips ^ trips; // since pairs includes pairs and also trips, this will get rid of trips
+		long pairs = trips ^ pairsAndTrips; // since pairs includes pairs and also trips, this will get rid of trips
 		// and only include pairs
-		long quads = sum & quadMask;
-
-		if (quads != 0) {
-			//return 0x1C000000;
-			//return 7;
-			return 15762598695796736L | (quads << 1);
-		}
-
 		if (trips != 0) {
 			long twoTrips = trips & trips - 1;
 			if (twoTrips != 0) {
-				//return 6;
-				return 13510798882111488L | ((trips << 1) | twoTrips^trips);
+				return 13510798882111488L | ((twoTrips << 1) | trips^twoTrips);//fullhouse
 			} else if (pairs != 0){
 				long nextPair = pairs & pairs - 1;
-				return 13510798882111488L | ((trips << 1) | (nextPair != 0 ? nextPair : pairs) );
-
+				return 13510798882111488L | ((trips << 1) | (nextPair != 0 ? nextPair : pairs) );//fullhouse
 			} else {
-				//return 3;
-				return 6755399441055744L | trips;
+				long kickers = or ^ trips;
+				kickers &= kickers - 1;
+				return 6755399441055744L | trips << 1 | (kickers & kickers - 1);
 			}
-
 		}
 		if (pairs != 0) {
 			long nextPair = pairs & pairs - 1;
-
 			if (nextPair != 0) {
 				long finalPair = nextPair & nextPair - 1;
-				//return nextPair | (finalPair != 0) ? finalPair :  ;
+
 				if(finalPair != 0){
-					return 4503599627370496L | nextPair;
+					long kickers = or ^ nextPair;
+					kickers &= kickers -1;
+					return 4503599627370496L | nextPair << 1 | (kickers & kickers - 1) ;
+				} else {
+					long kickers = or ^ pairs;
+					kickers &= kickers -1;
+					return 4503599627370496L | pairs << 1 | (kickers & kickers - 1);
 				}
-				//return 2;
-				return 4503599627370496L | pairs;
+				//return 4503599627370496L | ((finalPair != 0) ? nextPair : pairs); //this gives us the pair, but need the other 3 kickers
 			} else {
-				//return 1;//<<(40);
-				return 2251799813685248L | pairs;
+				long kickers = or ^ pairs;
+				kickers &= kickers -1;
+				kickers &= kickers -1;
+				return 2251799813685248L |  pairs << 1 | (kickers & kickers - 1);
 			}
 		}
-		//return bitCounter;
 		return 0;
 	}
 
