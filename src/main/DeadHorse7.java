@@ -92,13 +92,12 @@ public class DeadHorse7 {
 	}
 
 	public static int eval7Checke2() throws Exception {
-		String[] someCardCodes = new String[] { "8S", "JS", "6S", "7C", "3D", "7S", "4S" };
+		String[] someCardCodes = new String[] { "AS", "5S", "6S", "2S", "KS", "3S", "4S" };
 		String[] someCardCodes2 = new String[] { "4D", "5C", "6C", "7C", "KC", "4C", "3C" };
 		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
 		long[] handm = util.maskCards(hand, cardMask);
 		for(int i=0; i<hand.length; i++){
 			long c = hand[i];
-
 
 			System.out.println("card " + i + " : " + util.bin51(c) + " : " + someCardCodes[i]);
 
@@ -410,31 +409,40 @@ Straight flush - 5,6,7
 		for (int i = 0; i < fullSuitMasks.length; i++) {
 			long fm = fullSuitMasks[i];
 			if ((fm & suits) > almostFlush[i]) {
-				if ((a & fm) != 0) flushCards |= a;
-				if ((b & fm) != 0) flushCards |= b;
-				if ((c & fm) != 0) flushCards |= c;
-				if ((d & fm) != 0) flushCards |= d;
-				if ((e & fm) != 0) flushCards |= e;
-				if ((f & fm) != 0) flushCards |= f;
-				if ((g & fm) != 0) flushCards |= g;
+				int flshCounter = 0;
+				if ((a & fm) != 0){flushCards |= a;flshCounter++;}
+				if ((b & fm) != 0){flushCards |= b;flshCounter++;}
+				if ((c & fm) != 0){flushCards |= c;flshCounter++;}
+				if ((d & fm) != 0){flushCards |= d;flshCounter++;}
+				if ((e & fm) != 0){flushCards |= e;flshCounter++;}
+				if ((f & fm) != 0){flushCards |= f;flshCounter++;}
+				if ((g & fm) != 0){flushCards |= g;flshCounter++;}
 				flushCards &= cardMask;
 				long straightFlushCards = (flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12);
 				if (straightFlushCards != 0 ) {//crappy extra check to get rid of extra straight cards:
 					long u=straightFlushCards;
 					if((u &= u-1) != 0){
 						long uu=u;
-						straightFlushCards = (((uu &= uu-1) != 0) ? uu : u) /*<< 12*/;
+						straightFlushCards = (((uu &= uu-1) != 0) ? uu : u) ;/*<< 12;*/
 					}
+					/*if(flshCounter == 7){
+						straightFlushCards &= straightFlushCards - 1;
+						straightFlushCards &= straightFlushCards - 1;
+					}
+					if(flshCounter == 6){
+						straightFlushCards &= straightFlushCards - 1;
+					}*/
 					return (18014398509481984L | straightFlushCards);//returns the lowest card in the straight (for 5,6,7,8,9 it will be 5)
 				} else if((flushCards & 68719477321L) == 68719477321L){//gotta check the stupid A,2,3,4,5 straight
 					return (18014398509481984L /*| 512*/); //if we dont or anything that means lowest possible strt. a2345
 				}
 
-				//TODO need to return correctly for flush, I guess all 5 flush cards
-				long u = flushCards;
-				if((u &= u-1) != 0){
-					long uu=u;
-					flushCards = ((uu &= uu-1) != 0) ? uu : u;
+				if(flshCounter == 7){
+					flushCards &= flushCards - 1;
+					flushCards &= flushCards - 1;
+				}
+				if(flshCounter == 6){
+					flushCards &= flushCards - 1;
 				}
 				return 11258999068426240L | flushCards;
 			}
