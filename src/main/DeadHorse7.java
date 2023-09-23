@@ -483,14 +483,19 @@ Straight flush - 5,6,7
 			//return 7;
 			return 15762598695796736L | (quads << 1);
 		}
+
 		if (trips != 0) {
 			long twoTrips = trips & trips - 1;
-			if (twoTrips != 0 || pairs != 0) {
+			if (twoTrips != 0) {
 				//return 6;
-				return 13510798882111488L;
+				return 13510798882111488L | ((trips << 1) | twoTrips^trips);
+			} else if (pairs != 0){
+				long nextPair = pairs & pairs - 1;
+				return 13510798882111488L | ((trips << 1) | (nextPair != 0 ? nextPair : pairs) );
+
 			} else {
 				//return 3;
-				return 6755399441055744L;
+				return 6755399441055744L | trips;
 			}
 
 		}
@@ -501,13 +506,13 @@ Straight flush - 5,6,7
 				long finalPair = nextPair & nextPair - 1;
 				//return nextPair | (finalPair != 0) ? finalPair :  ;
 				if(finalPair != 0){
-
+					return 4503599627370496L | nextPair;
 				}
 				//return 2;
-				return 4503599627370496L;
+				return 4503599627370496L | pairs;
 			} else {
 				//return 1;//<<(40);
-				return 2251799813685248L;
+				return 2251799813685248L | pairs;
 			}
 		}
 		//return bitCounter;
