@@ -92,7 +92,7 @@ public class DeadHorse7 {
 	}
 
 	public static int eval7Checke2() throws Exception {
-		String[] someCardCodes = new String[] { "8C", "8S", "6S", "7C", "8D", "8H", "4D" };
+		String[] someCardCodes = new String[] { "8S", "JS", "6S", "7C", "3D", "7S", "4S" };
 		String[] someCardCodes2 = new String[] { "4D", "5C", "6C", "7C", "KC", "4C", "3C" };
 		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
 		long[] handm = util.maskCards(hand, cardMask);
@@ -402,11 +402,10 @@ Straight flush - 5,6,7
 
 	//public static long eval7Working140Million(long a, long b, long c, long d, long e, long f, long g) {
 	public static long eval7(long a, long b, long c, long d, long e, long f, long g) {
-		//int aa  = getPwrTwo(a&cardMask), bb  = getPwrTwo(b&cardMask), cc  = getPwrTwo(c&cardMask), dd  = getPwrTwo(d&cardMask),
-		//		ee  = getPwrTwo(e&cardMask), ff  = getPwrTwo(f&cardMask), gg  = getPwrTwo(g&cardMask);
 		long ord = a | b | c | d | e | f | g; //orHand(hand);
 		long sum = a + b + c + d + e + f + g; //sumHand(hand);
-		long suits = sum & suitMask, flushCards = 0;
+		long suits = sum & suitMask;
+		long flushCards = 0;
 		//check for flushes and straight flushes
 		for (int i = 0; i < fullSuitMasks.length; i++) {
 			long fm = fullSuitMasks[i];
@@ -431,6 +430,7 @@ Straight flush - 5,6,7
 					return (18014398509481984L /*| 512*/); //if we dont or anything that means lowest possible strt. a2345
 				}
 
+				//TODO need to return correctly for flush, I guess all 5 flush cards
 				long u = flushCards;
 				if((u &= u-1) != 0){
 					long uu=u;
@@ -484,14 +484,18 @@ Straight flush - 5,6,7
 				long finalPair = nextPair & nextPair - 1;
 
 				if(finalPair != 0){
+					pairs = nextPair;
+				}
+
+				/*if(finalPair != 0){
 					long kickers = or ^ nextPair;
 					kickers &= kickers -1;
 					return 4503599627370496L | nextPair << 1 | (kickers & kickers - 1) ;
-				} else {
+				} else {*/
 					long kickers = or ^ pairs;
 					kickers &= kickers -1;
 					return 4503599627370496L | pairs << 1 | (kickers & kickers - 1);
-				}
+				//}
 				//return 4503599627370496L | ((finalPair != 0) ? nextPair : pairs); //this gives us the pair, but need the other 3 kickers
 			} else {
 				long kickers = or ^ pairs;
