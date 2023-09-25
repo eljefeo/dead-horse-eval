@@ -92,7 +92,7 @@ public class DeadHorse7 {
 	}
 
 	public static int eval7Checke2() throws Exception {
-		String[] someCardCodes = new String[] { "AS", "5S", "6S", "2S", "KS", "3S", "4S" };
+		String[] someCardCodes = new String[] { "AS", "5S", "QD", "9C", "KC", "2D", "3S" };
 		String[] someCardCodes2 = new String[] { "4D", "5C", "6C", "7C", "KC", "4C", "3C" };
 		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
 		long[] handm = util.maskCards(hand, cardMask);
@@ -512,7 +512,8 @@ Straight flush - 5,6,7
 				return 2251799813685248L |  pairs << 1 | (kickers & kickers - 1);
 			}
 		}
-		return 0;
+		or &= or - 1;
+		return or &= or - 1;
 	}
 
 	public static long testeval7() throws Exception {
