@@ -12,6 +12,30 @@ public class HandMaker {
 			16386, 16388, 16392, 16400, 16416, 16448, 16512, 16640, 16896, 17408, 18432, 20480, 8193, 8194, 8196, 8200,
 			8208, 8224, 8256, 8320, 8448, 8704, 9216, 10240, 12288 };
 
+	Random rand = new Random();
+
+	private static List<Integer[]> allHighCardHands = new ArrayList<>();
+	private static List<Integer[]> allPairHands = new ArrayList<>();
+	private static List<Integer[]> allTwoPairHands = new ArrayList<>();
+	private static List<Integer[]> allTripHands = new ArrayList<>();
+	private static List<Integer[]> allStraightHands = new ArrayList<>();
+	private static List<Integer[]> allFlushHands = new ArrayList<>();
+	private static List<Integer[]> allFullHouseHands = new ArrayList<>();
+	private static List<Integer[]> allQuadHands = new ArrayList<>();
+	private static List<Integer[]> allRoyalFlushHands = new ArrayList<>();
+	private static List<List<Integer[]>> allHands = new ArrayList<>();
+	static {
+		allHands.add(allHighCardHands);
+		allHands.add(allPairHands);
+		allHands.add(allTwoPairHands);
+		allHands.add(allTripHands);
+		allHands.add(allStraightHands);
+		allHands.add(allFlushHands);
+		allHands.add(allFullHouseHands);
+		allHands.add(allQuadHands);
+		allHands.add(allRoyalFlushHands);
+	}
+
 	/*public static int[] getRandom5CardHand() { // if used a lot this can be optimized, its likely slow with the toList
 												// and boxed etc..
 
@@ -576,4 +600,26 @@ public class HandMaker {
 				}
 	}
 
+	public static void prepAllHands() {
+
+		int[] allFiveCardHands = EvalTestPlayground.createAllFiveCardHands();
+		for(int i=0;i<allFiveCardHands.length;i+=5){
+			int res = DeadHorse.eval5(allFiveCardHands[i],allFiveCardHands[i+1],
+					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4])>>26;
+			allHands.get(res).add(new Integer[] {allFiveCardHands[i],allFiveCardHands[i+1],
+					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4]});
+		}
+
+
+	}
+
+	public static List<List<Integer[]>> getAllHands(){
+		return allHands;
+	}
+
+	public Integer[] getRandomHighCardHand(){
+		List<Integer[]> highCardHands = allHands.get(0);
+		int ni = rand.nextInt(highCardHands.size());
+		return highCardHands.get(ni);
+	}
 }

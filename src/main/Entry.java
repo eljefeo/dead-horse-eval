@@ -3,6 +3,8 @@ package main;
 public class Entry {
 
 	public static void main(String[] args) throws java.lang.Exception {
+
+		initializeHandMaker();
 		// EvalTestPlayground.showRandomizerDiagnostics(1);
 		// EvalTestPlayground.randomizerSpeedTest5CardDiagnostics(50);
 		// EvalTestPlayground.howLongUntilYouGetThisKindOfHands(2);
@@ -70,5 +72,9 @@ PASS - All 41584 Straight Flush hands are accounted for 0.03108280955590092%
 Total Count : 133784560
 		 */
 
+	}
+
+	private static void initializeHandMaker(){
+		HandMaker.prepAllHands();
 	}
 }
