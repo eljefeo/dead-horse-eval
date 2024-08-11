@@ -27,7 +27,7 @@ public class Entry {
 		//util7.getRandomThisType7CardHand(4);
 
 		 //EvalTestPlayground.testEveryHand5();
-		//EvalTestPlayground.testEval5AndNotes();
+		 //EvalTestPlayground.testEval5AndNotes();
 
 		 //EvalTestPlayground.testStatisticsManyHand5(10000000);
 		//DeadHorse7.findDuplicates();
@@ -35,8 +35,32 @@ public class Entry {
 		//DeadHorse7.findStraights();
 		//DeadHorse7.testeval7();
 		//DeadHorse7.eval7Checke();
-		DeadHorse7.eval7Checke2();
-		util7.testEveryHand7n();
+
+		Integer[] hch = HandMaker.getRandomHighCardHand();
+		//System.out.println(hch[0] + " = " + util5.getCardName5(hch[0]), " + hch[1] + ", " + hch[2] + ", " + hch[3] + ", " + hch[4]);
+		for (Integer integer : hch) {
+			System.out.print(integer + " = " + util5.getCardName5(integer) + ", ");
+		}
+		System.out.println();
+		int resHighCard = util5.humanEncodeEval(util5.getCardName5(hch[0]), util5.getCardName5(hch[1]), util5.getCardName5(hch[2]), util5.getCardName5(hch[3]), util5.getCardName5(hch[4]));
+		String handDescription = util5.decode5CardHand(resHighCard);
+		System.out.println("high card description: " + handDescription + " :: " + "int res : " + resHighCard);
+		//00000100000000000000000000101110
+		//00000100000000010001010000000010
+
+		Integer[] pair = HandMaker.getRandomHPairHand();
+		//System.out.println(hch[0] + " = " + util5.getCardName5(hch[0]), " + hch[1] + ", " + hch[2] + ", " + hch[3] + ", " + hch[4]);
+        for (Integer integer : pair) {
+            System.out.print(integer + " = " + util5.getCardName5(integer) + ", ");
+        }
+		System.out.println("\n\n");
+		int pairRes = util5.humanEncodeEval(util5.getCardName5(pair[0]), util5.getCardName5(pair[1]), util5.getCardName5(pair[2]), util5.getCardName5(pair[3]), util5.getCardName5(pair[4]));
+		String handDescription1 = util5.decode5CardHand(pairRes);
+		System.out.println("pair description: " + handDescription1 + " :: " + "int res : " + pairRes);
+
+
+		//DeadHorse7.eval7Checke2();
+		//util7.testEveryHand7n();
 		//util5.humanEncodeEval("2S", "8S", "6S", "5S", "3S" );
 
 

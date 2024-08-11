@@ -31,7 +31,7 @@ public class util5 extends util {
     static int leaveKickerBitMask = 8191; //0000000000000000001111111111111
 
 
-    public static void makeNewnums() {
+    public static void makeNewnums() { //I forget what this does
         for (int i : allCardNums) {
             int ne = 0;
             int suit = i & 122880;
@@ -129,8 +129,13 @@ public class util5 extends util {
         int e=((ec=='A'?1<<12:ec=='K'?1<<11:ec=='Q'?1<<10:ec=='J'?1<<9:ec=='T'?1<<8:1<<(ec-50))
                 |((ec=es.charAt(1))=='S'?0x10000:ec=='H'?0x8000:ec=='C'?0x4000:0x2000));
 
+        System.out.println("humanEncodeEval1: " + a + ", " + b + ", " + c + ", " + d + ", " + e);
+        System.out.println("humanEncodeEval2: " + util.bin32(a) + ", " + util.bin32(b) + ", " + util.bin32(c) + ", " + util.bin32(d) + ", " + util.bin32(e));
 
-        return DeadHorse.eval5WithNotes(a, b, c, d, e);
+        //return DeadHorse.eval5WithNotes(a, b, c, d, e);
+        int res = DeadHorse.eval5(a, b, c, d, e);
+        System.out.println("humanEncodeEval3 : " + res + " : " + util.bin32(res));
+        return res;
     }
 
 
@@ -142,6 +147,7 @@ public class util5 extends util {
 
     public static String decode5CardHand(int hand){
         int handType = hand >> rightShiftForHandType;
+        System.out.println("decode 5card hand type int: " + handType);
         int importantBits = (hand & leaveImportantBitMask) >> rightShiftForimportantCards;
         int kickerBits = hand & leaveKickerBitMask;
         System.out.println("This hand: " + hand + " :: " + util.bin32(hand) + " :: " + handType + " : " + handNames[handType]);

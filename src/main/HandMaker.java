@@ -12,7 +12,7 @@ public class HandMaker {
 			16386, 16388, 16392, 16400, 16416, 16448, 16512, 16640, 16896, 17408, 18432, 20480, 8193, 8194, 8196, 8200,
 			8208, 8224, 8256, 8320, 8448, 8704, 9216, 10240, 12288 };
 
-	Random rand = new Random();
+	static Random rand = new Random();
 
 	private static List<Integer[]> allHighCardHands = new ArrayList<>();
 	private static List<Integer[]> allPairHands = new ArrayList<>();
@@ -617,9 +617,17 @@ public class HandMaker {
 		return allHands;
 	}
 
-	public Integer[] getRandomHighCardHand(){
-		List<Integer[]> highCardHands = allHands.get(0);
+	public static Integer[] getRandomHighCardHand(){
+		return getRandomCertainTypeHand(0);
+	}
+	public static Integer[] getRandomHPairHand(){
+		return getRandomCertainTypeHand(1);
+	}
+	public static Integer[] getRandomCertainTypeHand(int type){
+		List<Integer[]> highCardHands = allHands.get(type);
 		int ni = rand.nextInt(highCardHands.size());
+		System.out.println("getRandomCertainTypeHand : " + util.handNames[type] + " random hand : " + ni + ", " + highCardHands.size());
 		return highCardHands.get(ni);
 	}
+
 }
