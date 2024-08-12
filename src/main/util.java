@@ -82,4 +82,42 @@ public class util {
         }
         return masked;
     }
+
+    public static int getPwrTwo(long n){
+        double m = Math.log(n);
+        double t = Math.log(2);
+        return (int) ( m/t);
+        //System.out.println("m: " + m + " t: " + t + " d: " + d);
+    }
+
+    public static String convertHumanShortNameToLongName(String cardString) throws Exception {
+        //convert AH to Ace of Hearts or 5S to Five of Spades
+
+        if (cardString.length() != 2) {
+            throw new IllegalArgumentException("Card must be 2 chars long:  " + cardString);
+        }
+
+        int cardIndex = getCardIndexChar(cardString.charAt(0));
+        int suitIndex = getSuitIndexChar(cardString.charAt(1));
+
+        return util.cardLongs[cardIndex] + util.OF + util.suitLongs[suitIndex];
+    }
+
+    public static int getSuitIndexChar(char suitChar) throws Exception {
+        for (int i = 0; i < util.suitChars.length; i++) {
+            if (suitChar == util.suitChars[i]) {
+                return i;
+            }
+        }
+        throw new Exception("Error retreiving suit index for suit char: " + suitChar);
+    }
+
+    public static int getCardIndexChar(char cardChar) throws Exception {
+        for (int i = 0; i < util.cardChars.length; i++) {
+            if (cardChar == util.cardChars[i]) {
+                return i;
+            }
+        }
+        throw new Exception("Error retreiving card index for card char: " + cardChar);
+    }
 }

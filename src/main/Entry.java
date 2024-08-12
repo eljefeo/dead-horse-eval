@@ -5,7 +5,9 @@ public class Entry {
 	public static void main(String[] args) throws java.lang.Exception {
 
 		initializeHandMaker();
-		doTest1();
+		//doTest1();
+		doTest2();
+
 
 		// EvalTestPlayground.showRandomizerDiagnostics(1);
 		// EvalTestPlayground.randomizerSpeedTest5CardDiagnostics(50);
@@ -21,9 +23,9 @@ public class Entry {
 
 		 //EvalTestPlayground.randomizerSpeedTest5Card(25000000); // speed average :
 		// 25000000 hands in 0.121995199 seconds = 204Mhps
-		// EvalTestPlayground.randomizerSpeedTest5Card(130000000); // Did 130000000
+		//EvalTestPlayground.randomizerSpeedTest5Card(100000000); // Did 130000000
 		// hands in 0.6159191 seconds 211 million hands a second
-		 //System.out.println(EvalTestPlayground.humanDecodeEval("9d", "9c", "9h", "6s","9s"));
+		 //System.out.println(EvalTestPlayground.humanDecodeEval("9D", "9C", "9H", "6S","9S"));
 
 		//util5.getRandomThisType5CardHand(4);
 		//util7.getRandomThisType7CardHand(4);
@@ -45,7 +47,7 @@ public class Entry {
 
 
 		//util5.decode5CardHand(403701764);
-		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"8H", "9D", "9C", "9H", "8D"});
+		util5.humanEncodeShortAndDecodeLongHand(new String[] {"8H", "9H", "TH", "7H", "JH"});
 
 		// EvalTestPlayground.testEveryHand7();
 
@@ -78,6 +80,8 @@ Total Count : 133784560
 
 	}
 
+
+
 	private static void initializeHandMaker(){
 		HandMaker.prepAllHands();
 	}
@@ -87,6 +91,47 @@ Total Count : 133784560
 		for(int i = 0; i < util.handNames.length; i++) {
 			testHandMaker(i);
 		}
+	}
+
+	private static void doTest2() throws Exception {
+
+		System.out.println("making all 52 cards for 5 card poker:");
+		util5.makeAllDecimalNumsFromScratch();
+		System.out.println();
+
+		System.out.println("making all 52 cards for 7 card poker:");
+		util7.makeAllDecimalNumsFromScratch();
+		System.out.println();
+
+		String test1 = "8D";
+		int humanShortDecimal5 = util5.convertHumanShortNameToDecimal(test1);
+		System.out.println("conver human short to decimal 5: " + test1 + " : " + humanShortDecimal5);
+		System.out.println("human short binary : " + util.bin32(humanShortDecimal5));
+		System.out.println("converting decimal back to short name 5: " + util5.convertDecimalToShortName(humanShortDecimal5));
+
+		long humanShortDecimal7 = util7.convertHumanShortNameToDecimal(test1);
+		System.out.println("conver human short to decimal 7: " + test1 + " : " + humanShortDecimal7);
+		System.out.println("human short binary : " + util.bin64(humanShortDecimal7));
+		System.out.println("converting decimal back to short name 7: " + util7.convertDecimalToShortName(humanShortDecimal7));
+
+
+		int[] allCardNums = util5.allCardNums;
+		String[] allCardNames = util.allCardNames;
+		String[] hand = new String[]{"7H", "4S", "2D", "4D", "KC"};
+		if(allCardNames.length != allCardNums.length){
+			throw new Error("Card numbers and names are not the same length!");
+
+		}
+
+		System.out.println("doing card names and nums: ");
+		for(String s : hand){
+			System.out.println(s + " " + util5.cardMap.get(s) );//+ " : " + util5.de);
+		}
+
+		//for (int i = 0; i < allCardNums.length; i++) {
+		//	System.out.println(allCardNames[i] + " : " + allCardNums[i]);
+		//}
+
 	}
 
 	public static void testHandMaker(int type) throws Exception {
@@ -100,7 +145,7 @@ Total Count : 133784560
             case 6 -> HandMaker.getRandomFullHouseHand();
             case 7 -> HandMaker.getRandomQuadsHand();
             case 8 -> HandMaker.getRandomStraightFlushHand();
-            default -> new Integer[0];
+            default -> throw new Error("Please enter a correct hand type from 0-" + util.handNames.length);
         };
 
 
@@ -111,7 +156,7 @@ Total Count : 133784560
 		System.out.println("\n\n");
 		int cardsRes = util5.humanEncodeEval(util5.getCardName5(cards[0]), util5.getCardName5(cards[1]), util5.getCardName5(cards[2]), util5.getCardName5(cards[3]), util5.getCardName5(cards[4]));
 		String handDescription1 = util5.decode5CardHand(cardsRes);
-		System.out.println("pair description: " + handDescription1 + " :: " + "int res : " + cardsRes);
+		System.out.println("Description: " + handDescription1 + " :: " + "int res : " + cardsRes);
 	}
 }
 
