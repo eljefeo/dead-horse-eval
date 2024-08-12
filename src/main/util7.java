@@ -5,7 +5,7 @@ import java.util.Random;
 public class util7 extends util {
 
     final static int total7CardHandCount = 133784560;
-    final static int[] handFrequency7 = {
+    final static int[] handFrequency = {
             23294460, 58627800, 31433400, 6461620, 6180020, 4047644, 3473184, 224848, 41584
     };
     final static long highCardRet = 0;
@@ -207,13 +207,13 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         }
         for(int j=0;j<handCounter.length;j++){
             //check if expected == actual
-            boolean checked = handCounter[j]==handFrequency7[j];
+            boolean checked = handCounter[j]== handFrequency[j];
             String res = checked
                     //if all hands accounted for, good news
-                    ?"PASS - All "+handFrequency7[j]+" "+handNames[j]+" hands are accounted for"
+                    ?"PASS - All "+ handFrequency[j]+" "+handNames[j]+" hands are accounted for"
 
                     //if the counts dont match, show how many failed
-                    : "FAIL - " +handCounter[j]+" out of "+handFrequency7[j]
+                    : "FAIL - " +handCounter[j]+" out of "+ handFrequency[j]
                     +" "+handNames[j]+" hands received!";
 
             System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
@@ -392,7 +392,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
     }
 
     public static String convertDecimalToLongName7(long card) throws Exception {
-        return getCardDecimal(card) + util.OF + getSuitLong(card);
+        return getCardLong(card) + util.OF + getSuitLong(card);
     }
 
     public static String convertDecimalToShortName(long card) throws Exception {
@@ -403,7 +403,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         return util.suitLongs[getSuitIndexDecimal(card)];
     }
 
-    public static String getCardDecimal(long card) throws Exception {
+    public static String getCardLong(long card) throws Exception {
         return util.cardLongs[getCardIndexDecimal(card)];
     }
 
@@ -430,7 +430,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
                 return i;
             }
         }
-        throw new Exception("Error retreiving card index for card: " + card);
+        throw new Exception("Error retrieving card index for card: " + card);
     }
 
 

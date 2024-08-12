@@ -1,6 +1,6 @@
 package main;
 
-public class util {
+public abstract class util {
     static String[] allCardNames = new String[]{
             //"2s", "3s", "4s", "5s", "6s", "7s", "8s", "9s", "10s", "Js", "Qs", "Ks", "As",
             "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "TS", "JS", "QS", "KS", "AS",
@@ -32,7 +32,7 @@ public class util {
         return String.format("%17s", Integer.toBinaryString(i)).replace(' ', '0');
     }
 
-    protected static String bin13(int i) {
+    public static String bin13(int i) {
         return String.format("%13s", Integer.toBinaryString(i)).replace(' ', '0');
     }
 
@@ -47,6 +47,7 @@ public class util {
     public static String bin64(long l) {
         return String.format("%64s", Long.toBinaryString(l)).replace(' ', '0');
     }
+
 
 
     public static int countBits(int i){
@@ -119,5 +120,67 @@ public class util {
             }
         }
         throw new Exception("Error retreiving card index for card char: " + cardChar);
+    }
+
+
+    public static String getLongHandName(int type, String[] cards){ //probably want this String array to be int array, for now just passing the card strings like Five, or Five of Hearts or whatever
+        //probably want to just pass the integer itself and have the next function figure it out, like pass the int for 2H and just have this one figure it out
+
+        return switch (type) {
+            case 0 -> printLongHighCard(cards);
+            case 1 -> printLongPair(cards);
+            case 2 -> printLongTwoPair(cards);
+            case 3 -> printLongTrips(cards);
+            case 4 -> printLongStraight(cards);
+            case 5 -> printLongFlush(cards);
+            case 6 -> printLongFullHouse(cards);
+            case 7 -> printLongQuads(cards);
+            case 8 -> printLongStraightFlush(cards);
+            default -> "ERROROORRRRORR trying to show long fun description of hand";
+        };
+
+    }
+
+    public static String printLongHighCard(String[] cards){
+        return handNames[0] + " : " + cards[0] + " " + cards[1] + " " + cards[2] + " " + cards[3] + " " + cards[4];
+    }
+
+    public static String printLongPair(String[] cards){
+        return handNames[1] + OF + cards[0] + "s" + " with kickers " + cards[1] + ", " + cards[2] + ", " + cards[3];
+    }
+
+    public static String printLongTwoPair(String[] cards){
+        return handNames[2] + ": " + cards[0] + "s and " + cards[1] + "s with a " + cards[2] + " kicker";
+    }
+
+    public static String printLongTrips(String[] cards){
+        return handNames[3] + OF + cards[0] + "s with a " + cards[1] + " and " + cards[2] + " kicker";
+    }
+
+    public static String printLongStraight(String[] cards){
+        //There is a scenario where ACE,2,3,4,5 happens. In that scenario we dont put the ACE card in the bits in the result
+        // that way it wont appear higher than a 2,3,4,5,6. So here we check if that ACE is missing, and we add the word in...
+        if(cards[4] == null)
+            cards[4] = "Ace";
+        return handNames[4] + " : " + cards[4] + " " + cards[3] + " " + cards[2] + " " + cards[1] + " " + cards[0];
+    }
+
+    public static String printLongFlush(String[] cards){
+        return cards[0] + " High " + handNames[5];
+    }
+    public static String printLongFullHouse(String[] cards){
+        return handNames[6] + " : " + cards[0] + "s full of " + cards[1] + "s";
+    }
+
+    public static String printLongQuads(String[] cards){
+        return handNames[7] + OF + cards[0] + "s";
+    }
+
+    public static String printLongStraightFlush(String[] cards){
+        //There is a scenario where ACE,2,3,4,5 happens. In that scenario we dont put the ACE card in the bits in the result
+        // that way it wont appear higher than a 2,3,4,5,6. So here we check if that ACE is missing, and we add the word in...
+        if(cards[4] == null)
+            cards[4] = "Ace";
+        return handNames[8] + " : " + cards[4] + " " + cards[3] + " " + cards[2] + " " + cards[1] + " " + cards[0];
     }
 }

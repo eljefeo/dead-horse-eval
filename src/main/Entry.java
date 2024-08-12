@@ -4,9 +4,12 @@ public class Entry {
 
 	public static void main(String[] args) throws java.lang.Exception {
 
-		initializeHandMaker();
+		//initializeHandMaker();
 		//doTest1();
 		doTest2();
+
+		//testCardConversion();
+		//makeAllCards();
 
 
 		// EvalTestPlayground.showRandomizerDiagnostics(1);
@@ -47,6 +50,7 @@ public class Entry {
 
 
 		//util5.decode5CardHand(403701764);
+		util5.humanEncodeShortAndDecodeLongHand(new String[] {"2H", "9H", "TC", "7H", "JS"});
 		util5.humanEncodeShortAndDecodeLongHand(new String[] {"8H", "9H", "TH", "7H", "JH"});
 
 		// EvalTestPlayground.testEveryHand7();
@@ -82,9 +86,9 @@ Total Count : 133784560
 
 
 
-	private static void initializeHandMaker(){
-		HandMaker.prepAllHands();
-	}
+	//private static void initializeHandMaker(){
+	//	//HandMakerFiveCard.prepAllHands();
+	//}
 
 	public static void doTest1() throws Exception {
 
@@ -93,8 +97,7 @@ Total Count : 133784560
 		}
 	}
 
-	private static void doTest2() throws Exception {
-
+	private static void makeAllCards() throws Exception {
 		System.out.println("making all 52 cards for 5 card poker:");
 		util5.makeAllDecimalNumsFromScratch();
 		System.out.println();
@@ -102,7 +105,9 @@ Total Count : 133784560
 		System.out.println("making all 52 cards for 7 card poker:");
 		util7.makeAllDecimalNumsFromScratch();
 		System.out.println();
+	}
 
+	private static void testCardConversion() throws Exception {
 		String test1 = "8D";
 		int humanShortDecimal5 = util5.convertHumanShortNameToDecimal(test1);
 		System.out.println("conver human short to decimal 5: " + test1 + " : " + humanShortDecimal5);
@@ -114,10 +119,17 @@ Total Count : 133784560
 		System.out.println("human short binary : " + util.bin64(humanShortDecimal7));
 		System.out.println("converting decimal back to short name 7: " + util7.convertDecimalToShortName(humanShortDecimal7));
 
+	}
 
-		int[] allCardNums = util5.allCardNums;
+	private static void doTest2() throws Exception {
+
+
+
+
+
+		int[] allCardNums = util5.all52CardsDecimal;
 		String[] allCardNames = util.allCardNames;
-		String[] hand = new String[]{"7H", "4S", "2D", "4D", "KC"};
+		String[] hand = new String[]{"7H", "4S", "2D", "5D", "KC"};
 		if(allCardNames.length != allCardNums.length){
 			throw new Error("Card numbers and names are not the same length!");
 
@@ -136,15 +148,15 @@ Total Count : 133784560
 
 	public static void testHandMaker(int type) throws Exception {
 		Integer[] cards = switch (type) {
-            case 0 -> HandMaker.getRandomHighCardHand();
-            case 1 -> HandMaker.getRandomPairHand();
-            case 2 -> HandMaker.getRandomTwoPairHand();
-            case 3 -> HandMaker.getRandomTripsHand();
-            case 4 -> HandMaker.getRandomStraightHand();
-            case 5 -> HandMaker.getRandomFlushHand();
-            case 6 -> HandMaker.getRandomFullHouseHand();
-            case 7 -> HandMaker.getRandomQuadsHand();
-            case 8 -> HandMaker.getRandomStraightFlushHand();
+            case 0 -> HandMakerFiveCard.getRandomHighCardHand();
+            case 1 -> HandMakerFiveCard.getRandomPairHand();
+            case 2 -> HandMakerFiveCard.getRandomTwoPairHand();
+            case 3 -> HandMakerFiveCard.getRandomTripsHand();
+            case 4 -> HandMakerFiveCard.getRandomStraightHand();
+            case 5 -> HandMakerFiveCard.getRandomFlushHand();
+            case 6 -> HandMakerFiveCard.getRandomFullHouseHand();
+            case 7 -> HandMakerFiveCard.getRandomQuadsHand();
+            case 8 -> HandMakerFiveCard.getRandomStraightFlushHand();
             default -> throw new Error("Please enter a correct hand type from 0-" + util.handNames.length);
         };
 

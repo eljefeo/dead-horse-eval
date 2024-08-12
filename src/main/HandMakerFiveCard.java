@@ -5,12 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class HandMaker {
+public class HandMakerFiveCard {
 
-	static int[] allc = new int[] { 65537, 65538, 65540, 65544, 65552, 65568, 65600, 65664, 65792, 66048, 66560, 67584,
+	/*static int[] allc = new int[] { 65537, 65538, 65540, 65544, 65552, 65568, 65600, 65664, 65792, 66048, 66560, 67584,
 			69632, 32769, 32770, 32772, 32776, 32784, 32800, 32832, 32896, 33024, 33280, 33792, 34816, 36864, 16385,
 			16386, 16388, 16392, 16400, 16416, 16448, 16512, 16640, 16896, 17408, 18432, 20480, 8193, 8194, 8196, 8200,
-			8208, 8224, 8256, 8320, 8448, 8704, 9216, 10240, 12288 };
+			8208, 8224, 8256, 8320, 8448, 8704, 9216, 10240, 12288 };*/
 
 	static Random rand = new Random();
 
@@ -35,6 +35,17 @@ public class HandMaker {
 		allHands.add(allQuadHands);
 		allHands.add(allRoyalFlushHands);
 	}
+
+	static{
+		int[] allFiveCardHands = EvalTestPlayground.createAllFiveCardHands();
+		for(int i=0;i<allFiveCardHands.length;i+=5){
+			int res = DeadHorse.eval5(allFiveCardHands[i],allFiveCardHands[i+1],
+					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4])>>26;
+			allHands.get(res).add(new Integer[] {allFiveCardHands[i],allFiveCardHands[i+1],
+					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4]});
+		}
+	}
+
 
 	/*public static int[] getRandom5CardHand() { // if used a lot this can be optimized, its likely slow with the toList
 												// and boxed etc..
@@ -70,7 +81,7 @@ public class HandMaker {
 	public static int[] makeLotsOfRandom5CardHandsSlow(int howMany) { //this is so dang slow. But a more proper way to do it I suppose...
 		// List<Integer> fiftyTwoCards = Arrays.asList(allc.clone())
 
-		List<Integer> fiftyTwoCards = Arrays.stream(allc).boxed().toList();
+		List<Integer> fiftyTwoCards = Arrays.stream(util5.all52CardsDecimal).boxed().toList();
 
 		// make a copy of array to do each hand
 		List<Integer> allc2 = new ArrayList<Integer>(fiftyTwoCards);
@@ -101,7 +112,7 @@ public class HandMaker {
 				67584, 69632, 32769, 32770, 32772, 32776, 32784, 32800, 32832, 32896, 33024, 33280, 33792, 34816, 36864,
 				16385, 16386, 16388, 16392, 16400, 16416, 16448, 16512, 16640, 16896, 17408, 18432, 20480, 8193, 8194,
 				8196, 8200, 8208, 8224, 8256, 8320, 8448, 8704, 9216, 10240, 12288 };*/
-		int[] fiftyTwoCards = util5.allCardNums;
+		int[] fiftyTwoCards = util5.all52CardsDecimal;
 
 		// make a copy of array to do each hand
 		int[] allc2 = fiftyTwoCards.clone();
@@ -174,7 +185,7 @@ public class HandMaker {
 	// and dirty. It needs re-doing
 	public static int[] makeHighCardHand() {
 		// System.out.println("Making high card hand");
-		int[] allc2 = allc.clone();
+		int[] allc2 = util5.all52CardsDecimal.clone();
 		Random r = new Random();
 		int ra, rb, rc, rd, re;
 		int ran = 0, x = 0, a = 0, b = 0, c = 0, d = 0, e = 0;
@@ -306,7 +317,7 @@ public class HandMaker {
 
 	public static int[] makePairHand() {
 		// System.out.println("Making Pair hand");
-		int[] allc2 = allc.clone();
+		int[] allc2 = util5.all52CardsDecimal.clone();
 		Random r = new Random();
 		int ran = 0, x = 0, a = 0, b = 0, c = 0, d = 0, e = 0;
 
@@ -353,7 +364,7 @@ public class HandMaker {
 
 	public static int[] makeTwoPairHand() {
 		// System.out.println("Making Two Pair hand");
-		int[] allc2 = allc.clone();
+		int[] allc2 = util5.all52CardsDecimal.clone();
 		Random r = new Random();
 		int ran = 0, x = 0, a = 0, b = 0, c = 0, d = 0, e = 0;
 
@@ -392,7 +403,7 @@ public class HandMaker {
 
 	public static int[] makeTripHand() {
 		// System.out.println("Making Trip hand");
-		int[] allc2 = allc.clone();
+		int[] allc2 = util5.all52CardsDecimal.clone();
 		Random r = new Random();
 		int ran = 0, x = 0, a = 0, b = 0, c = 0, d = 0, e = 0;
 
@@ -430,7 +441,7 @@ public class HandMaker {
 
 	public static int[] makeStraightHand() {
 		// System.out.println("Making Straight hand");
-		int[] allc2 = allc.clone();
+		int[] allc2 = util5.all52CardsDecimal.clone();
 		Random r = new Random();
 		int ran = 0, x = 0, a = 0, b = 0, c = 0, d = 0, e = 0;
 
@@ -450,7 +461,7 @@ public class HandMaker {
 
 	public static int[] makeFlushHand() {
 		// System.out.println("Making Flush hand");
-		int[] allc2 = allc.clone();
+		int[] allc2 = util5.all52CardsDecimal.clone();
 		Random r = new Random();
 		int ran = 0, x = 0, a = 0, b = 0, c = 0, d = 0, e = 0;
 
@@ -498,7 +509,7 @@ public class HandMaker {
 
 	public static int[] makeFullHouseHand() {
 		// System.out.println("Making Fullhouse hand");
-		int[] allc2 = allc.clone();
+		int[] allc2 = util5.all52CardsDecimal.clone();
 		Random r = new Random();
 		int ran = 0, x = 0, a = 0, b = 0, c = 0, d = 0, e = 0;
 
@@ -527,7 +538,7 @@ public class HandMaker {
 
 	public static int[] makeQuadsHand() {
 		// System.out.println("Making Quads hand");
-		int[] allc2 = allc.clone();
+		int[] allc2 = util5.all52CardsDecimal.clone();
 		Random r = new Random();
 		int ran = 0, x = 0, a = 0, b = 0, c = 0, d = 0, e = 0;
 
@@ -556,7 +567,7 @@ public class HandMaker {
 
 	public static int[] makeStraightFlushHand() {
 		// System.out.println("Making straightFlush hand");
-		int[] allc2 = allc.clone();
+		int[] allc2 = util5.all52CardsDecimal.clone();
 		Random r = new Random();
 		int ran = 0, x = 0, a = 0, b = 0, c = 0, d = 0, e = 0;
 
