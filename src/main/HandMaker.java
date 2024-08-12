@@ -620,9 +620,31 @@ public class HandMaker {
 	public static Integer[] getRandomHighCardHand(){
 		return getRandomCertainTypeHand(0);
 	}
-	public static Integer[] getRandomHPairHand(){
+	public static Integer[] getRandomPairHand(){
 		return getRandomCertainTypeHand(1);
 	}
+	public static Integer[] getRandomTwoPairHand(){
+		return getRandomCertainTypeHand(2);
+	}
+	public static Integer[] getRandomTripsHand(){
+		return getRandomCertainTypeHand(3);
+	}
+	public static Integer[] getRandomStraightHand(){
+		return getRandomCertainTypeHand(4);
+	}
+	public static Integer[] getRandomFlushHand(){
+		return getRandomCertainTypeHand(5);
+	}
+	public static Integer[] getRandomFullHouseHand(){
+		return getRandomCertainTypeHand(6);
+	}
+	public static Integer[] getRandomQuadsHand(){
+		return getRandomCertainTypeHand(7);
+	}
+	public static Integer[] getRandomStraightFlushHand(){
+		return getRandomCertainTypeHand(8);
+	}
+
 	public static Integer[] getRandomCertainTypeHand(int type){
 		List<Integer[]> highCardHands = allHands.get(type);
 		int ni = rand.nextInt(highCardHands.size());

@@ -5,6 +5,8 @@ public class Entry {
 	public static void main(String[] args) throws java.lang.Exception {
 
 		initializeHandMaker();
+		doTest1();
+
 		// EvalTestPlayground.showRandomizerDiagnostics(1);
 		// EvalTestPlayground.randomizerSpeedTest5CardDiagnostics(50);
 		// EvalTestPlayground.howLongUntilYouGetThisKindOfHands(2);
@@ -35,28 +37,6 @@ public class Entry {
 		//DeadHorse7.findStraights();
 		//DeadHorse7.testeval7();
 		//DeadHorse7.eval7Checke();
-
-		Integer[] hch = HandMaker.getRandomHighCardHand();
-		//System.out.println(hch[0] + " = " + util5.getCardName5(hch[0]), " + hch[1] + ", " + hch[2] + ", " + hch[3] + ", " + hch[4]);
-		for (Integer integer : hch) {
-			System.out.print(integer + " = " + util5.getCardName5(integer) + ", ");
-		}
-		System.out.println();
-		int resHighCard = util5.humanEncodeEval(util5.getCardName5(hch[0]), util5.getCardName5(hch[1]), util5.getCardName5(hch[2]), util5.getCardName5(hch[3]), util5.getCardName5(hch[4]));
-		String handDescription = util5.decode5CardHand(resHighCard);
-		System.out.println("high card description: " + handDescription + " :: " + "int res : " + resHighCard);
-		//00000100000000000000000000101110
-		//00000100000000010001010000000010
-
-		Integer[] pair = HandMaker.getRandomHPairHand();
-		//System.out.println(hch[0] + " = " + util5.getCardName5(hch[0]), " + hch[1] + ", " + hch[2] + ", " + hch[3] + ", " + hch[4]);
-        for (Integer integer : pair) {
-            System.out.print(integer + " = " + util5.getCardName5(integer) + ", ");
-        }
-		System.out.println("\n\n");
-		int pairRes = util5.humanEncodeEval(util5.getCardName5(pair[0]), util5.getCardName5(pair[1]), util5.getCardName5(pair[2]), util5.getCardName5(pair[3]), util5.getCardName5(pair[4]));
-		String handDescription1 = util5.decode5CardHand(pairRes);
-		System.out.println("pair description: " + handDescription1 + " :: " + "int res : " + pairRes);
 
 
 		//DeadHorse7.eval7Checke2();
@@ -101,4 +81,80 @@ Total Count : 133784560
 	private static void initializeHandMaker(){
 		HandMaker.prepAllHands();
 	}
+
+	public static void doTest1() throws Exception {
+
+		for(int i = 0; i < util.handNames.length; i++){
+			testHandMaker(i);
+		}
+
+		/*Integer[] hch = HandMaker.getRandomHighCardHand();
+		//System.out.println(hch[0] + " = " + util5.getCardName5(hch[0]), " + hch[1] + ", " + hch[2] + ", " + hch[3] + ", " + hch[4]);
+		for (Integer integer : hch) {
+			System.out.print(integer + " = " + util5.getCardName5(integer) + ", ");
+		}
+		System.out.println();
+		int resHighCard = util5.humanEncodeEval(util5.getCardName5(hch[0]), util5.getCardName5(hch[1]), util5.getCardName5(hch[2]), util5.getCardName5(hch[3]), util5.getCardName5(hch[4]));
+		String handDescription = util5.decode5CardHand(resHighCard);
+		System.out.println("high card description: " + handDescription + " :: " + "int res : " + resHighCard);
+		//00000100000000000000000000101110
+		//00000100000000010001010000000010
+
+		Integer[] pair = HandMaker.getRandomPairHand();
+		//System.out.println(hch[0] + " = " + util5.getCardName5(hch[0]), " + hch[1] + ", " + hch[2] + ", " + hch[3] + ", " + hch[4]);
+		for (Integer integer : pair) {
+			System.out.print(integer + " = " + util5.getCardName5(integer) + ", ");
+		}
+		System.out.println("\n\n");
+		int pairRes = util5.humanEncodeEval(util5.getCardName5(pair[0]), util5.getCardName5(pair[1]), util5.getCardName5(pair[2]), util5.getCardName5(pair[3]), util5.getCardName5(pair[4]));
+		String handDescription1 = util5.decode5CardHand(pairRes);
+		System.out.println("pair description: " + handDescription1 + " :: " + "int res : " + pairRes);
+*/
+	}
+
+	public static void testHandMaker(int type) throws Exception {
+		Integer[] cards = new Integer[0];
+		switch (type){
+			case 0:
+				cards = HandMaker.getRandomHighCardHand();
+				break;
+			case 1:
+				cards = HandMaker.getRandomPairHand();
+				break;
+			case 2:
+				cards = HandMaker.getRandomTwoPairHand();
+				break;
+			case 3:
+				cards = HandMaker.getRandomTripsHand();
+				break;
+			case 4:
+				cards = HandMaker.getRandomStraightHand();
+				break;
+			case 5:
+				cards = HandMaker.getRandomFlushHand();
+				break;
+			case 6:
+				cards = HandMaker.getRandomFullHouseHand();
+				break;
+			case 7:
+				cards = HandMaker.getRandomQuadsHand();
+				break;
+			case 8:
+				cards = HandMaker.getRandomStraightFlushHand();
+				break;
+		}
+
+
+
+		//System.out.println(hch[0] + " = " + util5.getCardName5(hch[0]), " + hch[1] + ", " + hch[2] + ", " + hch[3] + ", " + hch[4]);
+		for (Integer integer : cards) {
+			System.out.print(integer + " = " + util5.getCardName5(integer) + ", ");
+		}
+		System.out.println("\n\n");
+		int cardsRes = util5.humanEncodeEval(util5.getCardName5(cards[0]), util5.getCardName5(cards[1]), util5.getCardName5(cards[2]), util5.getCardName5(cards[3]), util5.getCardName5(cards[4]));
+		String handDescription1 = util5.decode5CardHand(cardsRes);
+		System.out.println("pair description: " + handDescription1 + " :: " + "int res : " + cardsRes);
+	}
 }
+
+
