@@ -403,15 +403,15 @@ public static void handCompareTest(int howMany) throws Exception {
 		
 		System.out.println("On #" + i);
 		
-	int[] highCard = HandMakerFiveCard.makeHighCardHand();
-	int[] pair = HandMakerFiveCard.makePairHand();
-	int[] twoPair = HandMakerFiveCard.makeTwoPairHand();
-	int[] trips = HandMakerFiveCard.makeTripHand();
-	int[] straight = HandMakerFiveCard.makeStraightHand();
-	int[] flush = HandMakerFiveCard.makeFlushHand();
-	int[] fullhouse = HandMakerFiveCard.makeFullHouseHand();
-	int[] quads = HandMakerFiveCard.makeQuadsHand();
-	int[] straightFlush = HandMakerFiveCard.makeStraightFlushHand();
+	Integer[] highCard = HandMakerFiveCard.getRandomHighCardHand();
+	Integer[] pair = HandMakerFiveCard.getRandomPairHand();
+	Integer[] twoPair = HandMakerFiveCard.getRandomTwoPairHand();
+	Integer[] trips = HandMakerFiveCard.getRandomTripsHand();
+	Integer[] straight = HandMakerFiveCard.getRandomStraightHand();
+	Integer[] flush = HandMakerFiveCard.getRandomFlushHand();
+	Integer[] fullHouse = HandMakerFiveCard.getRandomFullHouseHand();
+	Integer[] quads = HandMakerFiveCard.getRandomQuadsHand();
+	Integer[] straightFlush = HandMakerFiveCard.getRandomStraightFlushHand();
 	
 	int hc = DeadHorse.eval5(highCard[0], highCard[1], highCard[2], highCard[3], highCard[4]);
 	int p = DeadHorse.eval5(pair[0], pair[1], pair[2], pair[3], pair[4]);
@@ -419,7 +419,7 @@ public static void handCompareTest(int howMany) throws Exception {
 	int t = DeadHorse.eval5(trips[0], trips[1], trips[2], trips[3], trips[4]);
 	int s = DeadHorse.eval5(straight[0], straight[1], straight[2], straight[3], straight[4]);
 	int f = DeadHorse.eval5(flush[0], flush[1], flush[2], flush[3], flush[4]);
-	int fh = DeadHorse.eval5(fullhouse[0], fullhouse[1], fullhouse[2], fullhouse[3], fullhouse[4]);
+	int fh = DeadHorse.eval5(fullHouse[0], fullHouse[1], fullHouse[2], fullHouse[3], fullHouse[4]);
 	int q = DeadHorse.eval5(quads[0], quads[1], quads[2], quads[3], quads[4]);
 	int sf = DeadHorse.eval5(straightFlush[0], straightFlush[1], straightFlush[2], straightFlush[3], straightFlush[4]);
 	boolean check = hc<p && p<tp && tp<t && t<s && s<f && f<fh && fh<q && q<sf;
@@ -430,37 +430,50 @@ public static void handCompareTest(int howMany) throws Exception {
 	} else{
 		if(highCard[0] != 0)
 			System.out.println("High card failed " + getCardName5(highCard[0]) + " " + getCardName5(highCard[1]) + " " + getCardName5(highCard[2]) + " " + getCardName5(highCard[3]) + " " + getCardName5(highCard[4]) );
+		throw new Error("High card failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
 	if(p<tp && p<t && p<s && p<f && p<fh && p<q && p<sf){
 		//System.out.println("Pair pass");
 	} else{
 		System.out.println("Pair failed " + getCardName5(pair[0]) + " " + getCardName5(pair[1]) + " " + getCardName5(pair[2]) + " " + getCardName5(pair[3]) + " " + getCardName5(pair[4]) );
+		throw new Error("Pair failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
 	if(tp<t && tp<s && tp<f && tp<fh && tp<q && tp<sf){
 		//System.out.println("TwoPair pass");
 	} else{
 		System.out.println("TwoPair failed " + getCardName5(twoPair[0]) + " " + getCardName5(twoPair[1]) + " " + getCardName5(twoPair[2]) + " " + getCardName5(twoPair[3]) + " " + getCardName5(twoPair[4]) );
+		throw new Error("TwoPair failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
 	if(t<s && t<f && t<fh && t<q && t<sf){
 		//System.out.println("Trips pass");
 	} else{
 		System.out.println("Trips failed " + getCardName5(trips[0]) + " " + getCardName5(trips[1]) + " " + getCardName5(trips[2]) + " " + getCardName5(trips[3]) + " " + getCardName5(trips[4]) );
+		throw new Error("Trips failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
 	if(s<f && s<fh && s<q && s<sf){
 		//System.out.println("Straight pass");
 	} else{
 		System.out.println("Straight failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
+		throw new Error("Straight failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
 	if(f<fh && f<q && f<sf){
 		//System.out.println("Flush pass");
 	} else{
 		System.out.println("Flush failed " + getCardName5(flush[0]) + " " + getCardName5(flush[1]) + " " + getCardName5(flush[2]) + " " + getCardName5(flush[3]) + " " + getCardName5(flush[4]) );
+		throw new Error("Flush failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
 	if(fh<q && fh<sf){
 		//System.out.println("FullHouse pass");
 	} else{
-		System.out.println("FullHouse failed " + getCardName5(fullhouse[0]) + " " + getCardName5(fullhouse[1]) + " " + getCardName5(fullhouse[2]) + " " + getCardName5(fullhouse[3]) + " " + getCardName5(fullhouse[4]) );
+		System.out.println("FullHouse failed " + getCardName5(fullHouse[0]) + " " + getCardName5(fullHouse[1]) + " " + getCardName5(fullHouse[2]) + " " + getCardName5(fullHouse[3]) + " " + getCardName5(fullHouse[4]) );
+		throw new Error("FullHouse failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
+		if(q<sf){
+			//System.out.println("FullHouse pass");
+		} else{
+			System.out.println("Quads failed " + getCardName5(fullHouse[0]) + " " + getCardName5(fullHouse[1]) + " " + getCardName5(fullHouse[2]) + " " + getCardName5(fullHouse[3]) + " " + getCardName5(fullHouse[4]) );
+			throw new Error("Quads failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
+		}
 
 	
 	
