@@ -26,7 +26,7 @@ public class DeadHorse7 {
 	public static int eval7Checke() throws Exception {
 		String[] someCardCodes = new String[] { "8C", "5C", "6C", "7C", "9C", "4C", "3C" };
 		String[] someCardCodes2 = new String[] { "4D", "5C", "6C", "7C", "KC", "4C", "3C" };
-		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
+		long[] hand = convertHandHumanShortToDecimal(someCardCodes);
 		long[] handm = util.maskCards(hand, cardMask);
 		/*for(int i=0; i<hand.length; i++){
 			long c = hand[i];
@@ -89,7 +89,7 @@ public class DeadHorse7 {
 	public static int eval7Checke2() throws Exception {
 		String[] someCardCodes = new String[] { "AS", "5S", "QD", "9C", "KC", "2D", "3S" };
 		String[] someCardCodes2 = new String[] { "4D", "5C", "6C", "7C", "KC", "4C", "3C" };
-		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
+		long[] hand = convertHandHumanShortToDecimal(someCardCodes);
 		long[] handm = util.maskCards(hand, cardMask);
 		for(int i=0; i<hand.length; i++){
 			long c = hand[i];
@@ -514,10 +514,10 @@ Straight flush - 5,6,7
 	public static long testeval7() throws Exception {
 		String[] someCardCodes = new String[] { "9C", "9H", "3C", "KS", "9S", "JD", "9D" };
 
-		long[] hand = convertHandHumanShortToDecimal7(someCardCodes);
+		long[] hand = convertHandHumanShortToDecimal(someCardCodes);
 
 		for (long l : hand) {
-			System.out.println("card: " + l + " : " + convertDecimalToLongName7(l) + " : " + util.bin51(l));
+			System.out.println("card: " + l + " : " + convertDecimalToLongName(l) + " : " + util.bin51(l));
 		}
 		long ord = orHand(hand);
 		long sum = sumHand(hand);
@@ -739,7 +739,7 @@ Straight flush - 5,6,7
 				System.out.println();
 				cnt = 1;
 			}
-			System.out.print(convertDecimalToLongName7(l) + ", ");
+			System.out.print(convertDecimalToLongName(l) + ", ");
 		}
 
 		String[] someCardCodes = new String[] { "2C", "3H", "4H", "5H", "6H", "8S", "9H", "TH", "JD", "QH", "KH",
@@ -751,7 +751,7 @@ Straight flush - 5,6,7
 
 		for (int i = 0; i < someCards.length; i++) {
 			System.out.println("before:\t\t" + util.bin51(someCards[i]) + " : " + someCards[i]);
-			System.out.println("name: " + convertDecimalToLongName7(someCards[i]));
+			System.out.println("name: " + convertDecimalToLongName(someCards[i]));
 			someCards[i] &= cardMask;
 			System.out.println("after:\t\t" + util.bin51(someCards[i]) + " : " + someCards[i]);
 
@@ -886,7 +886,7 @@ Straight flush - 5,6,7
 
 
 	public static long[] getSomeHand() throws Exception {
-		return convertHandHumanShortToDecimal7(new String[] { "AH", "5S", "7S", "AC", "2C", "TD", "4S" });
+		return convertHandHumanShortToDecimal(new String[] { "AH", "5S", "7S", "AC", "2C", "TD", "4S" });
 	}
 
 

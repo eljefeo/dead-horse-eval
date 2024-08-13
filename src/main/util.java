@@ -183,4 +183,6 @@ public abstract class util {
             cards[4] = "Ace";
         return handNames[8] + " : " + cards[4] + " " + cards[3] + " " + cards[2] + " " + cards[1] + " " + cards[0];
     }
+
+    //abstract public Object makeDecimalFromIndexes(int cardIndex, int suitIndex) ;
 }

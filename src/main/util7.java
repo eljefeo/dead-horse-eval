@@ -362,7 +362,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         return makeDecimalFromIndexes(cardIndex, suitIndex);
     }
 
-    public static long[] convertHandHumanShortToDecimal7(String[] cards) throws Exception {
+    public static long[] convertHandHumanShortToDecimal(String[] cards) throws Exception {
         if (cards.length != 7) {
             throw new IllegalArgumentException("There must be 7 cards");
         }
@@ -371,6 +371,16 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
             ret[i] = convertHumanShortNameToDecimal(cards[i]);
         }
         return ret;
+    }
+
+    public static long convertHumanLongNameToDecimal (String cardString){
+        //return cardMap.get(cardString);
+        return 0;
+    }
+
+    public static String convertHumanLongNameToShortName (String cardString){
+        //return cardMap.get(cardString);
+        return "";
     }
 
     public static long orHand(long[] cards) {
@@ -391,7 +401,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         return (1L << (cardIndex * 3)) | (1L << ((suitIndex + 13) * 3));
     }
 
-    public static String convertDecimalToLongName7(long card) throws Exception {
+    public static String convertDecimalToLongName(long card) throws Exception {
         return getCardLong(card) + util.OF + getSuitLong(card);
     }
 

@@ -26,5 +26,5 @@ public interface UtilI {
     //static final String[] suitLongsReversed = new String[]{"Spades", "Hearts", "Clubs", "Diamonds"};
 
     static final String OF = " of ";
-
+    public Object makeDecimalFromIndexes(int cardIndex, int suitIndex) ;
 }

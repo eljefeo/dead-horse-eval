@@ -34,7 +34,7 @@ public class Tests {
 		String expected = "Six of Spades";
 
 		String longName1 = util.convertHumanShortNameToLongName(card);
-		String longName2 = util7.convertDecimalToLongName7(cardDecimal);
+		String longName2 = util7.convertDecimalToLongName(cardDecimal);
 		if (!longName1.equals(longName2) || !longName1.equals(expected)) {
 			throw new Exception(card + " did not convert..." + longName1 + " : " + longName2);
 		} else {

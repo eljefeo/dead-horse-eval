@@ -4,11 +4,16 @@ public class Entry {
 
 	public static void main(String[] args) throws java.lang.Exception {
 
+
+
 		//initializeHandMaker();
 		//doTest1();
-		doTest2();
+		//doTest2();
 
-		//testCardConversion();
+		testCardConversion();
+		//util5.decode5CardHand(403701764);
+		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"2H", "9H", "TC", "7H", "JS"});
+		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"8H", "8S", "TH", "TD", "8C"});
 		//makeAllCards();
 
 
@@ -49,9 +54,7 @@ public class Entry {
 		//util5.humanEncodeEval("2S", "8S", "6S", "5S", "3S" );
 
 
-		//util5.decode5CardHand(403701764);
-		util5.humanEncodeShortAndDecodeLongHand(new String[] {"2H", "9H", "TC", "7H", "JS"});
-		util5.humanEncodeShortAndDecodeLongHand(new String[] {"8H", "9H", "TH", "7H", "JH"});
+
 
 		// EvalTestPlayground.testEveryHand7();
 
@@ -108,15 +111,18 @@ Total Count : 133784560
 	}
 
 	private static void testCardConversion() throws Exception {
-		String test1 = "8D";
+		String test1 = "5H";
+		//int humanShortDecimal5 = util5.convertHumanShortNameToDecimal(test1);
 		int humanShortDecimal5 = util5.convertHumanShortNameToDecimal(test1);
-		System.out.println("conver human short to decimal 5: " + test1 + " : " + humanShortDecimal5);
+		System.out.println("convert human short to decimal 5: " + test1 + " : " + humanShortDecimal5);
 		System.out.println("human short binary : " + util.bin32(humanShortDecimal5));
+		System.out.println("Decimal to long name : " + util5.convertDecimalToLongName(humanShortDecimal5));
 		System.out.println("converting decimal back to short name 5: " + util5.convertDecimalToShortName(humanShortDecimal5));
 
 		long humanShortDecimal7 = util7.convertHumanShortNameToDecimal(test1);
 		System.out.println("conver human short to decimal 7: " + test1 + " : " + humanShortDecimal7);
 		System.out.println("human short binary : " + util.bin64(humanShortDecimal7));
+		System.out.println("Decimal to long name : " + util7.convertHumanShortNameToLongName(test1));
 		System.out.println("converting decimal back to short name 7: " + util7.convertDecimalToShortName(humanShortDecimal7));
 
 	}
@@ -137,7 +143,7 @@ Total Count : 133784560
 
 		System.out.println("doing card names and nums: ");
 		for(String s : hand){
-			System.out.println(s + " " + util5.cardMap.get(s) );//+ " : " + util5.de);
+			System.out.println(s + " " + util5.convertHumanShortNameToDecimal(s));//util5.cardMap.get(s) );//+ " : " + util5.de);
 		}
 
 		//for (int i = 0; i < allCardNums.length; i++) {
