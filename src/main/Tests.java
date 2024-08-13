@@ -13,7 +13,7 @@ public class Tests {
 	public static void shortToLong() throws Exception {
 		String card = "AH";
 		String expected = "Ace of Hearts";
-		String name = util7.convertHumanShortNameToLongName7(card);
+		String name = util.convertHumanShortNameToLongName(card);
 		if (!name.equals(expected)) {
 			throw new Exception(card + " did not convert to " + expected + " : " + name);
 		}
@@ -22,8 +22,8 @@ public class Tests {
 
 	public static void shortToDecimalToLong() throws Exception {
 		String card = "6S";
-		long cardDecimal = util7.convertHumanShortNameToDecimal7(card);
-		String shortName = util7.convertDecimalToShortName7(cardDecimal);
+		long cardDecimal = util7.convertHumanShortNameToDecimal(card);
+		String shortName = util7.convertDecimalToShortName(cardDecimal);
 		if (!shortName.equals(card)) {
 			throw new Exception(
 					"Error converting. card: " + card + ", cardDecimal: " + cardDecimal + ", shortName: " + shortName);
@@ -33,8 +33,8 @@ public class Tests {
 		}
 		String expected = "Six of Spades";
 
-		String longName1 = util7.convertHumanShortNameToLongName7(card);
-		String longName2 = util7.convertDecimalToLongName7(cardDecimal);
+		String longName1 = util.convertHumanShortNameToLongName(card);
+		String longName2 = util7.convertDecimalToLongName(cardDecimal);
 		if (!longName1.equals(longName2) || !longName1.equals(expected)) {
 			throw new Exception(card + " did not convert..." + longName1 + " : " + longName2);
 		} else {
@@ -44,8 +44,8 @@ public class Tests {
 	}
 
 	public static void check52GeneratedSameAsInline() throws Exception {
-		long[] generated = util7.makeAll52Cards7Decimal();
-		long[] inline = util7.all52Cards7;
+		long[] generated = util7.makeAll52CardsDecimal();
+		long[] inline = util7.all52CardsDecimal;
 		if (generated.length != inline.length) {
 			throw new Exception("Generated cards dont match length of inline, are there 52?");
 		}

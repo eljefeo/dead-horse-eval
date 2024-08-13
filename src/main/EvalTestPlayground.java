@@ -11,7 +11,7 @@ import java.util.Locale;
 
 import static main.util.handNames;
 import static main.util5.*;
-import static main.util7.handFrequency7;
+import static main.util7.handFrequency;
 
 public class EvalTestPlayground {
 	
@@ -38,7 +38,7 @@ public class EvalTestPlayground {
 		long[] allCards = new long[util7.total7CardHandCount*7];
 		int totalCounter=0;
 
-		long[] cards52_7 = util7.all52Cards7;//DeadHorse7.makeAll52Cards7Decimal();
+		long[] cards52_7 = util7.all52CardsDecimal;//DeadHorse7.makeAll52Cards7Decimal();
 
 //668.922.800
 
@@ -70,16 +70,16 @@ public class EvalTestPlayground {
 		  int totalCounter=0;
 		  
 		  //this is how we create every possible 5 card hand
-		  for(int i=0;i<allCardNums.length-1;i++)
-			  for(int j=i+1;j<allCardNums.length;j++)
-				  for(int k=j+1;k<allCardNums.length;k++)
-					  for(int l=k+1;l<allCardNums.length;l++)
-						  for(int m=l+1;m<allCardNums.length;m++){
-							  allCards[totalCounter*5]	=allCardNums[i];
-							  allCards[totalCounter*5+1]=allCardNums[j];
-							  allCards[totalCounter*5+2]=allCardNums[k];
-							  allCards[totalCounter*5+3]=allCardNums[l];
-							  allCards[totalCounter*5+4]=allCardNums[m];
+		  for(int i = 0; i< all52CardsDecimal.length-1; i++)
+			  for(int j = i+1; j< all52CardsDecimal.length; j++)
+				  for(int k = j+1; k< all52CardsDecimal.length; k++)
+					  for(int l = k+1; l< all52CardsDecimal.length; l++)
+						  for(int m = l+1; m< all52CardsDecimal.length; m++){
+							  allCards[totalCounter*5]	= all52CardsDecimal[i];
+							  allCards[totalCounter*5+1]= all52CardsDecimal[j];
+							  allCards[totalCounter*5+2]= all52CardsDecimal[k];
+							  allCards[totalCounter*5+3]= all52CardsDecimal[l];
+							  allCards[totalCounter*5+4]= all52CardsDecimal[m];
 							  totalCounter++;
 						  }
 		 return allCards;
@@ -124,10 +124,10 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 
 		  String thisManyString = NumberFormat.getNumberInstance(Locale.US).format(howManyHands);
 		  System.out.println("Doing this many hands: " + thisManyString);
-		  int[] allCards = HandMaker.makeThisManyRandom5CardHands(howManyHands);
+		  int[] allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(howManyHands);
 		  int totalHandsNow = allCards.length / 5; 
 		  int[] handCounter = new int[9];
-		  double[] frequencyPerc = new double[handFrequency5.length];
+		  double[] frequencyPerc = new double[handFrequency.length];
 		  
 		 
 		  
@@ -138,9 +138,9 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  }
 		  
 		  System.out.println("\nNow our hands:");
-		  for(int i=0; i<handFrequency5.length; i++) {
+		  for(int i = 0; i< handFrequency.length; i++) {
 			  //frequencyPerc[i] = handFrequency5[i]/(double)totalHands5;total5CardHandCount
-			  frequencyPerc[i] = handFrequency5[i] / (double)total5CardHandCount;
+			  frequencyPerc[i] = handFrequency[i] / (double)total5CardHandCount;
 			  System.out.println("hand frequency of " + handNames[i] + " : (had this many in this test: " + handCounter[i] + ")");
 			  System.out.println("expected:\t" + (frequencyPerc[i]*100) + "%");
 			  System.out.println("Actual:  \t" + ((double)( handCounter[i]/(double)totalHandsNow)*100) + "%");
@@ -218,13 +218,13 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  //to the number of each type of hand we expect
 		   for(int j=0;j<handCounter.length;j++){
 			   //check if expected == actual
-			   boolean checked = handCounter[j]==handFrequency5[j];
+			   boolean checked = handCounter[j]== handFrequency[j];
 			   String res = checked
 					   //if all hands accounted for, good news
-					   ?"All "+handFrequency5[j]+" "+handNames[j]+" hands are accounted for" 
+					   ?"All "+ handFrequency[j]+" "+handNames[j]+" hands are accounted for"
 							   
 						//if the counts dont match, show how many failed
-					   : (handCounter[j]-handFrequency5[j])+" of "+handFrequency5[j]
+					   : (handCounter[j]- handFrequency[j])+" of "+ handFrequency[j]
 							   +" "+handNames[j]+" hands failed!"; 
 			   
 			   System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
@@ -254,23 +254,23 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  int totalCounter=0;
 		  int[] handCounter = new int[9];
 		  //this is how we create all 133,784,560 7 card hands
-		  for(int i=0;i<allCardNums.length-1;i++)
-			  for(int j=i+1;j<allCardNums.length;j++)
-				  for(int k=j+1;k<allCardNums.length;k++)
-					  for(int l=k+1;l<allCardNums.length;l++)
-						  for(int m=l+1;m<allCardNums.length;m++)
-							  for(int n=m+1;n<allCardNums.length;n++)
-								  for(int o=n+1;o<allCardNums.length;o++){
+		  for(int i = 0; i< all52CardsDecimal.length-1; i++)
+			  for(int j = i+1; j< all52CardsDecimal.length; j++)
+				  for(int k = j+1; k< all52CardsDecimal.length; k++)
+					  for(int l = k+1; l< all52CardsDecimal.length; l++)
+						  for(int m = l+1; m< all52CardsDecimal.length; m++)
+							  for(int n = m+1; n< all52CardsDecimal.length; n++)
+								  for(int o = n+1; o< all52CardsDecimal.length; o++){
 									  
 									  int res = oldBad7Code.eval7
 											  (
-											  	allCardNums[i],
-											  	allCardNums[j],
-											  	allCardNums[k],
-											  	allCardNums[l],
-											  	allCardNums[m],
-											  	allCardNums[n],
-											  	allCardNums[o]
+											  	all52CardsDecimal[i],
+											  	all52CardsDecimal[j],
+											  	all52CardsDecimal[k],
+											  	all52CardsDecimal[l],
+											  	all52CardsDecimal[m],
+											  	all52CardsDecimal[n],
+											  	all52CardsDecimal[o]
 											  )>>26;
 											  	
 									  
@@ -318,13 +318,13 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 
 		   for(int j=0;j<handCounter.length;j++){
 			   //check if expected == actual
-			   boolean checked = handCounter[j]==handFrequency7[j];
+			   boolean checked = handCounter[j]== util7.handFrequency[j];
 			   String res = checked
 					   //if all hands accounted for, good news
-					   ?"PASS - All "+handFrequency7[j]+" "+handNames[j]+" hands are accounted for" 
+					   ?"PASS - All "+ util7.handFrequency[j]+" "+handNames[j]+" hands are accounted for"
 							   
 						//if the counts dont match, show how many failed
-					   : "FAIL - " +handCounter[j]+" out of "+handFrequency7[j]
+					   : "FAIL - " +handCounter[j]+" out of "+ util7.handFrequency[j]
 							   +" "+handNames[j]+" hands received!"; 
 			   
 			   System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
@@ -342,7 +342,7 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 	  
 	public static void randomizerSpeedTest5CardDiagnostics(int howMany){
 		  
-		  int[] allCards = HandMaker.makeThisManyRandom5CardHands(howMany);
+		  int[] allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(howMany);
 		  
 		  for(int i=0;i<allCards.length;i+=5){
 			int res = DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
@@ -358,7 +358,7 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  //pick a nice huge round number to let this sucker get warmed up
 		  // int howMany = 10000000;
 		System.out.println("Making " + howMany + " hands...");
-		int[] allCards = HandMaker.makeThisManyRandom5CardHands(howMany);
+		int[] allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(howMany);
 		  System.out.println("...Done making " + howMany + " hands");
 		  System.out.println("...Evaluating " + howMany + " hands");
 		  long startT = System.nanoTime();
@@ -377,7 +377,7 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  //how many hands do you want to test? choose a few million to be sure..
 		 // int howMany = 10000000;
 
-		  int[] allCards = HandMaker.makeThisManyRandom5CardHands(howMany);
+		  int[] allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(howMany);
 		  
 		  //create an array of size 9. 0-8 for each type of hand
 		  //this will hold the count of each type of hand that gets created/evaluated
@@ -403,15 +403,15 @@ public static void handCompareTest(int howMany) throws Exception {
 		
 		System.out.println("On #" + i);
 		
-	int[] highCard = HandMaker.makeHighCardHand();
-	int[] pair = HandMaker.makePairHand();
-	int[] twoPair = HandMaker.makeTwoPairHand();
-	int[] trips = HandMaker.makeTripHand();
-	int[] straight = HandMaker.makeStraightHand();
-	int[] flush = HandMaker.makeFlushHand();
-	int[] fullhouse = HandMaker.makeFullHouseHand();
-	int[] quads = HandMaker.makeQuadsHand();
-	int[] straightFlush = HandMaker.makeStraightFlushHand();
+	Integer[] highCard = HandMakerFiveCard.getRandomHighCardHand();
+	Integer[] pair = HandMakerFiveCard.getRandomPairHand();
+	Integer[] twoPair = HandMakerFiveCard.getRandomTwoPairHand();
+	Integer[] trips = HandMakerFiveCard.getRandomTripsHand();
+	Integer[] straight = HandMakerFiveCard.getRandomStraightHand();
+	Integer[] flush = HandMakerFiveCard.getRandomFlushHand();
+	Integer[] fullHouse = HandMakerFiveCard.getRandomFullHouseHand();
+	Integer[] quads = HandMakerFiveCard.getRandomQuadsHand();
+	Integer[] straightFlush = HandMakerFiveCard.getRandomStraightFlushHand();
 	
 	int hc = DeadHorse.eval5(highCard[0], highCard[1], highCard[2], highCard[3], highCard[4]);
 	int p = DeadHorse.eval5(pair[0], pair[1], pair[2], pair[3], pair[4]);
@@ -419,7 +419,7 @@ public static void handCompareTest(int howMany) throws Exception {
 	int t = DeadHorse.eval5(trips[0], trips[1], trips[2], trips[3], trips[4]);
 	int s = DeadHorse.eval5(straight[0], straight[1], straight[2], straight[3], straight[4]);
 	int f = DeadHorse.eval5(flush[0], flush[1], flush[2], flush[3], flush[4]);
-	int fh = DeadHorse.eval5(fullhouse[0], fullhouse[1], fullhouse[2], fullhouse[3], fullhouse[4]);
+	int fh = DeadHorse.eval5(fullHouse[0], fullHouse[1], fullHouse[2], fullHouse[3], fullHouse[4]);
 	int q = DeadHorse.eval5(quads[0], quads[1], quads[2], quads[3], quads[4]);
 	int sf = DeadHorse.eval5(straightFlush[0], straightFlush[1], straightFlush[2], straightFlush[3], straightFlush[4]);
 	boolean check = hc<p && p<tp && tp<t && t<s && s<f && f<fh && fh<q && q<sf;
@@ -430,37 +430,50 @@ public static void handCompareTest(int howMany) throws Exception {
 	} else{
 		if(highCard[0] != 0)
 			System.out.println("High card failed " + getCardName5(highCard[0]) + " " + getCardName5(highCard[1]) + " " + getCardName5(highCard[2]) + " " + getCardName5(highCard[3]) + " " + getCardName5(highCard[4]) );
+		throw new Error("High card failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
 	if(p<tp && p<t && p<s && p<f && p<fh && p<q && p<sf){
 		//System.out.println("Pair pass");
 	} else{
 		System.out.println("Pair failed " + getCardName5(pair[0]) + " " + getCardName5(pair[1]) + " " + getCardName5(pair[2]) + " " + getCardName5(pair[3]) + " " + getCardName5(pair[4]) );
+		throw new Error("Pair failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
 	if(tp<t && tp<s && tp<f && tp<fh && tp<q && tp<sf){
 		//System.out.println("TwoPair pass");
 	} else{
 		System.out.println("TwoPair failed " + getCardName5(twoPair[0]) + " " + getCardName5(twoPair[1]) + " " + getCardName5(twoPair[2]) + " " + getCardName5(twoPair[3]) + " " + getCardName5(twoPair[4]) );
+		throw new Error("TwoPair failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
 	if(t<s && t<f && t<fh && t<q && t<sf){
 		//System.out.println("Trips pass");
 	} else{
 		System.out.println("Trips failed " + getCardName5(trips[0]) + " " + getCardName5(trips[1]) + " " + getCardName5(trips[2]) + " " + getCardName5(trips[3]) + " " + getCardName5(trips[4]) );
+		throw new Error("Trips failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
 	if(s<f && s<fh && s<q && s<sf){
 		//System.out.println("Straight pass");
 	} else{
 		System.out.println("Straight failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
+		throw new Error("Straight failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
 	if(f<fh && f<q && f<sf){
 		//System.out.println("Flush pass");
 	} else{
 		System.out.println("Flush failed " + getCardName5(flush[0]) + " " + getCardName5(flush[1]) + " " + getCardName5(flush[2]) + " " + getCardName5(flush[3]) + " " + getCardName5(flush[4]) );
+		throw new Error("Flush failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
 	if(fh<q && fh<sf){
 		//System.out.println("FullHouse pass");
 	} else{
-		System.out.println("FullHouse failed " + getCardName5(fullhouse[0]) + " " + getCardName5(fullhouse[1]) + " " + getCardName5(fullhouse[2]) + " " + getCardName5(fullhouse[3]) + " " + getCardName5(fullhouse[4]) );
+		System.out.println("FullHouse failed " + getCardName5(fullHouse[0]) + " " + getCardName5(fullHouse[1]) + " " + getCardName5(fullHouse[2]) + " " + getCardName5(fullHouse[3]) + " " + getCardName5(fullHouse[4]) );
+		throw new Error("FullHouse failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
 	}
+		if(q<sf){
+			//System.out.println("FullHouse pass");
+		} else{
+			System.out.println("Quads failed " + getCardName5(fullHouse[0]) + " " + getCardName5(fullHouse[1]) + " " + getCardName5(fullHouse[2]) + " " + getCardName5(fullHouse[3]) + " " + getCardName5(fullHouse[4]) );
+			throw new Error("Quads failed " + getCardName5(straight[0]) + " " + getCardName5(straight[1]) + " " + getCardName5(straight[2]) + " " + getCardName5(straight[3]) + " " + getCardName5(straight[4]) );
+		}
 
 	
 	
@@ -920,13 +933,13 @@ public static void createsomethingsomethingidk(int[] cards){
 		//to the number of each type of hand we expect
 		for(int j=0;j<handCounter.length;j++){
 			//check if expected == actual
-			boolean checked = handCounter[j]==handFrequency5[j];
+			boolean checked = handCounter[j]== handFrequency[j];
 			String res = checked
 					//if all hands accounted for, good news
-					?"All "+handFrequency5[j]+" "+handNames[j]+" hands are accounted for"
+					?"All "+ handFrequency[j]+" "+handNames[j]+" hands are accounted for"
 
 					//if the counts dont match, show how many failed
-					: (handCounter[j]-handFrequency5[j])+" of "+handFrequency5[j]
+					: (handCounter[j]- handFrequency[j])+" of "+ handFrequency[j]
 					+" "+handNames[j]+" hands failed!";
 
 			System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");

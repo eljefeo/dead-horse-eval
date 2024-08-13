@@ -3,10 +3,24 @@ package main;
 public class Entry {
 
 	public static void main(String[] args) throws java.lang.Exception {
+
+
+
+		//initializeHandMaker();
+		//doTest1();
+		//doTest2();
+
+		testCardConversion();
+		//util5.decode5CardHand(403701764);
+		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"2H", "9H", "TC", "7H", "JS"});
+		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"8H", "8S", "TH", "TD", "8C"});
+		//makeAllCards();
+
+
 		// EvalTestPlayground.showRandomizerDiagnostics(1);
 		// EvalTestPlayground.randomizerSpeedTest5CardDiagnostics(50);
 		// EvalTestPlayground.howLongUntilYouGetThisKindOfHands(2);
-		// EvalTestPlayground.handCompareTest(100);
+		 //EvalTestPlayground.handCompareTest(1000000);
 
 		// EvalTestPlayground.randomizerSpeedTest7Card(10000000);
 		// EvalTestPlayground.randomizerSpeedTest7nCard(10000000);
@@ -17,15 +31,15 @@ public class Entry {
 
 		 //EvalTestPlayground.randomizerSpeedTest5Card(25000000); // speed average :
 		// 25000000 hands in 0.121995199 seconds = 204Mhps
-		// EvalTestPlayground.randomizerSpeedTest5Card(130000000); // Did 130000000
+		//EvalTestPlayground.randomizerSpeedTest5Card(100000000); // Did 130000000
 		// hands in 0.6159191 seconds 211 million hands a second
-		 //System.out.println(EvalTestPlayground.humanDecodeEval("9d", "9c", "9h", "6s","9s"));
+		 //System.out.println(EvalTestPlayground.humanDecodeEval("9D", "9C", "9H", "6S","9S"));
 
 		//util5.getRandomThisType5CardHand(4);
 		//util7.getRandomThisType7CardHand(4);
 
 		 //EvalTestPlayground.testEveryHand5();
-		//EvalTestPlayground.testEval5AndNotes();
+		 //EvalTestPlayground.testEval5AndNotes();
 
 		 //EvalTestPlayground.testStatisticsManyHand5(10000000);
 		//DeadHorse7.findDuplicates();
@@ -33,13 +47,14 @@ public class Entry {
 		//DeadHorse7.findStraights();
 		//DeadHorse7.testeval7();
 		//DeadHorse7.eval7Checke();
-		DeadHorse7.eval7Checke2();
-		util7.testEveryHand7n();
+
+
+		//DeadHorse7.eval7Checke2();
+		//util7.testEveryHand7n();
 		//util5.humanEncodeEval("2S", "8S", "6S", "5S", "3S" );
 
 
-		//util5.decode5CardHand(403701764);
-		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"8H", "9D", "9C", "9H", "8D"});
+
 
 		// EvalTestPlayground.testEveryHand7();
 
@@ -71,4 +86,96 @@ Total Count : 133784560
 		 */
 
 	}
+
+
+
+	//private static void initializeHandMaker(){
+	//	//HandMakerFiveCard.prepAllHands();
+	//}
+
+	public static void doTest1() throws Exception {
+
+		for(int i = 0; i < util.handNames.length; i++) {
+			testHandMaker(i);
+		}
+	}
+
+	private static void makeAllCards() throws Exception {
+		System.out.println("making all 52 cards for 5 card poker:");
+		util5.makeAllDecimalNumsFromScratch();
+		System.out.println();
+
+		System.out.println("making all 52 cards for 7 card poker:");
+		util7.makeAllDecimalNumsFromScratch();
+		System.out.println();
+	}
+
+	private static void testCardConversion() throws Exception {
+		String test1 = "5H";
+		//int humanShortDecimal5 = util5.convertHumanShortNameToDecimal(test1);
+		int humanShortDecimal5 = util5.convertHumanShortNameToDecimal(test1);
+		System.out.println("convert human short to decimal 5: " + test1 + " : " + humanShortDecimal5);
+		System.out.println("human short binary : " + util.bin32(humanShortDecimal5));
+		System.out.println("Decimal to long name : " + util5.convertDecimalToLongName(humanShortDecimal5));
+		System.out.println("converting decimal back to short name 5: " + util5.convertDecimalToShortName(humanShortDecimal5));
+
+		long humanShortDecimal7 = util7.convertHumanShortNameToDecimal(test1);
+		System.out.println("conver human short to decimal 7: " + test1 + " : " + humanShortDecimal7);
+		System.out.println("human short binary : " + util.bin64(humanShortDecimal7));
+		System.out.println("Decimal to long name : " + util7.convertHumanShortNameToLongName(test1));
+		System.out.println("converting decimal back to short name 7: " + util7.convertDecimalToShortName(humanShortDecimal7));
+
+	}
+
+	private static void doTest2() throws Exception {
+
+
+
+
+
+		int[] allCardNums = util5.all52CardsDecimal;
+		String[] allCardNames = util.allCardNames;
+		String[] hand = new String[]{"7H", "4S", "2D", "5D", "KC"};
+		if(allCardNames.length != allCardNums.length){
+			throw new Error("Card numbers and names are not the same length!");
+
+		}
+
+		System.out.println("doing card names and nums: ");
+		for(String s : hand){
+			System.out.println(s + " " + util5.convertHumanShortNameToDecimal(s));//util5.cardMap.get(s) );//+ " : " + util5.de);
+		}
+
+		//for (int i = 0; i < allCardNums.length; i++) {
+		//	System.out.println(allCardNames[i] + " : " + allCardNums[i]);
+		//}
+
+	}
+
+	public static void testHandMaker(int type) throws Exception {
+		Integer[] cards = switch (type) {
+            case 0 -> HandMakerFiveCard.getRandomHighCardHand();
+            case 1 -> HandMakerFiveCard.getRandomPairHand();
+            case 2 -> HandMakerFiveCard.getRandomTwoPairHand();
+            case 3 -> HandMakerFiveCard.getRandomTripsHand();
+            case 4 -> HandMakerFiveCard.getRandomStraightHand();
+            case 5 -> HandMakerFiveCard.getRandomFlushHand();
+            case 6 -> HandMakerFiveCard.getRandomFullHouseHand();
+            case 7 -> HandMakerFiveCard.getRandomQuadsHand();
+            case 8 -> HandMakerFiveCard.getRandomStraightFlushHand();
+            default -> throw new Error("Please enter a correct hand type from 0-" + util.handNames.length);
+        };
+
+
+        //System.out.println(hch[0] + " = " + util5.getCardName5(hch[0]), " + hch[1] + ", " + hch[2] + ", " + hch[3] + ", " + hch[4]);
+		for (Integer integer : cards) {
+			System.out.print(integer + " = " + util5.getCardName5(integer) + ", ");
+		}
+		System.out.println("\n\n");
+		int cardsRes = util5.humanEncodeEval(util5.getCardName5(cards[0]), util5.getCardName5(cards[1]), util5.getCardName5(cards[2]), util5.getCardName5(cards[3]), util5.getCardName5(cards[4]));
+		String handDescription1 = util5.decode5CardHand(cardsRes);
+		System.out.println("Description: " + handDescription1 + " :: " + "int res : " + cardsRes);
+	}
 }
+
+

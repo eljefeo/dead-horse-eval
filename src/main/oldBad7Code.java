@@ -2,7 +2,7 @@ package main;
 
 import static main.util5.getCardName5;
 import static main.util.handNames;
-import static main.util5.allCardNums;
+import static main.util5.all52CardsDecimal;
 
 public class oldBad7Code {
 
@@ -632,22 +632,22 @@ public class oldBad7Code {
 
         int[] sevenCardFlush = {65538,65540,65552,65600,65664,66048,67584};
 
-        int[] sf7 = {allCardNums[21],allCardNums[16],allCardNums[20],allCardNums[18],allCardNums[19],allCardNums[17],allCardNums[22]};
-        int[] sf61 = {allCardNums[21],allCardNums[1],allCardNums[20],allCardNums[18],allCardNums[19],allCardNums[17],allCardNums[22]};
-        int[] sf62 = {allCardNums[21],allCardNums[16],allCardNums[20],allCardNums[18],allCardNums[19],allCardNums[49],allCardNums[22]};
-        int[] sf51 = {allCardNums[21],allCardNums[3],allCardNums[20],allCardNums[18],allCardNums[19],allCardNums[49],allCardNums[22]};
+        int[] sf7 = {all52CardsDecimal[21], all52CardsDecimal[16], all52CardsDecimal[20], all52CardsDecimal[18], all52CardsDecimal[19], all52CardsDecimal[17], all52CardsDecimal[22]};
+        int[] sf61 = {all52CardsDecimal[21], all52CardsDecimal[1], all52CardsDecimal[20], all52CardsDecimal[18], all52CardsDecimal[19], all52CardsDecimal[17], all52CardsDecimal[22]};
+        int[] sf62 = {all52CardsDecimal[21], all52CardsDecimal[16], all52CardsDecimal[20], all52CardsDecimal[18], all52CardsDecimal[19], all52CardsDecimal[49], all52CardsDecimal[22]};
+        int[] sf51 = {all52CardsDecimal[21], all52CardsDecimal[3], all52CardsDecimal[20], all52CardsDecimal[18], all52CardsDecimal[19], all52CardsDecimal[49], all52CardsDecimal[22]};
 
         int[][] allTestHands = {
-                {allCardNums[1],allCardNums[17],allCardNums[15],allCardNums[24],allCardNums[35],allCardNums[45],allCardNums[51]},
-                {allCardNums[1],allCardNums[17],allCardNums[15],allCardNums[25],allCardNums[35],allCardNums[45],allCardNums[51]}, //aces
-                {allCardNums[1],allCardNums[16],allCardNums[0],allCardNums[25],allCardNums[35],allCardNums[13],allCardNums[51]},//aces
-                {allCardNums[12],allCardNums[17],allCardNums[15],allCardNums[25],allCardNums[35],allCardNums[45],allCardNums[51]},//aces
-                {allCardNums[1],allCardNums[2],allCardNums[17],allCardNums[3],allCardNums[18],allCardNums[48],allCardNums[51]},// 34567
-                {allCardNums[1],allCardNums[44],allCardNums[9],allCardNums[6],allCardNums[3],allCardNums[8],allCardNums[45]},//spades
-                {allCardNums[4],allCardNums[32],allCardNums[46],allCardNums[48],allCardNums[35],allCardNums[17],allCardNums[30]},// 6 9 9 11 11 6 6 //6s full of 11s or 9s
+                {all52CardsDecimal[1], all52CardsDecimal[17], all52CardsDecimal[15], all52CardsDecimal[24], all52CardsDecimal[35], all52CardsDecimal[45], all52CardsDecimal[51]},
+                {all52CardsDecimal[1], all52CardsDecimal[17], all52CardsDecimal[15], all52CardsDecimal[25], all52CardsDecimal[35], all52CardsDecimal[45], all52CardsDecimal[51]}, //aces
+                {all52CardsDecimal[1], all52CardsDecimal[16], all52CardsDecimal[0], all52CardsDecimal[25], all52CardsDecimal[35], all52CardsDecimal[13], all52CardsDecimal[51]},//aces
+                {all52CardsDecimal[12], all52CardsDecimal[17], all52CardsDecimal[15], all52CardsDecimal[25], all52CardsDecimal[35], all52CardsDecimal[45], all52CardsDecimal[51]},//aces
+                {all52CardsDecimal[1], all52CardsDecimal[2], all52CardsDecimal[17], all52CardsDecimal[3], all52CardsDecimal[18], all52CardsDecimal[48], all52CardsDecimal[51]},// 34567
+                {all52CardsDecimal[1], all52CardsDecimal[44], all52CardsDecimal[9], all52CardsDecimal[6], all52CardsDecimal[3], all52CardsDecimal[8], all52CardsDecimal[45]},//spades
+                {all52CardsDecimal[4], all52CardsDecimal[32], all52CardsDecimal[46], all52CardsDecimal[48], all52CardsDecimal[35], all52CardsDecimal[17], all52CardsDecimal[30]},// 6 9 9 11 11 6 6 //6s full of 11s or 9s
                 //{allCardNums[6],allCardNums[33],allCardNums[19],allCardNums[32],allCardNums[50],allCardNums[17],allCardNums[45]},//4x8s
-                {allCardNums[12],allCardNums[25],allCardNums[19],allCardNums[32],allCardNums[38],allCardNums[17],allCardNums[51]},//4x8s
-                {allCardNums[21],allCardNums[16],allCardNums[20],allCardNums[18],allCardNums[19],allCardNums[17],allCardNums[22]}//78910J
+                {all52CardsDecimal[12], all52CardsDecimal[25], all52CardsDecimal[19], all52CardsDecimal[32], all52CardsDecimal[38], all52CardsDecimal[17], all52CardsDecimal[51]},//4x8s
+                {all52CardsDecimal[21], all52CardsDecimal[16], all52CardsDecimal[20], all52CardsDecimal[18], all52CardsDecimal[19], all52CardsDecimal[17], all52CardsDecimal[22]}//78910J
         };
 /*	 int tpo = (threepair[0]&8191)|(threepair[1]&8191)|(threepair[2]&8191)|(threepair[3]&8191)|(threepair[4]&8191)|(threepair[5]&8191)|(threepair[6]&8191);
 	 int tpx = (threepair[0]&8191)^(threepair[1]&8191)^(threepair[2]&8191)^(threepair[3]&8191)^(threepair[4]&8191)^(threepair[5]&8191)^(threepair[6]&8191);
@@ -676,7 +676,7 @@ public class oldBad7Code {
         //int res = DeadHorseEval.eval7(f7);
         int res = oldBad7Code.eval7(f7[0],f7[1],f7[2],f7[3],f7[4],f7[5],f7[6]);
 
-        System.out.println("Outcome " + res + ", " + handNames[(res>>26)] + "\n"+ util5.bin32(res));
+        System.out.println("Outcome " + res + ", " + handNames[(res>>26)] + "\n"+ util.bin32(res));
 
 /*DeadHorseEval.sort7(f7);
 	System.out.println(f7[0]+" "+getName(f7[0])+", "+f7[1]+" "+getName(f7[1])+", "+f7[2]+" "+getName(f7[2])+", "

@@ -5,7 +5,7 @@ import java.util.Random;
 public class util7 extends util {
 
     final static int total7CardHandCount = 133784560;
-    final static int[] handFrequency7 = {
+    final static int[] handFrequency = {
             23294460, 58627800, 31433400, 6461620, 6180020, 4047644, 3473184, 224848, 41584
     };
     final static long highCardRet = 0;
@@ -21,7 +21,7 @@ public class util7 extends util {
 
     // cards are all 2 through Ace, diamonds clubs then hearts then spades (we may
     // change the order, Im already mixing up orders everywhere of cards and suits)
-    final static long[] all52Cards7 = new long[]{549755813889L, 549755813896L, 549755813952L, 549755814400L,
+    final static long[] all52CardsDecimal = new long[]{549755813889L, 549755813896L, 549755813952L, 549755814400L,
             549755817984L, 549755846656L, 549756076032L, 549757911040L, 549772591104L, 549890031616L, 550829555712L,
             558345748480L, 618475290624L, 4398046511105L, 4398046511112L, 4398046511168L, 4398046511616L,
             4398046515200L, 4398046543872L, 4398046773248L, 4398048608256L, 4398063288320L, 4398180728832L,
@@ -207,13 +207,13 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         }
         for(int j=0;j<handCounter.length;j++){
             //check if expected == actual
-            boolean checked = handCounter[j]==handFrequency7[j];
+            boolean checked = handCounter[j]== handFrequency[j];
             String res = checked
                     //if all hands accounted for, good news
-                    ?"PASS - All "+handFrequency7[j]+" "+handNames[j]+" hands are accounted for"
+                    ?"PASS - All "+ handFrequency[j]+" "+handNames[j]+" hands are accounted for"
 
                     //if the counts dont match, show how many failed
-                    : "FAIL - " +handCounter[j]+" out of "+handFrequency7[j]
+                    : "FAIL - " +handCounter[j]+" out of "+ handFrequency[j]
                     +" "+handNames[j]+" hands received!";
 
             System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
@@ -223,7 +223,17 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
 
     }
 
-    public static long[] makeAll52Cards7Decimal() {
+    public static void makeAllDecimalNumsFromScratch() throws Exception {
+
+        for(int i = 0; i < suitDecimals.length; i++){
+            for(int j = 0; j < cardDecimals.length; j++){
+                long newNum = makeDecimalFromIndexes(j, i);
+                System.out.println("new num : " + newNum + " : " + convertDecimalToShortName(newNum));
+            }
+        }
+
+    }
+    public static long[] makeAll52CardsDecimal() {
 
         int cardCount = util.cardChars.length;
         int suitCount = util.suitChars.length;
@@ -290,7 +300,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
 
     public static long[] makeThisManyRandom7CardHands(int howMany) {
 
-        long[] fiftyTwoCards = util7.all52Cards7;
+        long[] fiftyTwoCards = util7.all52CardsDecimal;
 
         // make a copy of array to do each hand
         long[] allc2 = fiftyTwoCards.clone();
@@ -334,24 +344,13 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         return allCards;
     }
 
-    public static String convertHumanShortNameToLongName7(String cardString) throws Exception {
-        // like AH or 5S
 
-        if (cardString.length() != 2) {
-            throw new IllegalArgumentException("Card must be 2 chars long:  " + cardString);
-        }
-
-        int cardIndex = getCardIndexChar(cardString.charAt(0));
-        int suitIndex = getSuitIndexChar(cardString.charAt(1));
-
-        return util.cardLongs[cardIndex] + util.OF + util.suitLongs[suitIndex];
-    }
 
     // This method will take a String like "5S" or "JC" (five of clubs or Jack of
     // Spades) and turn it into the decimal equivalent for that card
     // This function is not optimized, just here to make things easier. If actually
     // needed in some performance situation, we should find faster ways to do this
-    public static long convertHumanShortNameToDecimal7(String cardString) throws Exception {
+    public static long convertHumanShortNameToDecimal(String cardString) throws Exception {
         // like AH or 5S
         if (cardString.length() != 2) {
             throw new IllegalArgumentException("Card must be 2 chars long:  " + cardString);
@@ -363,15 +362,25 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         return makeDecimalFromIndexes(cardIndex, suitIndex);
     }
 
-    public static long[] convertHandHumanShortToDecimal7(String[] cards) throws Exception {
+    public static long[] convertHandHumanShortToDecimal(String[] cards) throws Exception {
         if (cards.length != 7) {
             throw new IllegalArgumentException("There must be 7 cards");
         }
         long[] ret = new long[cards.length];
         for (int i = 0; i < cards.length; i++) {
-            ret[i] = convertHumanShortNameToDecimal7(cards[i]);
+            ret[i] = convertHumanShortNameToDecimal(cards[i]);
         }
         return ret;
+    }
+
+    public static long convertHumanLongNameToDecimal (String cardString){
+        //return cardMap.get(cardString);
+        return 0;
+    }
+
+    public static String convertHumanLongNameToShortName (String cardString){
+        //return cardMap.get(cardString);
+        return "";
     }
 
     public static long orHand(long[] cards) {
@@ -392,11 +401,11 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         return (1L << (cardIndex * 3)) | (1L << ((suitIndex + 13) * 3));
     }
 
-    public static String convertDecimalToLongName7(long card) throws Exception {
+    public static String convertDecimalToLongName(long card) throws Exception {
         return getCardLong(card) + util.OF + getSuitLong(card);
     }
 
-    public static String convertDecimalToShortName7(long card) throws Exception {
+    public static String convertDecimalToShortName(long card) throws Exception {
         return (getCardChar(card) + "" + getSuitChar(card));
     }
 
@@ -431,25 +440,9 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
                 return i;
             }
         }
-        throw new Exception("Error retreiving card index for card: " + card);
+        throw new Exception("Error retrieving card index for card: " + card);
     }
 
-    public static int getSuitIndexChar(char suitChar) throws Exception {
-        for (int i = 0; i < util.suitChars.length; i++) {
-            if (suitChar == util.suitChars[i]) {
-                return i;
-            }
-        }
-        throw new Exception("Error retreiving suit index for suit char: " + suitChar);
-    }
 
-    public static int getCardIndexChar(char cardChar) throws Exception {
-        for (int i = 0; i < util.cardChars.length; i++) {
-            if (cardChar == util.cardChars[i]) {
-                return i;
-            }
-        }
-        throw new Exception("Error retreiving card index for card char: " + cardChar);
-    }
 
 }
