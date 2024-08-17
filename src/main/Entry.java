@@ -10,7 +10,8 @@ public class Entry {
 		//doTest1();
 		//doTest2();
 
-		testCardConversion();
+		//testCardConversion();
+		DeadHorseExamples.doTestExamples();
 		//util5.decode5CardHand(403701764);
 		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"2H", "9H", "TC", "7H", "JS"});
 		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"8H", "8S", "TH", "TD", "8C"});
@@ -113,11 +114,11 @@ Total Count : 133784560
 	private static void testCardConversion() throws Exception {
 		String test1 = "5H";
 		//int humanShortDecimal5 = util5.convertHumanShortNameToDecimal(test1);
-		int humanShortDecimal5 = util5.convertHumanShortNameToDecimal(test1);
+		int humanShortDecimal5 = util5.shortCardNameToDecimal(test1);
 		System.out.println("convert human short to decimal 5: " + test1 + " : " + humanShortDecimal5);
 		System.out.println("human short binary : " + util.bin32(humanShortDecimal5));
-		System.out.println("Decimal to long name : " + util5.convertDecimalToLongName(humanShortDecimal5));
-		System.out.println("converting decimal back to short name 5: " + util5.convertDecimalToShortName(humanShortDecimal5));
+		System.out.println("Decimal to long name : " + util5.decimalToLongCardName(humanShortDecimal5));
+		System.out.println("converting decimal back to short name 5: " + util5.decimalToShortCardName(humanShortDecimal5));
 
 		long humanShortDecimal7 = util7.convertHumanShortNameToDecimal(test1);
 		System.out.println("conver human short to decimal 7: " + test1 + " : " + humanShortDecimal7);
@@ -143,7 +144,7 @@ Total Count : 133784560
 
 		System.out.println("doing card names and nums: ");
 		for(String s : hand){
-			System.out.println(s + " " + util5.convertHumanShortNameToDecimal(s));//util5.cardMap.get(s) );//+ " : " + util5.de);
+			System.out.println(s + " " + util5.shortCardNameToDecimal(s));//util5.cardMap.get(s) );//+ " : " + util5.de);
 		}
 
 		//for (int i = 0; i < allCardNums.length; i++) {
@@ -172,8 +173,8 @@ Total Count : 133784560
 			System.out.print(integer + " = " + util5.getCardName5(integer) + ", ");
 		}
 		System.out.println("\n\n");
-		int cardsRes = util5.humanEncodeEval(util5.getCardName5(cards[0]), util5.getCardName5(cards[1]), util5.getCardName5(cards[2]), util5.getCardName5(cards[3]), util5.getCardName5(cards[4]));
-		String handDescription1 = util5.decode5CardHand(cardsRes);
+		int cardsRes = util5.evalShortCards(util5.getCardName5(cards[0]), util5.getCardName5(cards[1]), util5.getCardName5(cards[2]), util5.getCardName5(cards[3]), util5.getCardName5(cards[4]));
+		String handDescription1 = util5.decode5CardHand(cardsRes, true);
 		System.out.println("Description: " + handDescription1 + " :: " + "int res : " + cardsRes);
 	}
 }

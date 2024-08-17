@@ -12,7 +12,7 @@ public class HandMakerFiveCard {
 			16386, 16388, 16392, 16400, 16416, 16448, 16512, 16640, 16896, 17408, 18432, 20480, 8193, 8194, 8196, 8200,
 			8208, 8224, 8256, 8320, 8448, 8704, 9216, 10240, 12288 };*/
 
-	static Random rand = new Random();
+	static final Random rand = new Random();
 
 	private static List<Integer[]> allHighCardHands = new ArrayList<>();
 	private static List<Integer[]> allPairHands = new ArrayList<>();
@@ -22,28 +22,34 @@ public class HandMakerFiveCard {
 	private static List<Integer[]> allFlushHands = new ArrayList<>();
 	private static List<Integer[]> allFullHouseHands = new ArrayList<>();
 	private static List<Integer[]> allQuadHands = new ArrayList<>();
-	private static List<Integer[]> allRoyalFlushHands = new ArrayList<>();
-	private static List<List<Integer[]>> allHands = new ArrayList<>();
+	private static List<Integer[]> allStraightFlushHands = new ArrayList<>();
+	private static List<List<Integer[]>> allHandsOrdered = new ArrayList<>();
+	private static List<Integer[]> allHands = new ArrayList<>();
 	static {
-		allHands.add(allHighCardHands);
-		allHands.add(allPairHands);
-		allHands.add(allTwoPairHands);
-		allHands.add(allTripHands);
-		allHands.add(allStraightHands);
-		allHands.add(allFlushHands);
-		allHands.add(allFullHouseHands);
-		allHands.add(allQuadHands);
-		allHands.add(allRoyalFlushHands);
-	}
+		allHandsOrdered.add(allHighCardHands);
+		allHandsOrdered.add(allPairHands);
+		allHandsOrdered.add(allTwoPairHands);
+		allHandsOrdered.add(allTripHands);
+		allHandsOrdered.add(allStraightHands);
+		allHandsOrdered.add(allFlushHands);
+		allHandsOrdered.add(allFullHouseHands);
+		allHandsOrdered.add(allQuadHands);
+		allHandsOrdered.add(allStraightFlushHands);
 
-	static{
+		//This will create and evaluate every possible 5 card hand. Then add the hand to allHandsOrdered in the correct spot, and add it to allHands
 		int[] allFiveCardHands = EvalTestPlayground.createAllFiveCardHands();
 		for(int i=0;i<allFiveCardHands.length;i+=5){
 			int res = DeadHorse.eval5(allFiveCardHands[i],allFiveCardHands[i+1],
 					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4])>>26;
-			allHands.get(res).add(new Integer[] {allFiveCardHands[i],allFiveCardHands[i+1],
-					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4]});
+			Integer[] aHand = new Integer[] {allFiveCardHands[i],allFiveCardHands[i+1],
+					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4]};
+
+			allHandsOrdered.get(res).add(aHand);
+
+			allHands.add(aHand);
 		}
+
+
 	}
 
 
@@ -137,7 +143,7 @@ public class HandMakerFiveCard {
 				// x would remain zero if it chose it again, and the loop will continue
 				// while x==0 until it chooses a card we have not picked yet
 				while (x == 0) {
-					ran = r.nextInt(52);
+					ran = r.nextInt(52 );
 					x = allc2[ran];
 				}
 
@@ -206,17 +212,53 @@ public class HandMakerFiveCard {
 		for(int i=0;i<allFiveCardHands.length;i+=5){
 			int res = DeadHorse.eval5(allFiveCardHands[i],allFiveCardHands[i+1],
 					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4])>>26;
-			allHands.get(res).add(new Integer[] {allFiveCardHands[i],allFiveCardHands[i+1],
+			allHandsOrdered.get(res).add(new Integer[] {allFiveCardHands[i],allFiveCardHands[i+1],
 					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4]});
 		}
 
 
 	}
 
-	public static List<List<Integer[]>> getAllHands(){
-		return allHands;
+	public static List<List<Integer[]>> getAllHandsOrdered(){
+		return allHandsOrdered;
 	}
 
+
+
+	public static String[] getRandomHandFromDescription(String handDescription) throws Exception {
+
+		//int handType;
+		//if(handDescription.toUpperCase().equals(util.ROYAL_FLUSH.toUpperCase())){
+		//	handType = 9; //maybe can hijack some functions and use 9 as royal flush indicator
+		//} else {
+			int handType = handDescriptionToType(handDescription);
+			Integer[] cardsInt = getRandomCertainTypeHand(handType);
+		//}
+
+		return util5.decimalsToShortCardNames(cardsInt);
+	}
+
+	public static int handDescriptionToType(String handDescription){
+		return switch (handDescription.toUpperCase().trim()){
+			case "HIGH CARD" -> 0;
+			case "PAIR" -> 1;
+			case "TWO PAIR" -> 2;
+			case "THREE OF A KIND", "TRIPS" -> 3;
+            case "STRAIGHT" -> 4;
+			case "FLUSH" -> 5;
+			case "FULL HOUSE", "FULL BOAT", "BOAT" -> 6;
+            case "QUADS", "FOUR OF A KIND" -> 7;
+            case "STRAIGHT FLUSH" -> 8;
+			//case "ROYAL FLUSH" -> 8???;
+
+			default -> throw new IllegalStateException("Unexpected value for hand description: " + handDescription.toUpperCase());
+		};
+	}
+
+	public static Integer[] getRandomHand(){
+
+		return allHands.get(rand.nextInt(allHands.size()));
+	}
 	public static Integer[] getRandomHighCardHand(){
 		return getRandomCertainTypeHand(0);
 	}
@@ -246,10 +288,20 @@ public class HandMakerFiveCard {
 	}
 
 	public static Integer[] getRandomCertainTypeHand(int type){
-		List<Integer[]> highCardHands = allHands.get(type);
-		int ni = rand.nextInt(highCardHands.size());
+		List<Integer[]> handList = allHandsOrdered.get(type);
+		int ni = rand.nextInt(handList.size());
 		//System.out.println("getRandomCertainTypeHand : " + util.handNames[type] + " random hand : " + ni + ", " + highCardHands.size());
-		return highCardHands.get(ni);
+		return handList.get(ni);
+	}
+
+
+
+
+	//Just testing if this could work, make sure references are good in the list of lists
+	public static void testGetRandomTestSomeHand() throws Exception {
+		Integer[] cards = allQuadHands.get(0);
+		String[] cardsSt = util5.decimalsToShortCardNames(cards);
+		System.out.println("Random hand : " + Arrays.toString(cardsSt));
 	}
 
 }

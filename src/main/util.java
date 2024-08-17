@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Arrays;
+
 public abstract class util {
     static String[] allCardNames = new String[]{
             //"2s", "3s", "4s", "5s", "6s", "7s", "8s", "9s", "10s", "Js", "Qs", "Ks", "As",
@@ -25,6 +27,7 @@ public abstract class util {
     //static final String[] suitLongsReversed = new String[]{"Spades", "Hearts", "Clubs", "Diamonds"};
 
     static final String OF = " of ";
+    static final String ROYAL_FLUSH = "Royal Flush";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -181,8 +184,24 @@ public abstract class util {
         // that way it wont appear higher than a 2,3,4,5,6. So here we check if that ACE is missing, and we add the word in...
         if(cards[4] == null)
             cards[4] = "Ace";
+
         return handNames[8] + " : " + cards[4] + " " + cards[3] + " " + cards[2] + " " + cards[1] + " " + cards[0];
     }
 
     //abstract public Object makeDecimalFromIndexes(int cardIndex, int suitIndex) ;
+
+
+    public static int indexOfLargestIntInArray(Integer[] nums){
+        int maxI = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            maxI = nums[i] > nums[maxI] ? i : maxI;
+        }
+
+        return maxI;
+    }
+
+    public static int indexOfLargestIntInArray(int[] nums){
+        return indexOfLargestIntInArray(Arrays.stream(nums).boxed().toArray(Integer[]::new));
+    }
 }

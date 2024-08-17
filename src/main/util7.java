@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class util7 extends util {
 
+    static final int numOfCardsPerHand = 7;
     final static int total7CardHandCount = 133784560;
     final static int[] handFrequency = {
             23294460, 58627800, 31433400, 6461620, 6180020, 4047644, 3473184, 224848, 41584

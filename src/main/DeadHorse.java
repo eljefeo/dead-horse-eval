@@ -25,6 +25,13 @@ public class DeadHorse {
         return eval5(cards[0], cards[1], cards[2], cards[3], cards[4]);
     }
 
+    public static int eval5(Integer[] cards) {
+        if (cards.length != 5) {
+            throw new IllegalArgumentException("You must pass in 5 and only 5 numbers");
+        }
+        return eval5(cards[0], cards[1], cards[2], cards[3], cards[4]);
+    }
+
     public static int eval5WithNotes(int a, int b, int c, int d, int e) {
         //& (and) is if both bits are 1, then return 1
         //| (or) is if either of the bits are 1, then return 1
