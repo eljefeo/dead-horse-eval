@@ -218,13 +218,13 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  //to the number of each type of hand we expect
 		   for(int j=0;j<handCounter.length;j++){
 			   //check if expected == actual
-			   boolean checked = handCounter[j]== handFrequency[j];
+			   boolean checked = handCounter[j] == util5.handFrequency[j];
 			   String res = checked
 					   //if all hands accounted for, good news
-					   ?"All "+ handFrequency[j]+" "+handNames[j]+" hands are accounted for"
+					   ? "All " + util5.handFrequency[j] + " " + handNames[j] + " hands are accounted for"
 							   
 						//if the counts dont match, show how many failed
-					   : (handCounter[j]- handFrequency[j])+" of "+ handFrequency[j]
+					   : (handCounter[j] - util5.handFrequency[j]) + " of "+ handFrequency[j]
 							   +" "+handNames[j]+" hands failed!"; 
 			   
 			   System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");

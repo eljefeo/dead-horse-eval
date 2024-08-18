@@ -7,13 +7,13 @@ public class DeadHorse5Examples {
 
 
     public static void doTestExamples() throws Exception {
-        shortToLong(); //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
+        //shortToLong(); //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
         //HandMakerFiveCard.testGetRandomTestSomeHand();
         //getRandomHandFromDescription();
 
         //speedGameOfPoker();
         speedGameOfPokerRealDeck();
-        getSomeRandomHand();
+        //getSomeRandomHand();
     }
 
     private static void speedGameOfPoker() throws Exception {
@@ -78,7 +78,7 @@ public class DeadHorse5Examples {
 
     private static void getRandomHandFromDescription() throws Exception {
         //Here you can type in what type of hand you want and it will find a random hand of that type
-        String handType = " flush";
+        String handType = "full house";
         System.out.println("Retrieving random " + handType + " hand:");
         String[] cards = HandMakerFiveCard.getRandomHandFromDescription(handType);
         System.out.println(Arrays.toString(cards) + " --- " + util5.shortCardsToLongHandDescription(cards, false));
@@ -91,7 +91,7 @@ public class DeadHorse5Examples {
         //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
         System.out.println("Example: shorthand card names to full hand description..." );
         String[] cards = new String[]{
-                "2C", "2S", "9C", "7C", "7H"
+                "2C", "4C", "5C", "3C", "6C"
         };
         System.out.println("Evaluating these cards: " + Arrays.toString(cards));
         String result = util5.shortCardsToLongHandDescription(cards, false);

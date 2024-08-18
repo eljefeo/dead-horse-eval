@@ -30,7 +30,7 @@ public class Entry {
 
 		// EvalTestPlayground.randomizerSpeedTest7Card(30000000);
 
-		 //EvalTestPlayground.randomizerSpeedTest5Card(25000000); // speed average :
+		 //EvalTestPlayground.randomizerSpeedTest5Card(50000000); // speed average :
 		// 25000000 hands in 0.121995199 seconds = 204Mhps
 		//EvalTestPlayground.randomizerSpeedTest5Card(100000000); // Did 130000000
 		// hands in 0.6159191 seconds 211 million hands a second
@@ -39,7 +39,7 @@ public class Entry {
 		//util5.getRandomThisType5CardHand(4);
 		//util7.getRandomThisType7CardHand(4);
 
-		 //EvalTestPlayground.testEveryHand5();
+		 EvalTestPlayground.testEveryHand5();
 		 //EvalTestPlayground.testEval5AndNotes();
 
 		 //EvalTestPlayground.testStatisticsManyHand5(10000000);
