@@ -3,11 +3,11 @@ package main;
 import java.util.Arrays;
 import java.util.List;
 
-public class DeadHorseExamples {
+public class DeadHorse5Examples {
 
 
     public static void doTestExamples() throws Exception {
-        //shortToLong();
+        shortToLong(); //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
         //HandMakerFiveCard.testGetRandomTestSomeHand();
         //getRandomHandFromDescription();
 
@@ -88,7 +88,7 @@ public class DeadHorseExamples {
 
     //5 card
     public static void shortToLong(){
-        //This shows how to mock up a hand and get it evaluated into a human-readable description
+        //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
         System.out.println("Example: shorthand card names to full hand description..." );
         String[] cards = new String[]{
                 "2C", "2S", "9C", "7C", "7H"
