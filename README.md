@@ -1,5 +1,7 @@
 # DeadHorseEval
 
+* (Update !!! - I have an almost working 7 card evaluator now. It is able to do the operations of figuring out what type of hand it is, I am working on the part where we return the important bits vs kicker bits so you can get a comparable number. I also am working on the decoder)
+
 So I decided to beat a dead horse and make another 5 card evaluator. I did not like the idea of lugging around a >100MB lookup table file. I figured this eval would go into an app someday and who in their right minds would attach a 100MB file to a 10MB game just to eval the hand? But I also loved the speed of the lookup table evals, so I wanted both.
 So I wanted to make a fast and small eval, yes like so many others. I also wrote it in Java, partly because most people dont, and partly so I can throw it into an android app later maybe...Either way it can quickly be recoded for other languages. This is all very new.
 Before you read into the explanation, please note that this evaluator has been tested for accuracy against all 2,598,960 5card hands that you can make with a 52 card deck (Which it currently burns through in .02 seconds or so).
