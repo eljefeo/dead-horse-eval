@@ -18,6 +18,10 @@ public class HandMakerSevenCard {
     private static final List<Long[]> allQuadHands = new ArrayList<>();
     private static final List<Long[]> allStraightFlushHands = new ArrayList<>();
     private static final List<List<Long[]>> allHandsOrdered = new ArrayList<>();
+
+
+
+    //TODO This works in 5 card evaluator because theres only 2.5 million hands. Will not work with 7 card as there is 133 million hands, we will run out of Java heap space...
     private static final List<Long[]> allHands = new ArrayList<>();
     static {
         allHandsOrdered.add(allHighCardHands);
@@ -39,7 +43,7 @@ public class HandMakerSevenCard {
 
             long res = DeadHorse7.eval7(aHand) >>> 51;
 
-            System.out.println("cast long to int for hand type, hopefully : " + ((int) res));
+            //System.out.println("cast long to int for hand type, hopefully : " + ((int) res));
             allHandsOrdered.get((int)res).add(aHand);
 
             allHands.add(aHand);

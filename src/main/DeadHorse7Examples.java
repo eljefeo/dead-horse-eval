@@ -55,7 +55,13 @@ public class DeadHorse7Examples {
 
     }
 
-    private static void getRandomHandFromDescription() {
+    private static void getRandomHandFromDescription() throws Exception {
+
+        //Here you can type in what type of hand you want and it will find a random hand of that type.
+        String handType = "full house";
+        System.out.println("Retrieving random " + handType + " hand:");
+        String[] cards = HandMakerSevenCard.getRandomHandFromDescription(handType);
+        System.out.println(Arrays.toString(cards) + " --- " + util5.shortCardsToLongHandDescription(cards, false));
     }
 
     private static void speedGameOfPoker() {
