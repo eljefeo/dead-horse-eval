@@ -11,7 +11,9 @@ public class DeadHorse7Examples {
 
         //shortToLong(); //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
         //HandMakerFiveCard.testGetRandomTestSomeHand();
-        getRandomHandFromDescription();
+        //getRandomHandFromDescription();
+
+
 
         speedGameOfPoker();
         speedGameOfPokerRealDeck();
@@ -19,7 +21,7 @@ public class DeadHorse7Examples {
         
     }
 
-    private static void testBin(){
+    private static void testBin() throws Exception {
 
         String[] cards1 = new String[]{
                 //I think there is a problem here, how can we tell if 4ofAKind of 2s with 7 kicker, is less than 3 of a kind with 2 kicker
@@ -53,6 +55,37 @@ public class DeadHorse7Examples {
         int winner = result1 > result2 ? 1 : 2;
         System.out.println("\nwinner: " + result1 + " : " + result2 + " ::: Player " + winner);
 
+
+        long[] quadCards = HandMakerSevenCard.getRandomQuadsHand();
+
+        long res3 = DeadHorse7.eval7(quadCards);
+        System.out.println("Manufactured quad hand: " + util.handNames[(int)(res3 >>> 51)]);
+
+
+        int type = 0;
+        for(int i = 0; i < util.handNames.length; i++){
+            System.out.println("\nSearching for a " + util.handNames[i] + " type of hand");
+            long[] randCards = util7.getRandomThisType7CardHand(i);
+
+            long rRes = DeadHorse7.eval7(randCards);
+            //int gotType = rRes >>> 51;
+            String[] shrts = util7.decimalsToShortCardNames(randCards);
+
+
+            System.out.println("Got : " + util.handNames[(int)(rRes >>> 51)] + " : " + shrts[0] + ", " + shrts[1] + ", " + shrts[2] + ", " + shrts[3] + ", " + shrts[4] + ", " + shrts[5] + ", " + shrts[6]);
+
+
+
+
+        }
+        System.out.println("making straight hand");
+        int max = 1000;
+        for(int i = 0; i < max; i++){
+            HandMakerSevenCard.getRandomStraightHand2();
+        }
+
+
+
     }
 
     private static void getRandomHandFromDescription() throws Exception {
@@ -60,8 +93,11 @@ public class DeadHorse7Examples {
         //Here you can type in what type of hand you want and it will find a random hand of that type.
         String handType = "full house";
         System.out.println("Retrieving random " + handType + " hand:");
-        String[] cards = HandMakerSevenCard.getRandomHandFromDescription(handType);
+        long[] cardLongs = HandMakerSevenCard.getRandomHandFromDescription(handType);
+        String[] cards = util7.decimalsToShortCardNames(cardLongs);
         System.out.println(Arrays.toString(cards) + " --- " + util5.shortCardsToLongHandDescription(cards, false));
+
+
     }
 
     private static void speedGameOfPoker() {

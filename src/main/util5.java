@@ -332,7 +332,7 @@ public class util5 extends util{
             int someOne = (int) Math.pow(2,impKickCount);
             int maybe1 = impKickBts & someOne;
             if(maybe1 != 0){
-                strngs.add(util.cardLongs[impKickCount]);
+                strngs.add(util.cardLongNames[impKickCount]);
                 impKickBts ^= maybe1;
             }
             impKickCount--;
@@ -429,7 +429,7 @@ public class util5 extends util{
     }
 
     public static String getCardLong(int card) throws Exception {
-        return util.cardLongs[getCardIndexDecimal(card)];
+        return util.cardLongNames[getCardIndexDecimal(card)];
     }
 
     public static String getSuitLong(int card) throws Exception {

@@ -167,6 +167,8 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
 
 
     private static final Map<String, Long> cardMap = new HashMap<>();
+
+
     static {
         for (int i = 0; i < all52CardsDecimal.length; i++){
             cardMap.put(allCardNames[i], all52CardsDecimal[i]);
@@ -269,6 +271,29 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         return cards;
     }
 
+    public static Long makeDecimalFromChars(char cardChar, char suitChar) throws Exception {
+        int cardInd = -1, suitInd = -1;
+        for(int i = 0; i < cardChars.length; i++){
+            if(cardChars[i] == cardChar){
+                cardInd = i;
+                break;
+            }
+         }
+        for(int i = 0; i < suitChars.length; i++){
+            if(suitChars[i] == suitChar){
+                suitInd = i;
+                break;
+            }
+        }
+
+        if(cardInd != -1 && suitInd != -1){
+            return makeDecimalFromIndexes(cardInd, suitInd);
+        }
+
+        throw new Exception("Invalid Chars requested: card: " + cardChar + " or  suit: " + suitChar);
+
+    }
+
     // can send user readable strings into here like 'AS or JC or 9H or TD (ten of diamonds)'..
 //capital letter for face cards and UPPER case letter for suit
     public static long evalShortCards(String as, String bs, String cs, String ds, String es, String fs, String gs){
@@ -286,6 +311,54 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
     }
 
     public static long[] getRandomThisType7CardHand(int whatKind) throws Exception { // 0 = high card, 1 = pair, 2 = 2pair etc..
+
+
+        System.out.println("looking for this type of hand: " + whatKind + " : " + util.handNames[whatKind]);
+
+        int counter = 0;
+        int limit = 10000000;
+        int batchSize = 1000;//make this many hands at a time, go through them all looking for the desired outcome (instead of making 1 hand at a time, slower)
+        if (whatKind > handNames.length - 1 || whatKind < 0) {
+            throw new IllegalArgumentException(whatKind + " is invalid. Please pick a hand from 0 - " + (handNames.length - 1));
+        }
+        while (true) {
+
+            long[] allCards = util7.makeThisManyRandom7CardHands(batchSize);
+            for(int i=0; i < batchSize-7; i+=7){
+                /*if(counter % 100000 == 0){
+                    System.out.println("counter is now : " + counter);
+                }*/
+                counter++;
+                long res = DeadHorse7.eval7(allCards[i*7], allCards[i*7+1], allCards[i*7+2], allCards[i*7+3], allCards[i*7+4], allCards[i*7+5], allCards[i*7+6]);
+                int resi = (int) (res >>> 51);
+                //System.out.println("resi: " + resi + " :: " + util.bin51(res) + " : " + res);
+                //System.out.println("Cards: " + allCards[i*5] + ", " + allCards[i*5+1] + ", " + allCards[i*5+2] + ", " + allCards[i*5+3] + ", " + allCards[i*5+4]);
+                //res >>= 26;
+                //if(counter > 10) return null;
+                if (resi == whatKind) {
+                    System.out.println("Finally got " + handNames[resi] + " after " + counter + " hands");
+                    return new long[]{allCards[i*7], allCards[i*7+1], allCards[i*7+2], allCards[i*7+3], allCards[i*7+4], allCards[i*7+5], allCards[i*7+6]};
+                } else if (counter > limit) {
+                    System.out.println("Did not get a " + handNames[whatKind] + " after " + limit + " hands...stopping the search so it doesnt go on forever. something doesnt seem right, it shouldn't take this long");
+                    return new long[]{};
+                } /*else {
+                    System.out.println("got : " + handNames[resi] + " : " + whatKind + " : "  + resi + " : "
+                            + util7.convertDecimalToShortName7(allCards[i*7]) + ", "
+                            + util7.convertDecimalToShortName7(allCards[i*7+1]) + ", "
+                            + util7.convertDecimalToShortName7(allCards[i*7+2]) + ", "
+                            + util7.convertDecimalToShortName7(allCards[i*7+3]) + ", "
+                            + util7.convertDecimalToShortName7(allCards[i*7+4]) + ", "
+                            + util7.convertDecimalToShortName7(allCards[i*7+5]) + ", "
+                            + util7.convertDecimalToShortName7(allCards[i*7+6]));
+                }*/
+            }
+
+        }
+
+    }
+
+
+    /*public static Long[] getRandomThisType7CardHand(int whatKind) throws Exception { // 0 = high card, 1 = pair, 2 = 2pair etc..
 
 
         System.out.println("looking for this type of hand: " + whatKind + " : " + util.handNames[whatKind]);
@@ -313,11 +386,11 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
                 //if(counter > 10) return null;
                 if (resi == whatKind) {
                     System.out.println("Finally got " + handNames[resi] + " after " + counter + " hands");
-                    return new long[]{allCards[i*7], allCards[i*7+1], allCards[i*7+2], allCards[i*7+3], allCards[i*7+4], allCards[i*7+5], allCards[i*7+6]};
+                    return new Long[]{allCards[i*7], allCards[i*7+1], allCards[i*7+2], allCards[i*7+3], allCards[i*7+4], allCards[i*7+5], allCards[i*7+6]};
                 } else if (counter > limit) {
                     System.out.println("Did not get a " + handNames[whatKind] + " after " + limit + " hands...stopping the search so it doesnt go on forever. something doesnt seem right, it shouldnt take this long");
-                    return new long[]{};
-                } /*else {
+                    return new Long[]{};
+                } *//*else {
                     System.out.println("got : " + handNames[resi] + " : " + whatKind + " : "  + resi + " : "
                             + util7.convertDecimalToShortName7(allCards[i*7]) + ", "
                             + util7.convertDecimalToShortName7(allCards[i*7+1]) + ", "
@@ -326,12 +399,12 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
                             + util7.convertDecimalToShortName7(allCards[i*7+4]) + ", "
                             + util7.convertDecimalToShortName7(allCards[i*7+5]) + ", "
                             + util7.convertDecimalToShortName7(allCards[i*7+6]));
-                }*/
+                }*//*
             }
 
         }
 
-    }
+    }*/
 
     public static long[] makeThisManyRandom7CardHands(int howMany) {
 
@@ -339,6 +412,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
 
         // make a copy of array to do each hand
         long[] allc2 = fiftyTwoCards.clone();
+        int cardCount = allc2.length;
 
         // the total array with all the cards will be a 1-D array
         // every chunk of 7 cards will be a different random hand
@@ -360,7 +434,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
                 // x would remain zero if it chose it again, and the loop will continue
                 // while x==0 until it chooses a card we have not picked yet
                 while (x == 0) {
-                    ran = r.nextInt((51 - 1) + 1) + 1;
+                    ran = r.nextInt((cardCount));
                     x = allc2[ran];
                 }
 
@@ -398,6 +472,10 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
     }
 
     public static String[] decimalsToShortCardNames(Long[] cards) throws Exception {
+        return decimalsToShortCardNames(new long[] {cards[0], cards[1], cards[2], cards[3], cards[4], cards[5], cards[6]});
+    }
+
+    public static String[] decimalsToShortCardNames(long[] cards) throws Exception {
         String[] cardShorts = new String[cards.length];
         for(int i = 0; i < cards.length; i++){
             cardShorts[i] = convertDecimalToShortCardName(cards[i]);// getCardChar(card) + "" + getSuitChar(card);
@@ -472,7 +550,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
     }
 
     public static String getCardLong(long card) throws Exception {
-        return util.cardLongs[getCardIndexDecimal(card)];
+        return util.cardLongNames[getCardIndexDecimal(card)];
     }
 
     public static char getSuitChar(long card) throws Exception {
@@ -500,7 +578,6 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         }
         throw new Exception("Error retrieving card index for card: " + card);
     }
-
 
 
 }

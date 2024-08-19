@@ -83,7 +83,7 @@ public class HandMakerFiveCard {
 		return allCards;
 	}*/
 
-	public static int[] makeLotsOfRandom5CardHandsSlow(int howMany) { //this is so dang slow. But a more proper way to do it I suppose...
+	public static int[] makeLotsOfRandom5CardHandsSlow(int howMany) { //this is so dang slow. But another way to do it I suppose...
 		// List<Integer> fiftyTwoCards = Arrays.asList(allc.clone())
 
 		List<Integer> fiftyTwoCards = Arrays.stream(util5.all52CardsDecimal).boxed().toList();

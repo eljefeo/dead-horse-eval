@@ -19,7 +19,7 @@ public abstract class util {
             "Straight", "Flush", "Full House", "4 of a kind", "Straight Flush"
     };
     static final char[] cardChars = new char[]{'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'};
-    static final String[] cardLongs = new String[]{"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+    static final String[] cardLongNames = new String[]{"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
             "Ten", "Jack", "Queen", "King", "Ace"};
 
     static final char[] suitChars = new char[]{'D', 'C', 'H', 'S'};
@@ -71,6 +71,22 @@ public abstract class util {
         return counter;
     }
 
+    public static boolean arrayContains(int[] nums, int n){
+        for(int l : nums){
+            if(l == n)
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean arrayContains(long[] nums, long n){
+        for(long l : nums){
+            if(l == n)
+                return true;
+        }
+        return false;
+    }
+
     public static long[] maskCards(long[] hand, long mask){
         long[] masked = new long[hand.length];
         for(int i=0; i<hand.length; i++){
@@ -104,7 +120,7 @@ public abstract class util {
         int cardIndex = getCardIndexChar(cardString.charAt(0));
         int suitIndex = getSuitIndexChar(cardString.charAt(1));
 
-        return util.cardLongs[cardIndex] + util.OF + util.suitLongs[suitIndex];
+        return util.cardLongNames[cardIndex] + util.OF + util.suitLongs[suitIndex];
     }
 
     public static int getSuitIndexChar(char suitChar) throws Exception {
