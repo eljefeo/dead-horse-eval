@@ -45,7 +45,7 @@ public class DeadHorse7 {
 		System.out.println(util.bin51(res));
 		System.out.println(" : " + util7.handNames[resi]);
 		long[] handc = util7.getRandomThisType7CardHand(1);
-		System.out.println(" go this random hand " + handc);
+		System.out.println(" got this random hand " + handc);
 		eval7(handc);
 		System.out.println(" evald this random hand " + handc);
 		long ord = orHand(handc);
@@ -53,13 +53,13 @@ public class DeadHorse7 {
 		long ordMasked = ord & cardMask;
 		try {
 			System.out.println("got : "
-					+ util7.convertDecimalToShortName(handc[0]) + ", "
-					+ util7.convertDecimalToShortName(handc[1]) + ", "
-					+ util7.convertDecimalToShortName(handc[2]) + ", "
-					+ util7.convertDecimalToShortName(handc[3]) + ", "
-					+ util7.convertDecimalToShortName(handc[4]) + ", "
-					+ util7.convertDecimalToShortName(handc[5]) + ", "
-					+ util7.convertDecimalToShortName(handc[6]));
+					+ util7.convertDecimalToShortCardName(handc[0]) + ", "
+					+ util7.convertDecimalToShortCardName(handc[1]) + ", "
+					+ util7.convertDecimalToShortCardName(handc[2]) + ", "
+					+ util7.convertDecimalToShortCardName(handc[3]) + ", "
+					+ util7.convertDecimalToShortCardName(handc[4]) + ", "
+					+ util7.convertDecimalToShortCardName(handc[5]) + ", "
+					+ util7.convertDecimalToShortCardName(handc[6]));
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
@@ -102,7 +102,7 @@ public class DeadHorse7 {
 		int resi = (int) (res >>> 51);
 		System.out.println("RES : " + res + " : " + resi + " : " + util.bin51(resi) + " : " + util.getPwrTwo(resi) );
 		System.out.println("binn: " + util.bin51(res));
-		System.out.println(" : " + util7.handNames[resi]);
+		System.out.println(" : " + util.handNames[resi]);
 		System.out.println("Checke 2");
 		return 0;
 	}
@@ -120,10 +120,17 @@ Straight flush - 5,6,7
 
  */
 
-	public static long eval7(long[] hand) throws Exception {
-		if(hand.length != 7){
+	public static long eval7(long[] hand) {/*throws Exception {*/
+		/*if(hand.length != 7){
 			throw new Exception("Hand must have exactly 7 cards");
-		}
+		}*/
+		return eval7(hand[0],hand[1],hand[2],hand[3],hand[4],hand[5],hand[6]);
+	}
+
+	public static long eval7(Long[] hand) {// throws Exception {
+		//if(hand.length != 7){
+		//	throw new Exception("Hand must have exactly 7 cards");
+		//}
 		return eval7(hand[0],hand[1],hand[2],hand[3],hand[4],hand[5],hand[6]);
 	}
 
@@ -396,6 +403,8 @@ Straight flush - 5,6,7
 
 	//public static long eval7Working140Million(long a, long b, long c, long d, long e, long f, long g) {
 	public static long eval7(long a, long b, long c, long d, long e, long f, long g) {
+
+		//TODO Still need to shift the bits upon the return so we have important bits and kicker bits. We are not doing that yet!
 		long ord = a | b | c | d | e | f | g; //orHand(hand);
 		long sum = a + b + c + d + e + f + g; //sumHand(hand);
 		long suits = sum & suitMask;
@@ -416,9 +425,9 @@ Straight flush - 5,6,7
 				long straightFlushCards = (flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12);
 				if (straightFlushCards != 0 ) {//crappy extra check to get rid of extra straight cards:
 					long u=straightFlushCards;
-					if((u &= u-1) != 0){
+					if((u &= u-1) != 0){ //we only need 5 cards for a straight, if you more than 5 cards to a straight (like a 6 card straight), this will chop off the lowest card
 						long uu=u;
-						straightFlushCards = (((uu &= uu-1) != 0) ? uu : u) ;/*<< 12;*/
+						straightFlushCards = (((uu &= uu-1) != 0) ? uu : u) ;/*<< 12;*/ //this also chops off the lowest card in case you have a 7 card straight
 					}
 					/*if(flshCounter == 7){
 						straightFlushCards &= straightFlushCards - 1;
@@ -451,9 +460,9 @@ Straight flush - 5,6,7
 				long uu=u;
 				ors = ((uu &= uu-1) != 0) ? uu : u;
 			}
-			return 9007199254740992L | ors;
+			return 9007199254740992L | ors; //return Straight
 		} else if ((or & 68719477321L) == 68719477321L){
-			return 9007199254740992L | 512;
+			return 9007199254740992L | 512; //return A,2,3,4,5 Straight I think? I forget..
 		}
 
 		//check pairs, trips, quads, fullhouse, two pair....
@@ -508,7 +517,7 @@ Straight flush - 5,6,7
 			}
 		}
 		or &= or - 1;
-		return or &= or - 1;
+		return or &= or - 1; //high card
 	}
 
 	public static long testeval7() throws Exception {

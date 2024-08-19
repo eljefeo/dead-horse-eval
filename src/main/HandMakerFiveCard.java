@@ -14,17 +14,17 @@ public class HandMakerFiveCard {
 
 	static final Random rand = new Random();
 
-	private static List<Integer[]> allHighCardHands = new ArrayList<>();
-	private static List<Integer[]> allPairHands = new ArrayList<>();
-	private static List<Integer[]> allTwoPairHands = new ArrayList<>();
-	private static List<Integer[]> allTripHands = new ArrayList<>();
-	private static List<Integer[]> allStraightHands = new ArrayList<>();
-	private static List<Integer[]> allFlushHands = new ArrayList<>();
-	private static List<Integer[]> allFullHouseHands = new ArrayList<>();
-	private static List<Integer[]> allQuadHands = new ArrayList<>();
-	private static List<Integer[]> allStraightFlushHands = new ArrayList<>();
-	private static List<List<Integer[]>> allHandsOrdered = new ArrayList<>();
-	private static List<Integer[]> allHands = new ArrayList<>();
+	private static final List<Integer[]> allHighCardHands = new ArrayList<>();
+	private static final List<Integer[]> allPairHands = new ArrayList<>();
+	private static final List<Integer[]> allTwoPairHands = new ArrayList<>();
+	private static final List<Integer[]> allTripHands = new ArrayList<>();
+	private static final List<Integer[]> allStraightHands = new ArrayList<>();
+	private static final List<Integer[]> allFlushHands = new ArrayList<>();
+	private static final List<Integer[]> allFullHouseHands = new ArrayList<>();
+	private static final List<Integer[]> allQuadHands = new ArrayList<>();
+	private static final List<Integer[]> allStraightFlushHands = new ArrayList<>();
+	private static final List<List<Integer[]>> allHandsOrdered = new ArrayList<>();
+	private static final List<Integer[]> allHands = new ArrayList<>();
 	static {
 		allHandsOrdered.add(allHighCardHands);
 		allHandsOrdered.add(allPairHands);
@@ -39,17 +39,16 @@ public class HandMakerFiveCard {
 		//This will create and evaluate every possible 5 card hand. Then add the hand to allHandsOrdered in the correct spot, and add it to allHands
 		int[] allFiveCardHands = EvalTestPlayground.createAllFiveCardHands();
 		for(int i=0;i<allFiveCardHands.length;i+=5){
-			int res = DeadHorse.eval5(allFiveCardHands[i],allFiveCardHands[i+1],
-					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4])>>26;
+
 			Integer[] aHand = new Integer[] {allFiveCardHands[i],allFiveCardHands[i+1],
 					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4]};
+
+			int res = DeadHorse.eval5(aHand)>>26;
 
 			allHandsOrdered.get(res).add(aHand);
 
 			allHands.add(aHand);
 		}
-
-
 	}
 
 
@@ -110,7 +109,15 @@ public class HandMakerFiveCard {
 		return allCards;
 	}
 
-	public static int[] makeThisManyRandom5CardHands(int howMany) {
+	public static List<Integer[]> makeThisManyRandom5CardHands(int howMany) {
+		List<Integer[]> hands = new ArrayList<>();
+		for(int i = 0; i < howMany; i++){
+			hands.add(allHands.get(rand.nextInt(allHands.size())));
+		}
+		return hands;
+	}
+
+	public static int[] makeThisManyRandom5CardHandsOld(int howMany) {
 
 		// keep a copy of the original array
 		// in case we want to use this method on its own out of this class
@@ -206,7 +213,7 @@ public class HandMakerFiveCard {
 				}
 	}
 
-	public static void prepAllHands() {
+	/*public static void prepAllHands() { //done in static block now
 
 		int[] allFiveCardHands = EvalTestPlayground.createAllFiveCardHands();
 		for(int i=0;i<allFiveCardHands.length;i+=5){
@@ -217,7 +224,7 @@ public class HandMakerFiveCard {
 		}
 
 
-	}
+	}*/
 
 	public static List<List<Integer[]>> getAllHandsOrdered(){
 		return allHandsOrdered;
@@ -231,29 +238,14 @@ public class HandMakerFiveCard {
 		//if(handDescription.toUpperCase().equals(util.ROYAL_FLUSH.toUpperCase())){
 		//	handType = 9; //maybe can hijack some functions and use 9 as royal flush indicator
 		//} else {
-			int handType = handDescriptionToType(handDescription);
+			int handType = util.handDescriptionToType(handDescription);
 			Integer[] cardsInt = getRandomCertainTypeHand(handType);
 		//}
 
 		return util5.decimalsToShortCardNames(cardsInt);
 	}
 
-	public static int handDescriptionToType(String handDescription){
-		return switch (handDescription.toUpperCase().trim()){
-			case "HIGH CARD" -> 0;
-			case "PAIR" -> 1;
-			case "TWO PAIR" -> 2;
-			case "THREE OF A KIND", "TRIPS" -> 3;
-            case "STRAIGHT" -> 4;
-			case "FLUSH" -> 5;
-			case "FULL HOUSE", "FULL BOAT", "BOAT" -> 6;
-            case "QUADS", "FOUR OF A KIND" -> 7;
-            case "STRAIGHT FLUSH" -> 8;
-			//case "ROYAL FLUSH" -> 8???;
 
-			default -> throw new IllegalStateException("Unexpected value for hand description: " + handDescription.toUpperCase());
-		};
-	}
 
 	public static Integer[] getRandomHand(){
 

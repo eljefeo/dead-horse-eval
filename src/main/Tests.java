@@ -23,7 +23,7 @@ public class Tests {
 	public static void shortToDecimalToLong() throws Exception {
 		String card = "6S";
 		long cardDecimal = util7.convertHumanShortNameToDecimal(card);
-		String shortName = util7.convertDecimalToShortName(cardDecimal);
+		String shortName = util7.convertDecimalToShortCardName(cardDecimal);
 		if (!shortName.equals(card)) {
 			throw new Exception(
 					"Error converting. card: " + card + ", cardDecimal: " + cardDecimal + ", shortName: " + shortName);

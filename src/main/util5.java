@@ -130,7 +130,7 @@ public class util5 extends util{
         return cards;
     }
 
-    public static int[] getRandomThisType5CardHandRandomly(int whatKind) { // 0 = high card, 1 = pair, 2 = 2pair etc..
+    public static Integer[] getRandomThisType5CardHandRandomly(int whatKind) { // 0 = high card, 1 = pair, 2 = 2pair etc..
 
         int counter = 0;
         int limit = 100000000;
@@ -140,19 +140,19 @@ public class util5 extends util{
         }
         while (true) {
 
-            int[] allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(10000);
-            for(int i=0; i < batchSize; i+=5){
+            List<Integer[]> allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(10000);
+            for(Integer[] hand : allCards){
                 counter++;
                // int[] fiveCards = new allCards[i*5]
-                int res = DeadHorse.eval5(allCards[i*5], allCards[i*5+1], allCards[i*5+2], allCards[i*5+3], allCards[i*5+4]);
+                int res = DeadHorse.eval5(hand[0], hand[1], hand[2], hand[3], hand[4]);
                 //System.out.println("Cards: " + allCards[i*5] + ", " + allCards[i*5+1] + ", " + allCards[i*5+2] + ", " + allCards[i*5+3] + ", " + allCards[i*5+4]);
                 res >>= 26;
                 if (res == whatKind) {
                     System.out.println("Finally got " + handNames[res] + " after " + counter + " hands");
-                    return new int[]{allCards[i*5], allCards[i*5+1], allCards[i*5+2], allCards[i*5+3], allCards[i*5+4]};
+                    return hand;
                 } else if (counter > limit) {
                     System.out.println("Did not get a " + handNames[whatKind] + " after " + limit + " hands...stopping the search so it doesnt go on forever. something doesnt seem right, it shouldnt take this long");
-                    return new int[]{};
+                    return new Integer[]{};
                 }
             }
 
@@ -419,8 +419,7 @@ public class util5 extends util{
     public static String[] decimalsToShortCardNames(Integer[] cards) throws Exception {
         String[] cardShorts = new String[cards.length];
         for(int i = 0; i < cards.length; i++){
-            int card = cards[i];
-            cardShorts[i] = getCardChar(card) + "" + getSuitChar(card);
+            cardShorts[i] = decimalToShortCardName(cards[i]);// getCardChar(card) + "" + getSuitChar(card);
         }
         return cardShorts;
     }

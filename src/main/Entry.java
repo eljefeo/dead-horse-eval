@@ -11,7 +11,8 @@ public class Entry {
 		//doTest2();
 
 		//testCardConversion();
-		DeadHorse5Examples.doTestExamples();
+		//DeadHorse5Examples.doTestExamples();
+		DeadHorse7Examples.doTestExamples();
 		//util5.decode5CardHand(403701764);
 		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"2H", "9H", "TC", "7H", "JS"});
 		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"8H", "8S", "TH", "TD", "8C"});
@@ -39,7 +40,7 @@ public class Entry {
 		//util5.getRandomThisType5CardHand(4);
 		//util7.getRandomThisType7CardHand(4);
 
-		 EvalTestPlayground.testEveryHand5();
+		 //EvalTestPlayground.testEveryHand5();
 		 //EvalTestPlayground.testEval5AndNotes();
 
 		 //EvalTestPlayground.testStatisticsManyHand5(10000000);
@@ -124,7 +125,7 @@ Total Count : 133784560
 		System.out.println("conver human short to decimal 7: " + test1 + " : " + humanShortDecimal7);
 		System.out.println("human short binary : " + util.bin64(humanShortDecimal7));
 		System.out.println("Decimal to long name : " + util7.convertHumanShortNameToLongName(test1));
-		System.out.println("converting decimal back to short name 7: " + util7.convertDecimalToShortName(humanShortDecimal7));
+		System.out.println("converting decimal back to short name 7: " + util7.convertDecimalToShortCardName(humanShortDecimal7));
 
 	}
 

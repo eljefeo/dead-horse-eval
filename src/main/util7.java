@@ -1,5 +1,7 @@
 package main;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class util7 extends util {
@@ -32,6 +34,15 @@ public class util7 extends util {
             281474976710720L, 281474976711168L, 281474976714752L, 281474976743424L, 281474976972800L, 281474978807808L,
             281474993487872L, 281475110928384L, 281476050452480L, 281483566645248L, 281543696187392L};
     /*
+
+    for the cards... first 13*3 (39) bits are for the cards. each card gets 3 bits 000, this allows you to add them together
+     and since there is 7 cards total, you just really need to count to 4 (like if you have four of a kind), so you need 3 bits to count to 4 (4 in binary = 100)
+     so each card gets 3 bits, and theres 13 cards, so the first 39 bits are for cards.
+     the next 12 bits are for suits, 3 bits each again, and 4 different suits... so 3*4 = 12 bits.
+     That is the first 51 bits.
+     since we have 64 bits to mess with, I just left that as is for the return value of a hand, meaning leave the first 51 bits to be suits and cards
+     then the following 4 bits (bits 52-56?) are used for hand type of 0-8 (high card to straight flush)
+
     Daimonds:
 2 : 549755813889 :	000000000001000000000000000000000000000000000000001
 3 : 549755813896 :	000000000001000000000000000000000000000000000001000
@@ -155,12 +166,19 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
 
 
 
+    private static final Map<String, Long> cardMap = new HashMap<>();
+    static {
+        for (int i = 0; i < all52CardsDecimal.length; i++){
+            cardMap.put(allCardNames[i], all52CardsDecimal[i]);
+        }
+    }
+
 
 
 
     public static void testEveryHand7n() throws Exception {
         System.out.println("testing every hand 7 cards");
-        int totalHands = 133784560;
+
 
         long[] allCards = EvalTestPlayground.createAllSevenCardHands();
         int totalCounter= allCards.length/7;
@@ -175,9 +193,9 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
 
         // Time = (end time - start time ) divided by a billion : because it is in nano seconds
         double time = (double) (endT - startT)/1000000000;
-        System.out.println("Did all " + totalHands + " hands in " + time +" seconds");
+        System.out.println("Did all " + total7CardHandCount + " hands in " + time +" seconds");
         //hands per second in millions
-        Double currentTotal = totalHands/time/1000000;
+        Double currentTotal = total7CardHandCount/time/1000000;
         //allHandPossibilities += currentTotal;
         System.out.println(currentTotal + " million hands a second\n");
 
@@ -229,7 +247,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         for(int i = 0; i < suitDecimals.length; i++){
             for(int j = 0; j < cardDecimals.length; j++){
                 long newNum = makeDecimalFromIndexes(j, i);
-                System.out.println("new num : " + newNum + " : " + convertDecimalToShortName(newNum));
+                System.out.println("new num : " + newNum + " : " + convertDecimalToShortCardName(newNum));
             }
         }
 
@@ -249,6 +267,22 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
             }
         }
         return cards;
+    }
+
+    // can send user readable strings into here like 'AS or JC or 9H or TD (ten of diamonds)'..
+//capital letter for face cards and UPPER case letter for suit
+    public static long evalShortCards(String as, String bs, String cs, String ds, String es, String fs, String gs){
+
+        //convert strings like 7H to numbers that the eval recognizes
+
+        //return DeadHorse.eval5WithNotes(a, b, c, d, e);
+        long res = DeadHorse7.eval7(cardMap.get(as), cardMap.get(bs), cardMap.get(cs), cardMap.get(ds), cardMap.get(es), cardMap.get(fs), cardMap.get(gs));
+        //System.out.println("humanEncodeEval3 : " + res + " : " + util.bin32(res));
+        return res;
+    }
+
+    public static long evalShortCards(String[] cards){
+        return evalShortCards(cards[0], cards[1], cards[2], cards[3], cards[4], cards[5], cards[6]);
     }
 
     public static long[] getRandomThisType7CardHand(int whatKind) throws Exception { // 0 = high card, 1 = pair, 2 = 2pair etc..
@@ -363,6 +397,29 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         return makeDecimalFromIndexes(cardIndex, suitIndex);
     }
 
+    public static String[] decimalsToShortCardNames(Long[] cards) throws Exception {
+        String[] cardShorts = new String[cards.length];
+        for(int i = 0; i < cards.length; i++){
+            cardShorts[i] = convertDecimalToShortCardName(cards[i]);// getCardChar(card) + "" + getSuitChar(card);
+        }
+        return cardShorts;
+    }
+
+    public static String shortCardsToLongHandDescription(String[] someHand, boolean showDetails) {
+        //String[] someHand = new String[] {"9D", "3H", "6H", "5H", "4H"};
+
+        //System.out.println(someHand[0] + " " + someHand[1] + " " + someHand[2] + " " + someHand[3] + " " + someHand[4]);
+        long res = evalShortCards(someHand[0], someHand[1], someHand[2], someHand[3], someHand[4], someHand[5], someHand[6]);
+        return decode7CardHand(res, showDetails);
+    }
+
+    private static String decode7CardHand(long res, boolean showDetails) {
+
+        //time to decode a 7 card hand
+        return "Finish me decode7CardHand...";
+    }
+
+
     public static long[] convertHandHumanShortToDecimal(String[] cards) throws Exception {
         if (cards.length != 7) {
             throw new IllegalArgumentException("There must be 7 cards");
@@ -406,7 +463,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         return getCardLong(card) + util.OF + getSuitLong(card);
     }
 
-    public static String convertDecimalToShortName(long card) throws Exception {
+    public static String convertDecimalToShortCardName(long card) throws Exception {
         return (getCardChar(card) + "" + getSuitChar(card));
     }
 

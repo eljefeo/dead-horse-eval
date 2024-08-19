@@ -191,6 +191,23 @@ public abstract class util {
     //abstract public Object makeDecimalFromIndexes(int cardIndex, int suitIndex) ;
 
 
+    public static int handDescriptionToType(String handDescription){
+        return switch (handDescription.toUpperCase().trim()){
+            case "HIGH CARD" -> 0;
+            case "PAIR" -> 1;
+            case "TWO PAIR" -> 2;
+            case "THREE OF A KIND", "TRIPS" -> 3;
+            case "STRAIGHT" -> 4;
+            case "FLUSH" -> 5;
+            case "FULL HOUSE", "FULL BOAT", "BOAT" -> 6;
+            case "QUADS", "FOUR OF A KIND" -> 7;
+            case "STRAIGHT FLUSH" -> 8;
+            //case "ROYAL FLUSH" -> 8???;
+
+            default -> throw new IllegalStateException("Unexpected value for hand description: " + handDescription.toUpperCase());
+        };
+    }
+
     public static int indexOfLargestIntInArray(Integer[] nums){
         int maxI = 0;
 
