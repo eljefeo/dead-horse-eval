@@ -40,7 +40,7 @@ public class Tests {
 		} else {
 			System.out.println("Converted card: " + card + ", longName1: " + longName1 + ", longName2: " + longName2);
 		}
-		System.out.println("success: " + expected);
+		System.out.println("success: " + expected) ;
 	}
 
 	public static void check52GeneratedSameAsInline() throws Exception {

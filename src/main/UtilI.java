@@ -23,7 +23,7 @@ public interface UtilI {
 
     static final char[] suitChars = new char[]{'D', 'C', 'H', 'S'};
     static final String[] suitLongs = new String[]{"Diamonds", "Clubs", "Hearts", "Spades"};
-    //static final String[] suitLongsReversed = new String[]{"Spades", "Hearts", "Clubs", "Diamonds"};
+    // static final String[] suitLongsReversed = new String[]{"Spades", "Hearts", "Clubs", "Diamonds"};
 
     static final String OF = " of ";
     public Object makeDecimalFromIndexes(int cardIndex, int suitIndex) ;

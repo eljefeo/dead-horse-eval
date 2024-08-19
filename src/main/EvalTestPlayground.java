@@ -39,7 +39,7 @@ public class EvalTestPlayground {
 		long[] allCards = new long[util7.total7CardHandCount*7];
 		int totalCounter=0;
 
-		long[] cards52_7 = util7.all52CardsDecimal;//DeadHorse7.makeAll52Cards7Decimal();
+		long[] cards52_7 = util7.all52CardsDecimal; //DeadHorse7.makeAll52Cards7Decimal() ;
 
 //668.922.800
 

@@ -122,7 +122,7 @@ public abstract class util {
                 return i;
             }
         }
-        throw new Exception("Error retreiving card index for card char: " + cardChar);
+        throw new Exception("Error retreiving card index for card char : " + cardChar);
     }
 
 

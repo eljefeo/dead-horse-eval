@@ -282,7 +282,7 @@ public class HandMakerFiveCard {
 	public static Integer[] getRandomCertainTypeHand(int type){
 		List<Integer[]> handList = allHandsOrdered.get(type);
 		int ni = rand.nextInt(handList.size());
-		//System.out.println("getRandomCertainTypeHand : " + util.handNames[type] + " random hand : " + ni + ", " + highCardHands.size());
+		// System.out.println("getRandomCertainTypeHand : " + util.handNames[type] + " random hand : " + ni + ", " + highCardHands.size());
 		return handList.get(ni);
 	}
 

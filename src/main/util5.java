@@ -275,7 +275,7 @@ public class util5 extends util{
         int handType = hand >> rightShiftForHandType;
 
         if(showDetails)
-            System.out.println("decode 5card hand type int: " + handType);
+            System.out.println("decode 5card hand type int : " + handType);
 
         int importantBits = (hand & leaveImportantBitMask) >> rightShiftForimportantCards;
         int kickerBits = hand & leaveKickerBitMask;

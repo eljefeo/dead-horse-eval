@@ -103,7 +103,7 @@ Total Count : 133784560
 	}
 
 	private static void makeAllCards() throws Exception {
-		System.out.println("making all 52 cards for 5 card poker:");
+		System.out.println("making all 52 cards for 5 card poker: ");
 		util5.makeAllDecimalNumsFromScratch();
 		System.out.println();
 

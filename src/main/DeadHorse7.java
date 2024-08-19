@@ -462,7 +462,7 @@ Straight flush - 5,6,7
 			}
 			return 9007199254740992L | ors; //return Straight
 		} else if ((or & 68719477321L) == 68719477321L){
-			return 9007199254740992L | 512; //return A,2,3,4,5 Straight I think? I forget..
+			return 9007199254740992L | 512; //return A,2,3,4,5 Straight I think? I forget...
 		}
 
 		//check pairs, trips, quads, fullhouse, two pair....

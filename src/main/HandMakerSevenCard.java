@@ -86,7 +86,7 @@ public class HandMakerSevenCard {
 
         //int handType;
         //if(handDescription.toUpperCase().equals(util.ROYAL_FLUSH.toUpperCase())){
-        //	handType = 9; //maybe can hijack some functions and use 9 as royal flush indicator
+        //	 handType = 9; //maybe can hijack some functions and use 9 as royal flush indicator
         //} else {
         int handType = util.handDescriptionToType(handDescription);
         Long[] cardsLong = getRandomCertainTypeHand(handType);

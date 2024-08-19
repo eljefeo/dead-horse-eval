@@ -2,7 +2,7 @@ package main;
 
 public class DeadHorse {
 
-
+//
     public static int eval5(int a, int b, int c, int d, int e) {
         int m = 0x1FFF;
         int x = (a ^ b ^ c ^ d ^ e) & m, y = (a | b | c | d | e) & m, z = y ^ x, v = y & y - 1;
