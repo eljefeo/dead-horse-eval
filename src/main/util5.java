@@ -363,8 +363,11 @@ public class util5 extends util{
     public static Integer[] shortCardNamesToDecimals(String[] cardString){
         //TODO
         System.out.println("Finish developing me util5.convertHumanShortNamesToDecimals");
-        return new Integer[]{0};
+
         //return cardMap.get(cardString);
+
+
+        return new Integer[]{cardMap.get(cardString[0]), cardMap.get(cardString[1]), cardMap.get(cardString[2]), cardMap.get(cardString[3]), cardMap.get(cardString[4])};
     }
 
 

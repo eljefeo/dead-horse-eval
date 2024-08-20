@@ -7,12 +7,12 @@ public class DeadHorse5Examples {
 
 
     public static void doTestExamples() throws Exception {
-        //shortToLong(); //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
+        shortToLong(); //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
         //HandMakerFiveCard.testGetRandomTestSomeHand();
         //getRandomHandFromDescription();
 
         //speedGameOfPoker();
-        speedGameOfPokerRealDeck();
+        //speedGameOfPokerRealDeck();
         //getSomeRandomHand();
     }
 
@@ -91,12 +91,18 @@ public class DeadHorse5Examples {
         //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
         System.out.println("Example: shorthand card names to full hand description..." );
         String[] cards = new String[]{
-                "2C", "4C", "5C", "3C", "6C"
+                //"3C", "3S", "7C", "3H", "3S"
+                "3C", "5D", "5C", "3H", "5S"
         };
         System.out.println("Evaluating these cards: " + Arrays.toString(cards));
         String result = util5.shortCardsToLongHandDescription(cards, false);
 
+        Integer[] decs = util5.shortCardNamesToDecimals(cards);
+        int res = DeadHorse.eval5(decs);
+        System.out.println("5card result : " + res + " : " + util.bin32(res));
+
         System.out.println(result);
+        System.out.println("\n");
     }
 
 }
