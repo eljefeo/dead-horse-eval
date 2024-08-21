@@ -285,23 +285,27 @@ Straight flush - 5,6,7
 					if(flshCounter == 6){
 						straightFlushCards &= straightFlushCards - 1;
 					}*/
-					return (18014398509481984L | straightFlushCards);//returns the lowest card in the straight (for 5,6,7,8,9 it will be 5)
+					System.out.println("Straight flush 1 : " + util.bin64(straightFlushCards));
+					return (576460752303423488L | straightFlushCards);//returns the lowest card in the straight (for 5,6,7,8,9 it will be 5)
 				} else if((flushCards & 68719477321L) == 68719477321L){//gotta check the stupid A,2,3,4,5 straight
-					return (18014398509481984L /*| 512*/); //if we dont or anything that means lowest possible strt. a2345
+					System.out.println("Straight flush 2 : " + util.bin64(straightFlushCards));
+					return (576460752303423488L /*| 512*/); //if we dont or anything that means lowest possible strt. a2345
 				}
 
 				if(flshCounter == 7){
 					flushCards &= flushCards - 1;
 					flushCards &= flushCards - 1;
-				}
+				} //TODO should do else if??
 				if(flshCounter == 6){
 					flushCards &= flushCards - 1;
 				}
-				return 11258999068426240L | flushCards;
+				System.out.println("Flush only : " + util.bin64(flushCards));
+				return 360287970189639680L | flushCards;
 			}
 		}
 
 		long or = ord & cardMask;
+		System.out.println("Straight or & card mask : " + util.bin64(or));
 		long ors = (or & (or >>> 3 & or >>> 6 & or >>> 9 & or >>> 12));
 		if (ors != 0) {
 			long u = ors;
@@ -309,9 +313,11 @@ Straight flush - 5,6,7
 				long uu=u;
 				ors = ((uu &= uu-1) != 0) ? uu : u;
 			}
-			return 9007199254740992L | ors; //return Straight
+			System.out.println("Straight 1 ors : "  + util.bin64(ors));
+			return 288230376151711744L | ors; //return Straight
 		} else if ((or & 68719477321L) == 68719477321L){
-			return 9007199254740992L | 512; //return A,2,3,4,5 Straight I think? I forget...
+			System.out.println("Straight 2 ors : "  + util.bin64(ors));
+			return 288230376151711744L; //return A,2,3,4,5 Straight I think? I forget...
 		}
 
 		//check pairs, trips, quads, fullhouse, two pair....
@@ -328,20 +334,19 @@ Straight flush - 5,6,7
 			}
 
 
-			long finalKicker = kickers;//
+			//long finalKicker = kickers;//
 			//System.out.println("quad card:\t" + util.bin64(quads) + " : " + quads);
 			//System.out.println("Kick card:\t" + util.bin64(finalKicker) + " : " + finalKicker);
 			//return 15762598695796736L | (quads << 1) | finalKicker;
-			int returnBase = 7 << 26;
-			int returnQds = (int)((quads >> bitMap.get(quads)*2) << 13);
-			int returnKick = (int)(finalKicker >> (bitMap.get(finalKicker)*2));
-			int finalReturn = returnBase |  returnQds | returnKick;
+			long returnBase = 504403158265495552L;
+			long returnQds = quads << (39 - (bitMap.get(quads)*2));
+			//int returnKick = (int)(finalKicker >> (bitMap.get(finalKicker)*2));
 			/*System.out.println("Return base : " + returnBase + " : " + util.bin64(returnBase));
 			System.out.println("Return Quads : " + returnQds + " : " + util.bin64(returnQds));
 			System.out.println("Return Kicker : " + returnKick + " : " + util.bin64(returnKick));
 			System.out.println("Return Final : " + finalReturn + " : " + util.bin64(finalReturn));*/
-
-			return finalReturn;
+			System.out.println("Returning Quads");
+			return returnBase |  returnQds | kickers;
 		}
 
 		long pairsAndTrips = (sum & pairMask) >> 1;
@@ -392,9 +397,23 @@ Straight flush - 5,6,7
 			long nextPair = pairs & pairs - 1;
 			if (nextPair != 0) {
 				long finalPair = nextPair & nextPair - 1;
-
+				//long kickers = ors ^ pairs;
+				//System.out.println("two pair kicker first at  :" + util.bin64(kickers));
 				if(finalPair != 0){
-					pairs = nextPair;
+					long threepairKicks = ors ^ nextPair;
+					System.out.println("three pair kicks 1 : " + util.bin64(threepairKicks));
+					threepairKicks &= threepairKicks - 1;
+					System.out.println("three pair kicks 2 : " + util.bin64(threepairKicks));
+					pairs = finalPair;
+					nextPair = finalPair ^ nextPair ;//biggest pair
+					System.out.println("in final big pairs : " + util.bin64(pairs));
+					System.out.println("in final big nextpair : " + util.bin64(nextPair));
+				} else {
+					long twopairKicks = ors ^ pairs;
+					System.out.println("two pair kicks 1 : " + util.bin64(twopairKicks));
+					pairs ^= nextPair;
+					System.out.println("in else final big pairs : " + util.bin64(pairs));
+					System.out.println("in else final big nextpair : " + util.bin64(nextPair));
 				}
 
 				/*if(finalPair != 0){
@@ -404,7 +423,16 @@ Straight flush - 5,6,7
 				} else {*/
 				long kickers = or ^ pairs;
 				kickers &= kickers -1;
-				return 4503599627370496L | pairs << 1 | (kickers & kickers - 1);
+				System.out.println("Doing 2 pair now");
+				//need to separate both pairs;
+				System.out.println("First biggest 2pair pair : " + pairs + " : " + util.bin64(pairs));
+				System.out.println("second biggest 2pair pair : " + nextPair + " : " + util.bin64(nextPair));
+				pairs = (pairs << (39 - (bitMap.get(pairs)*2)));
+				nextPair = (nextPair << (39 - (bitMap.get(nextPair)*2)));
+				System.out.println("afterFirst biggest 2pair pair : " + pairs + " : " + util.bin64(pairs));
+				System.out.println("aftersecond biggest 2pair pair : " + nextPair + " : " + util.bin64(nextPair));
+
+				return 144115188075855872L | pairs | nextPair | (kickers & kickers - 1);
 				//}
 				//return 4503599627370496L | ((finalPair != 0) ? nextPair : pairs); //this gives us the pair, but need the other 3 kickers
 			} else {

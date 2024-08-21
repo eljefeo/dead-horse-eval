@@ -37,7 +37,7 @@ public class DeadHorse7Examples {
 
         String[] cards7 = new String[]{
                 //cards5[0], cards5[1], cards5[2], cards5[3], cards5[4], "4H", "2D"   //0000000000111000000000000000000000000000000000001000000000010000 four 3s with 5 kicker
-                "3C", "3D", "5C", "3S", "9H", "5H", "5D"
+                "5D", "3D", "5C", "6H", "8D", "6D", "4S"
         };
 
         System.out.println("Evaluating these cards7: " + Arrays.toString(cards7));
