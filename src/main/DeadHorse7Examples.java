@@ -1,6 +1,8 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class DeadHorse7Examples {
 
@@ -8,7 +10,8 @@ public class DeadHorse7Examples {
     public static void doTestExamples() throws Exception {
 
         //testBin();
-        testQuads();
+        testDecode7();
+        //testQuads();
         //shortToLong(); //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
         //HandMakerFiveCard.testGetRandomTestSomeHand();
         //getRandomHandFromDescription();
@@ -19,6 +22,112 @@ public class DeadHorse7Examples {
         speedGameOfPokerRealDeck();
         getSomeRandomHand();
         
+    }
+
+    private static void testDecode7() throws Exception {
+        final long pairMask = 157073089682L;        //10010010010010010010010010010010010010 38 digits
+        final long singleCardMask = 78536544841L;   //01001001001001001001001001001001001001 37 digits
+        /*String[] cards5 = new String[]{
+                //I think there is a problem here, how can we tell if 4ofAKind of 2s with 7 kicker, is less than 3 of a kind with 2 kicker
+                //"2C", "4C", "5C", "3C", "6C", "9D", "KS" //0000000001000000000000000000000000000000000000000000000000000001
+                //"2C", "2D", "5C", "3C", "6C", "2H", "2S" //0000000000111000000000000000000000000000000000000001000000000010 four 2s with 6 kicker
+                //"2C", "2D", "5C", "3C", "7C", "2H", "2S" //0000000000111000000000000000000000000000000000001000000000000010 four 2s with 7 kicker
+                "3C", "3D", "5C", "3S", "9H",   //0000000000111000000000000000000000000000000000001000000000010000 four 3s with 5 kicker
+        };*/
+
+        String[] cards7 = new String[]{
+                //cards5[0], cards5[1], cards5[2], cards5[3], cards5[4], "4H", "2D"   //0000000000111000000000000000000000000000000000001000000000010000 four 3s with 5 kicker
+                "3C", "3D", "5C", "3S", "9H", "5H", "5D"
+        };
+
+        System.out.println("Evaluating these cards7: " + Arrays.toString(cards7));
+        //System.out.println("Evaluating these cards5: " + Arrays.toString(cards5));
+        long[] decs = util7.convertHandHumanShortToDecimal(cards7);
+        //long result1 = util7.evalShortCards(cards1);
+        long result1 = DeadHorse7.eval7beta(decs);
+
+        //long impBits = (pairMask & result1) >>> 1;
+        //System.out.println("Important bits : " + util.bin64(impBits) + " : " + impBits);
+
+        //long kickBits = singleCardMask & result1;
+       // System.out.println("Kicker bits : " + util.bin64(kickBits) + " : " + kickBits);
+
+
+        //long res1 = result1 >>> 51;
+        long res1 = result1 >> 56;
+        System.out.println("long result1 = " + result1 + " : " + res1 + " :: " + util.handNames[(int)res1]);
+        System.out.println("bin1 : " + util.bin64(result1));
+        System.out.println("\n\n");
+
+        //shortToLong5(cards5);
+
+    }
+
+
+    private static final long resultSuitsMask = 135107988821114880L;
+    private static final long resultImpBitsMask =  9006099743113216L;
+    private static final long resultHandTypeBitsMask =  2161727821137838080L;
+    private static final long resultKickersBitsMask =  549755813887L;
+    public static String[] getImportantBits(long res){
+        long masked = res & resultImpBitsMask;
+        System.out.println("Imp bits masked " + util.bin64(masked));
+        long shifted = masked >>> 39;
+        System.out.println("Imp bits shifted " + util.bin64(shifted));
+
+        String fCard = "";
+        String sCard = "";
+
+        long second = shifted & shifted - 1;
+        if(second != 0){
+            sCard += util.cardChars[(int)second];
+            shifted &= shifted - 1;
+
+
+        }
+        fCard += util.cardChars[(int)shifted];
+
+        System.out.println("imp bits f and s card : " + fCard + " : " + sCard);
+
+        if(second != 0){
+            return new String[]{fCard, sCard};
+        }
+//TODO finish ....maybe done already? Test it and move to util7
+        return new String[]{fCard};
+    }
+
+    public static long[] getkickerBits(long res){
+        long masked = res & resultKickersBitsMask;
+        if(masked == 0) System.out.println("No kickers?? " + res + " : " + masked);
+
+        System.out.println("kicker masked : " + masked);
+        List<Long> kLongs = new ArrayList<>();
+
+        long left = masked & masked - 1;
+        if(left == 0){
+            //no more kickers...
+        }
+
+
+
+        while(left != 0){
+            long fiMask = left ^ masked;
+            System.out.println("First masked : " + fiMask + " : " + util.bin64(fiMask));
+            kLongs.add(fiMask);
+            left &= left - 1;
+
+        }
+//TODO finish and move to util7
+        return new long[0];
+    }
+
+    public static long getHandTypeBits(long res){
+//TODO finish and move to util7
+        return 0L;
+    }
+
+    public static long getHandFlushBits(long res){
+//TODO finish and move to util7
+        return 0L;
     }
 
     private static void testQuads() throws Exception {
@@ -46,6 +155,24 @@ public class DeadHorse7Examples {
         System.out.println("long result1 = " + result1 + " : " + res1 + " :: " + util.handNames[(int)res1]);
         System.out.println("bin1 : " + util.bin64(result1));
         System.out.println("\n\n");
+    }
+
+    public static void shortToLong5(String[] cards2){
+        //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
+        System.out.println("Example: shorthand card names to full hand description..." );
+        String[] cards = new String[]{
+                //"3C", "3S", "7C", "3H", "3S"
+                "3C", "5D", "5C", "3H", "5S"
+        };
+        System.out.println("Evaluating these cards: " + Arrays.toString(cards2));
+        String result = util5.shortCardsToLongHandDescription(cards2, false);
+
+        Integer[] decs = util5.shortCardNamesToDecimals(cards);
+        int res = DeadHorse.eval5(decs);
+        System.out.println("5card result : " + res + " : " + util.bin32(res));
+
+        System.out.println(result);
+        System.out.println("\n");
     }
 
     private static void testBin() throws Exception {

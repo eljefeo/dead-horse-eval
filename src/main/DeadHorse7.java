@@ -25,6 +25,11 @@ public class DeadHorse7 {
 
 
 	private static final long[] bitPlaces = new long[] {1L, 8L, 64L, 512L, 4096L, 32768L, 262144L, 2097152L, 16777216L, 134217728L, 1073741824L, 8589934592L, 68719476736L};
+
+
+	private static long[] returnNumbers = new long[]{
+			0L,72057594037927936L, 144115188075855872L, 216172782113783808L, 288230376151711744L,360287970189639680L, 432345564227567616L, 504403158265495552L, 576460752303423488L
+	};
 	static Map<Long, Integer> bitMap = Map.ofEntries(
 			entry(1L, 0),
 			entry(8L, 1),
@@ -243,6 +248,9 @@ Straight flush - 5,6,7
 	public static long eval7beta(long[] cards) {
 		return eval7beta(cards[0], cards[1], cards[2], cards[3], cards[4], cards[5], cards[6]);
 	}
+	/*public static long eval7beta(long a, long b, long c, long d, long e, long f, long g) {
+		return 0L;
+	}*/
 	public static long eval7beta(long a, long b, long c, long d, long e, long f, long g) {
 
 		//TODO Still need to shift the bits upon the return so we have important bits and kicker bits. We are not doing that yet!
@@ -310,19 +318,28 @@ Straight flush - 5,6,7
 		long quads = (sum & quadMask) >> 2;
 		if (quads != 0) {
 			long kickers = or ^ quads;
-			kickers &= kickers - 1;
-			long finalKicker = kickers & kickers - 1;
-			System.out.println("quad card:\t" + util.bin64(quads) + " : " + quads);
-			System.out.println("Kick card:\t" + util.bin64(finalKicker) + " : " + finalKicker);
+			long kickers2 = kickers & kickers - 1;
+			if(kickers2 != 0){
+				kickers = kickers2;
+			}
+			kickers2 = kickers & kickers - 1;
+			if(kickers2 != 0){
+				kickers = kickers2;
+			}
+
+
+			long finalKicker = kickers;//
+			//System.out.println("quad card:\t" + util.bin64(quads) + " : " + quads);
+			//System.out.println("Kick card:\t" + util.bin64(finalKicker) + " : " + finalKicker);
 			//return 15762598695796736L | (quads << 1) | finalKicker;
 			int returnBase = 7 << 26;
 			int returnQds = (int)((quads >> bitMap.get(quads)*2) << 13);
 			int returnKick = (int)(finalKicker >> (bitMap.get(finalKicker)*2));
 			int finalReturn = returnBase |  returnQds | returnKick;
-			System.out.println("Return base : " + returnBase + " : " + util.bin64(returnBase));
+			/*System.out.println("Return base : " + returnBase + " : " + util.bin64(returnBase));
 			System.out.println("Return Quads : " + returnQds + " : " + util.bin64(returnQds));
 			System.out.println("Return Kicker : " + returnKick + " : " + util.bin64(returnKick));
-			System.out.println("Return Final : " + finalReturn + " : " + util.bin64(finalReturn));
+			System.out.println("Return Final : " + finalReturn + " : " + util.bin64(finalReturn));*/
 
 			return finalReturn;
 		}
@@ -334,27 +351,41 @@ Straight flush - 5,6,7
 		if (trips != 0) {
 			long twoTrips = trips & trips - 1;
 			if (twoTrips != 0) {
-				System.out.println("Two trips: " + twoTrips + " : " + util.bin64(twoTrips));
-				int retTrps = (int)((twoTrips >> bitMap.get(twoTrips)*2) << 13);
+				//System.out.println("Two trips: " + twoTrips + " : " + util.bin64(twoTrips));
+				//int retTrps = (int)((twoTrips >> bitMap.get(twoTrips)*2) << 13);
 				long txort = trips^twoTrips;
-				int rettxort = (int)((txort >> bitMap.get(txort)*2));
-				System.out.println("txort: " + txort + " : " + util.bin64(txort));
-				return 6 << 26 | (retTrps  | rettxort);//fullhouse
+				//int rettxort = (int)((txort >> bitMap.get(txort)*2));
+				System.out.println(" full house double trips");
+				return 432345564227567616L | twoTrips << (39 - (bitMap.get(twoTrips)*2))  | txort;//fullhouse
 			} else if (pairs != 0){
 				long nextPair = pairs & pairs - 1;
-				int retTrips = (int)((trips >> bitMap.get(trips)*2) << 13);
+				//int retTrips = (int)((trips >> bitMap.get(trips)*2) << 13);
+				long retTrips = (trips << (39 - (bitMap.get(trips)*2)));
 
-				System.out.println("Return trips: " + trips + " : " + util.bin64(retTrips));
+				//System.out.println("Return trips: " + trips + " : " + util.bin64(retTrips));
 
 				long retPair = (nextPair != 0 ? nextPair : pairs);
-				int retPairf = (int)((retPair >> bitMap.get(retPair)*2));
-				System.out.println("Return pair: " + retPair + " : " + util.bin64(retPair));
+				//int retPairf = (int)((retPair >> bitMap.get(retPair)*2));
+				System.out.println("Return full house trips and pair");
 
-				return 6 << 26 | ( retTrips | retPairf );//fullhouse
+				return 432345564227567616L | ( retTrips | retPair );//fullhouse
 			} else {
 				long kickers = or ^ trips;
 				kickers &= kickers - 1;
-				return 6755399441055744L | trips << 1 | (kickers & kickers - 1);
+				kickers &= kickers - 1;
+
+				long retTrips = (trips << (39 - (bitMap.get(trips)*2)));
+				//long fKicks = (kickers & kickers - 1);
+				//long kick2fKicks = fKicks;
+				//fKicks &= fKicks
+				System.out.println("Fkicksss: " + kickers + " : " + util.bin64(kickers));
+
+				//int retKicks = (int)(fKicks >> bitMap.get(fKicks)*2) | ;
+				System.out.println("3 of a kind : trips " + retTrips + " : " + util.bin64(retTrips) + " \nkicks: " + kickers +  " : " + util.bin64(kickers) + " ::: " + ((long)6 << 56));
+				long finalll = 0x300000000000000L | retTrips | kickers;
+				//
+				System.out.println("3of a kind 7 card final  :" + finalll + " : " + util.bin64(finalll));
+				return finalll; //3 of a kind / trips
 			}
 		}
 		if (pairs != 0) {
@@ -454,12 +485,25 @@ Straight flush - 5,6,7
 		//check pairs, trips, quads, fullhouse, two pair....
 		long quads = (sum & quadMask) >> 2;
 		if (quads != 0) {
+
 			long kickers = or ^ quads;
-			kickers &= kickers - 1;
-			long finalKicker = kickers & kickers - 1;
+			System.out.println("initial kickers " + util.bin64(kickers) + " : " + kickers);
+			long kickers2 = kickers & kickers - 1;
+			if(kickers2 != 0){
+				System.out.println("doing kickers 1 " + util.bin64(kickers2) + " : " + kickers2);
+				kickers = kickers2;
+				kickers2 = kickers & kickers - 1;
+				if(kickers2 != 0){
+					System.out.println("doing kickers 2 " + util.bin64(kickers2) + " : " + kickers2);
+					kickers = kickers2;
+				}
+			}
+
+
+
 			System.out.println("quad card:\t" + util.bin64(quads) + " : " + quads);
-			System.out.println("Kick card:\t" + util.bin64(finalKicker) + " : " + finalKicker);
-			return 15762598695796736L | (quads << 1) | finalKicker;
+			System.out.println("Kick card:\t" + util.bin64(kickers) + " : " + kickers);
+			return 15762598695796736L | (quads << 1) | kickers;
 			//return 15762598695796736L |  (quads >> bitMap.get(quads)*2) << 13 | finalKicker >> (bitMap.get(finalKicker)*2);
 		}
 
