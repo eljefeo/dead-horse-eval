@@ -12,7 +12,8 @@ public class Entry {
 
 		//testCardConversion();
 		//DeadHorse5Examples.doTestExamples();
-		DeadHorse7Examples.doTestExamples();
+		//DeadHorse7Examples.doTestExamples();
+		util7.testEveryHand7n();
 		//util5.decode5CardHand(403701764);
 		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"2H", "9H", "TC", "7H", "JS"});
 		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"8H", "8S", "TH", "TD", "8C"});
@@ -52,7 +53,7 @@ public class Entry {
 
 
 		//DeadHorse7.eval7Checke2();
-		util7.testEveryHand7n();
+		//util7.testEveryHand7n();
 		//util5.humanEncodeEval("2S", "8S", "6S", "5S", "3S" );
 
 

@@ -255,6 +255,7 @@ Straight flush - 5,6,7
 
 		//TODO Still need to shift the bits upon the return so we have important bits and kicker bits. We are not doing that yet!
 		long[] cds = new long[] { a, b, c, d, e, f, g};
+		 double l2 = Math.log(2);
 		final long ord = a | b | c | d | e | f | g; //orHand(hand);
 		final long sum = a + b + c + d + e + f + g; //sumHand(hand);
 		final long suits = sum & suitMask;
@@ -272,9 +273,10 @@ Straight flush - 5,6,7
 				flushCards &= cardMask;
 				long straightFlushCards = (flushCards & flushCards >>> 3 & flushCards >>> 6 & flushCards >>> 9 & flushCards >>> 12);
 				if (straightFlushCards != 0 ) {//crappy extra check to get rid of extra straight cards:
+					//TODO test flushes and straight flushes to make sure everything is in order after a couple small var changes
 					final long u = straightFlushCards & straightFlushCards - 1;
-					if(u != 0){ //we only need 5 cards for a straight, if you more than 5 cards to a straight (like a 6 card straight), this will chop off the lowest card
-						final long uu = u & u - 1;
+					if(u != 0){
+						final long uu = u & u - 1; //we only need 5 cards for a straight, if you more than 5 cards to a straight (like a 6 card straight), this will chop off the lowest card
 						straightFlushCards = ((uu != 0) ? uu : u) ;/*<< 12;*/ //this also chops off the lowest card in case you have a 7 card straight
 					}
 					return (576460752303423488L | straightFlushCards);//returns the lowest card in the straight (for 5,6,7,8,9 it will be 5)
@@ -325,7 +327,10 @@ Straight flush - 5,6,7
 
 			//long returnBase = 504403158265495552L;
 			//long returnQds = quads << (39 - (bitMap.get(quads)));
-			return 504403158265495552L |  quads << (39 - (bitMap.get(quads))) | kickers; //Quads
+			int chck = (int) (Math.log(quads) / l2 );
+			int d3 = chck / 3;
+			return 504403158265495552L |  quads << (39 + d3 - chck) | kickers; //Quads
+			//return 504403158265495552L |  quads << (39 - (bitMap.get(quads))) | kickers; //Quads
 		}
 
 		final long pairsAndTrips = (sum & pairMask) >> 1;
@@ -335,17 +340,25 @@ Straight flush - 5,6,7
 		if (trips != 0) {
 			final long twoTrips = trips & trips - 1;
 			if (twoTrips != 0) {
-				return 432345564227567616L | twoTrips << (39 - (bitMap.get(twoTrips)))  | trips^twoTrips;//fullhouse
+				int chck = (int) (Math.log(twoTrips) / l2 );
+				int d3 = chck / 3;
+				return 432345564227567616L | twoTrips << (39 + d3 - chck)  | trips^twoTrips;//fullhouse
+				//return 432345564227567616L | twoTrips << (39 - (bitMap.get(twoTrips)))  | trips^twoTrips;//fullhouse
 			} else if (pairs != 0){
 				final long nextPair = pairs & pairs - 1;
-				return 432345564227567616L | ( (trips << (39 - (bitMap.get(trips)))) | (nextPair != 0 ? nextPair : pairs)) ;//fullhouse
+				int chck = (int) (Math.log(trips) / l2 );
+				int d3 = chck / 3;
+				return 432345564227567616L | trips << (39 + d3 - chck) | (nextPair != 0 ? nextPair : pairs) ;//fullhouse
+				//return 432345564227567616L | ( (trips << (39 - (bitMap.get(trips)))) | (nextPair != 0 ? nextPair : pairs)) ;//fullhouse
 			} else {
 				long kickers = or ^ trips;
 				kickers &= kickers - 1;
-				//kickers &= kickers - 1;
 
-				//long retTrips = (trips << (39 - (bitMap.get(trips))));
-				return 0x300000000000000L | (trips << (39 - (bitMap.get(trips)))) | kickers & kickers - 1; //3 of a kind / trips
+				int chck = (int) (Math.log(trips) / l2 );
+				int d3 = chck / 3;
+				//0000001100000000000100000000001000000000001000000000000000000000
+				return 0x300000000000000L | trips << (39 + d3 - chck) | kickers & kickers - 1; //3 of a kind / trips
+				//return 0x300000000000000L | (trips << (39 - (bitMap.get(trips)))) | kickers & kickers - 1; //3 of a kind / trips
 			}
 		}
 		if (pairs != 0) {
@@ -366,11 +379,20 @@ Straight flush - 5,6,7
 				}
 				//pairs = (pairs << (39 - (bitMap.get(pairs))));
 				//nextPair = (nextPair << (39 - (bitMap.get(nextPair))));
-				return 144115188075855872L | (pairs << (39 - (bitMap.get(pairs))))| (nextPair << (39 - (bitMap.get(nextPair))))  | or; //2 pair
+				int chck = (int) (Math.log(pairs) / l2 );
+				int d3 = chck / 3;
+
+				int chck2 = (int) (Math.log(nextPair) / l2 );
+				int d32 = chck / 3;
+				return 144115188075855872L | pairs << (39 + d3 - chck)  | nextPair << (39 + d32 - chck2)  | or; //2 pair
+				//return 144115188075855872L | (pairs << (39 - (bitMap.get(pairs))))| (nextPair << (39 - (bitMap.get(nextPair))))  | or; //2 pair
 			} else {
 				or ^= pairs;
 				or &= or - 1;
-				return 72057594037927936L |  (pairs << (39 - (bitMap.get(pairs)))) | or & or -1; //1 pair
+				int chck = (int) (Math.log(pairs) / l2 );
+				int d3 = chck / 3;
+				return 72057594037927936L | pairs << (39 + d3 - chck) | or & or -1; //1 pair
+				//return 72057594037927936L |  (pairs << (39 - (bitMap.get(pairs)))) | or & or -1; //1 pair
 			}
 		}
 		//System.out.println("Just high card hand");

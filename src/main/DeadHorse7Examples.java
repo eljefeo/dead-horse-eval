@@ -39,7 +39,8 @@ public class DeadHorse7Examples {
                 //cards5[0], cards5[1], cards5[2], cards5[3], cards5[4], "4H", "2D"   //0000000000111000000000000000000000000000000000001000000000010000 four 3s with 5 kicker
                // "9D", "3D", "JC", "6H", "2D", "KD", "8S" //high card
                 //"9D", "3D", "8C", "6H", "2D", "KD", "8S" //Pair
-                "9D", "6D", "6C", "6H", "2D", "KD", "8S" //2 Pair
+                //"9D", "6D", "6C", "6H", "2D", "KD", "8S" //trips
+                "9D", "7D", "7C", "7H", "2D", "KD", "8S" //trips
         };
 
         System.out.println("Evaluating these cards7: " + Arrays.toString(cards7));
