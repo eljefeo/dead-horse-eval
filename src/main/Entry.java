@@ -24,7 +24,7 @@ public class Entry {
 		// EvalTestPlayground.howLongUntilYouGetThisKindOfHands(2);
 		 //EvalTestPlayground.handCompareTest(1000000);
 
-		// EvalTestPlayground.randomizerSpeedTest7Card(10000000);
+		//EvalTestPlayground.randomizerSpeedTest7Card(10000000);
 		// EvalTestPlayground.randomizerSpeedTest7nCard(10000000);
 
 		// EvalTestPlayground.randomizerSpeedTest7Cardr(10000000);
@@ -52,7 +52,7 @@ public class Entry {
 
 
 		//DeadHorse7.eval7Checke2();
-		//util7.testEveryHand7n();
+		util7.testEveryHand7n();
 		//util5.humanEncodeEval("2S", "8S", "6S", "5S", "3S" );
 
 

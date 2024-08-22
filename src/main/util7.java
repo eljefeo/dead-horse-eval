@@ -189,7 +189,8 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         long startT = System.nanoTime();
         //go through every hand, 5 cards at a time
         for(int i=0;i<allCards.length;i+=7)
-            DeadHorse7.eval7(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4],allCards[i+5], allCards[i+6]);
+            DeadHorse7.eval7beta(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4],allCards[i+5], allCards[i+6]);
+            //DeadHorse7.eval7(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4],allCards[i+5], allCards[i+6]);
         //get end time
         long endT = System.nanoTime();
 
@@ -221,8 +222,9 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         int[] handCounter = new int[9];
         for(int i=0;i<allCards.length;i+=7){
 
-            long res = DeadHorse7.eval7(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4],allCards[i+5],allCards[i+6]);
-            int resi = (int) (res >>> 51);
+            long res = DeadHorse7.eval7beta(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4],allCards[i+5],allCards[i+6]);
+            //long res = DeadHorse7.eval7(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4],allCards[i+5],allCards[i+6]);
+            int resi = (int) (res >>> 56);
 
             handCounter[resi]++;
         }

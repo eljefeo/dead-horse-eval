@@ -615,7 +615,7 @@ public static void randomizerSpeedTest7Card(int howMany){
 	  long startT = System.nanoTime();
 	  
 	  for(int v=0;v<ac.length/7;v++)
-		  DeadHorse7.eval7(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
+		  DeadHorse7.eval7beta(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
 
 
 	  //get end time
