@@ -375,7 +375,7 @@ public class Util5 extends Util {
         System.out.println("Finish developing me util5.convertHumanShortNamesToDecimals");
 
         //return cardMap.get(cardString);
-        if(cards != null && cards.size() == 5){
+        if(cards != null && cards.size() == numOfCardsPerHand){
             return new Integer[]{cardMap.get(cards.get(0)), cardMap.get(cards.get(1)), cardMap.get(cards.get(2)), cardMap.get(cards.get(3)), cardMap.get(cards.get(4))};
 
         } else {

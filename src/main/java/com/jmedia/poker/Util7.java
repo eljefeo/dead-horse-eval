@@ -502,7 +502,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
 
 
     public static long[] shortCardNamesToDecimals(String[] cards) throws Exception {
-        if (cards.length != 7) {
+        if (cards.length != numOfCardsPerHand) {
             throw new IllegalArgumentException("There must be 7 cards");
         }
         long[] ret = new long[cards.length];
@@ -513,7 +513,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
     }
 
     public static long[] shortCardNamesToDecimals(List<String> cards) throws Exception {
-        if (cards.size() != 7) {
+        if (cards.size() != numOfCardsPerHand) {
             throw new IllegalArgumentException("There must be 7 cards");
         }
         long[] ret = new long[cards.size()];
@@ -534,14 +534,14 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
     }
 
     public static long orHand(long[] cards) {
-        if (cards.length != 7) {
+        if (cards.length != numOfCardsPerHand) {
             throw new IllegalArgumentException("There must be 7 cards");
         }
         return cards[0] | cards[1] | cards[2] | cards[3] | cards[4] | cards[5] | cards[6];
     }
 
     public static long sumHand(long[] cards) {
-        if (cards.length != 7) {
+        if (cards.length != numOfCardsPerHand) {
             throw new IllegalArgumentException("There must be 7 cards");
         }
         return cards[0] + cards[1] + cards[2] + cards[3] + cards[4] + cards[5] + cards[6];
