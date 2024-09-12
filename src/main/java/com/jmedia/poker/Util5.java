@@ -1,9 +1,9 @@
-package main;
+package com.jmedia.poker;
 
 
 import java.util.*;
 
-public class util5 extends util{
+public class Util5 extends Util {
 
     static int total5CardHandCount = 2598960;
     static final Random rand = new Random();
@@ -232,11 +232,11 @@ public class util5 extends util{
         int e = encodeShortByHand(es);
 
         System.out.println("humanEncodeEval1: " + a + ", " + b + ", " + c + ", " + d + ", " + e);
-        System.out.println("humanEncodeEval2: " + util.bin32(a) + ", " + util.bin32(b) + ", " + util.bin32(c) + ", " + util.bin32(d) + ", " + util.bin32(e));
+        System.out.println("humanEncodeEval2: " + Util.bin32(a) + ", " + Util.bin32(b) + ", " + Util.bin32(c) + ", " + Util.bin32(d) + ", " + Util.bin32(e));
 
         //return DeadHorse.eval5WithNotes(a, b, c, d, e);
         int res = DeadHorse.eval5(a, b, c, d, e);
-        System.out.println("humanEncodeEval3 : " + res + " : " + util.bin32(res));
+        System.out.println("humanEncodeEval3 : " + res + " : " + Util.bin32(res));
         return res;
     }
 
@@ -281,9 +281,9 @@ public class util5 extends util{
         int kickerBits = hand & leaveKickerBitMask;
 
         if(showDetails) {
-            System.out.println("This hand: " + hand + " :: " + util.bin32(hand) + " :: " + handType + " : " + handNames[handType]);
-            System.out.println("important bits: " + importantBits + " :: " + util.bin13(importantBits));
-            System.out.println("kicker bits: " + kickerBits + " :: " + util.bin13(kickerBits));
+            System.out.println("This hand: " + hand + " :: " + Util.bin32(hand) + " :: " + handType + " : " + handNames[handType]);
+            System.out.println("important bits: " + importantBits + " :: " + Util.bin13(importantBits));
+            System.out.println("kicker bits: " + kickerBits + " :: " + Util.bin13(kickerBits));
         }
 
         String longHandName = handNames[handType];
@@ -332,7 +332,7 @@ public class util5 extends util{
             int someOne = (int) Math.pow(2,impKickCount);
             int maybe1 = impKickBts & someOne;
             if(maybe1 != 0){
-                strngs.add(util.cardLongNames[impKickCount]);
+                strngs.add(Util.cardLongNames[impKickCount]);
                 impKickBts ^= maybe1;
             }
             impKickCount--;
@@ -370,6 +370,20 @@ public class util5 extends util{
         return new Integer[]{cardMap.get(cardString[0]), cardMap.get(cardString[1]), cardMap.get(cardString[2]), cardMap.get(cardString[3]), cardMap.get(cardString[4])};
     }
 
+    public static Integer[] shortCardNamesToDecimals(List<String> cards){
+        //TODO
+        System.out.println("Finish developing me util5.convertHumanShortNamesToDecimals");
+
+        //return cardMap.get(cardString);
+        if(cards != null && cards.size() == 5){
+            return new Integer[]{cardMap.get(cards.get(0)), cardMap.get(cards.get(1)), cardMap.get(cards.get(2)), cardMap.get(cards.get(3)), cardMap.get(cards.get(4))};
+
+        } else {
+            throw new IllegalArgumentException("Cards must be not null and 5 cards only");
+        }
+
+    }
+
 
 
     public static int shortCardNameToDecimalByHand(String cardString) throws Exception {
@@ -386,7 +400,7 @@ public class util5 extends util{
 
 
     public static char getCardChar(int card) throws Exception {
-        return util.cardChars[getCardIndexDecimal(card)];
+        return Util.cardChars[getCardIndexDecimal(card)];
     }
 
     public static int getCardIndexDecimal(int card) throws Exception {
@@ -399,7 +413,7 @@ public class util5 extends util{
     }
 
     public static char getSuitChar(int card) throws Exception {
-        return util.suitChars[getSuitIndexDecimal(card)];
+        return Util.suitChars[getSuitIndexDecimal(card)];
     }
 
     public static int getSuitIndexDecimal(int card) throws Exception {
@@ -428,15 +442,15 @@ public class util5 extends util{
     }
 
     public static String decimalToLongCardName(int card) throws Exception {
-        return getCardLong(card) + util.OF + getSuitLong(card);
+        return getCardLong(card) + Util.OF + getSuitLong(card);
     }
 
     public static String getCardLong(int card) throws Exception {
-        return util.cardLongNames[getCardIndexDecimal(card)];
+        return Util.cardLongNames[getCardIndexDecimal(card)];
     }
 
     public static String getSuitLong(int card) throws Exception {
-        return util.suitLongs[getSuitIndexDecimal(card)];
+        return Util.suitLongs[getSuitIndexDecimal(card)];
     }
 
     public static String decimalsToLongHandDescription(Integer[] cards) {

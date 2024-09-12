@@ -1,4 +1,4 @@
-package main;
+package com.jmedia.poker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,7 +114,7 @@ public class HandMakerSevenCard {
         //if(handDescription.toUpperCase().equals(util.ROYAL_FLUSH.toUpperCase())){
         //	 handType = 9; //maybe can hijack some functions and use 9 as royal flush indicator
         //} else {
-        int handType = util.handDescriptionToType(handDescription);
+        int handType = Util.handDescriptionToType(handDescription);
         long[] cardsLong = getRandomThisType7CardHand(handType);
         //}
 
@@ -168,21 +168,21 @@ public class HandMakerSevenCard {
         int counter = 0;
         int limit = 10000000;
         int chunks = 1000;
-        if (whatKind > util.handNames.length - 1) {
-            throw new IllegalArgumentException(whatKind + " is invalid. Please pick a hand from 0 - " + (util.handNames.length - 1));
+        if (whatKind > Util.handNames.length - 1) {
+            throw new IllegalArgumentException(whatKind + " is invalid. Please pick a hand from 0 - " + (Util.handNames.length - 1));
         }
         while (true) {
             counter++;
-            long[] sevenCards = util7.makeThisManyRandom7CardHands(chunks);
+            long[] sevenCards = Util7.makeThisManyRandom7CardHands(chunks);
 
             for(int i = 0; i < sevenCards.length; i += 7){
                 long res = DeadHorse7.eval7(sevenCards[i], sevenCards[i+1], sevenCards[i+2], sevenCards[i+3], sevenCards[i+4], sevenCards[i+5], sevenCards[i+6]);
                 int type = (int) (res >>> 51);
                 if (type == whatKind) {
-                    System.out.println("Finally got " + util.handNames[type] + " after " + counter + " hands");
+                    System.out.println("Finally got " + Util.handNames[type] + " after " + counter + " hands");
                     return new long[]{sevenCards[i], sevenCards[i+1], sevenCards[i+2], sevenCards[i+3], sevenCards[i+4], sevenCards[i+5], sevenCards[i+6]};
                 } else if (counter > limit) {
-                    System.out.println("Did not get a " + util.handNames[whatKind] + " after " + limit + " hands...stopping the search so it doesnt go on forever");
+                    System.out.println("Did not get a " + Util.handNames[whatKind] + " after " + limit + " hands...stopping the search so it doesnt go on forever");
                     return null;
                 }
             }
@@ -196,15 +196,15 @@ public class HandMakerSevenCard {
 
     //This is not going to be pretty, algorithm to create a pair hand, or high card...
     public static Long[] getRandomPairHand2(){
-        List<Long> allCards = Arrays.stream(util7.all52CardsDecimal).boxed().collect(Collectors.toList());
-        int cardCount = util.cardChars.length;
-        int suitCount = util.suitChars.length;
+        List<Long> allCards = Arrays.stream(Util7.all52CardsDecimal).boxed().collect(Collectors.toList());
+        int cardCount = Util.cardChars.length;
+        int suitCount = Util.suitChars.length;
 
-        Long[] cards = new Long[util7.numOfCardsPerHand];
+        Long[] cards = new Long[Util7.numOfCardsPerHand];
 
 
         int cardInd = rand.nextInt(cardCount); //this 2, 3,4,5,6,7,8,9,T,J,Q,K
-        long pairCard = util.cardChars[cardInd];
+        long pairCard = Util.cardChars[cardInd];
         System.out.println("Picked first card: " + cardInd);
 
 
@@ -218,8 +218,8 @@ public class HandMakerSevenCard {
 
         //long suit2 = util.suitChars[suit2Ind];
 
-        long card1 = util7.makeDecimalFromIndexes(cardInd, suit1Ind);
-        long card2 = util7.makeDecimalFromIndexes(cardInd, suit2Ind);
+        long card1 = Util7.makeDecimalFromIndexes(cardInd, suit1Ind);
+        long card2 = Util7.makeDecimalFromIndexes(cardInd, suit2Ind);
 
         allCards.remove(card1);
         allCards.remove(card2);
@@ -238,48 +238,48 @@ public class HandMakerSevenCard {
     }
 
     public static Long[] getRandomStraightHand2() throws Exception {
-        List<Long> allCards = Arrays.stream(util7.all52CardsDecimal).boxed().collect(Collectors.toList());
-        int cardCount = util.cardChars.length;
-        int suitCount = util.suitChars.length;
+        List<Long> allCards = Arrays.stream(Util7.all52CardsDecimal).boxed().collect(Collectors.toList());
+        int cardCount = Util.cardChars.length;
+        int suitCount = Util.suitChars.length;
 
-        Long[] cards = new Long[util7.numOfCardsPerHand];
+        Long[] cards = new Long[Util7.numOfCardsPerHand];
 
 
         int cardInd = rand.nextInt(cardCount); //this 2, 3,4,5,6,7,8,9,T,J,Q,K
-        char[] ourCardChars = new char[util7.numOfCardsPerHand];
-        char[] ourSuitChars = new char[util7.numOfCardsPerHand];
+        char[] ourCardChars = new char[Util7.numOfCardsPerHand];
+        char[] ourSuitChars = new char[Util7.numOfCardsPerHand];
         //maybe pick a straight by choosing at random the highest card of the straight, choose from 5 - Ace
 
         int highestCard = rand.nextInt(10) + 3;//5,6,7,8,9,T,J,Q,K - 10 cards here. We actually want to pick a random number from 3-13, but we just do 0-10 and then add 3 after
         //System.out.println("highest card is " + util.cardLongNames[highestCard] + " hopefully same as :: " + util.cardChars[3]);
         if(highestCard == 3) { //this means highest card is the 5, so A2345, that darn low ace straight, gotta do something special for it
-            ourCardChars[0] = util.cardChars[util.cardChars.length-1];
-            ourSuitChars[0] = util.suitChars[rand.nextInt(util.suitChars.length)];
+            ourCardChars[0] = Util.cardChars[Util.cardChars.length-1];
+            ourSuitChars[0] = Util.suitChars[rand.nextInt(Util.suitChars.length)];
 
-            ourCardChars[1] = util.cardChars[0];
-            ourSuitChars[1] = util.suitChars[rand.nextInt(util.suitChars.length)];
+            ourCardChars[1] = Util.cardChars[0];
+            ourSuitChars[1] = Util.suitChars[rand.nextInt(Util.suitChars.length)];
 
-            ourCardChars[2] = util.cardChars[1];
-            ourSuitChars[2] = util.suitChars[rand.nextInt(util.suitChars.length)];
+            ourCardChars[2] = Util.cardChars[1];
+            ourSuitChars[2] = Util.suitChars[rand.nextInt(Util.suitChars.length)];
 
-            ourCardChars[3] = util.cardChars[2];
-            ourSuitChars[3] = util.suitChars[rand.nextInt(util.suitChars.length)];
+            ourCardChars[3] = Util.cardChars[2];
+            ourSuitChars[3] = Util.suitChars[rand.nextInt(Util.suitChars.length)];
 
-            ourCardChars[4] = util.cardChars[3];
-            ourSuitChars[4] = util.suitChars[rand.nextInt(util.suitChars.length)];
+            ourCardChars[4] = Util.cardChars[3];
+            ourSuitChars[4] = Util.suitChars[rand.nextInt(Util.suitChars.length)];
             //System.out.println("Found Low Ace straight...");
         } else {
             for(int i = 0; i < 5; i++){
-                ourCardChars[i] = util.cardChars[highestCard-i];
-                ourSuitChars[i] = util.suitChars[rand.nextInt(util.suitChars.length)];
+                ourCardChars[i] = Util.cardChars[highestCard-i];
+                ourSuitChars[i] = Util.suitChars[rand.nextInt(Util.suitChars.length)];
             }
         }
 
-        ourCardChars[5] = util.cardChars[rand.nextInt(util.cardChars.length)];
-        ourSuitChars[5] = util.suitChars[rand.nextInt(util.suitChars.length)];
+        ourCardChars[5] = Util.cardChars[rand.nextInt(Util.cardChars.length)];
+        ourSuitChars[5] = Util.suitChars[rand.nextInt(Util.suitChars.length)];
 
-        ourCardChars[6] = util.cardChars[rand.nextInt(util.cardChars.length)];
-        ourSuitChars[6] = util.suitChars[rand.nextInt(util.suitChars.length)];
+        ourCardChars[6] = Util.cardChars[rand.nextInt(Util.cardChars.length)];
+        ourSuitChars[6] = Util.suitChars[rand.nextInt(Util.suitChars.length)];
 
         for(int i = 0; i < ourSuitChars.length; i++){
             System.out.println("Created cards before checking for flushes: " + ourCardChars[i] + ourSuitChars[i]);
@@ -314,11 +314,11 @@ public class HandMakerSevenCard {
             }
         }
 
-        int[] suitCounts = new int[util.suitChars.length];
+        int[] suitCounts = new int[Util.suitChars.length];
         for(int i = 0; i < ourSuitChars.length; i++){
 
             for(int j = 0; j < suitCounts.length; j++){
-                if(ourSuitChars[i] == util.suitChars[j]){
+                if(ourSuitChars[i] == Util.suitChars[j]){
                     suitCounts[j]++;
                 }
 
@@ -352,7 +352,7 @@ public class HandMakerSevenCard {
                     System.out.println("doing ind = " + ind);
                     System.out.println("and index = " + indexes[ind] );
 
-                    if(ourSuitChars[indexes[ind]] == util.suitChars[c]){
+                    if(ourSuitChars[indexes[ind]] == Util.suitChars[c]){
                         //System.out.println("before changing this suit  " + ourCardChars[indexes[ind]] + ourSuitChars[indexes[ind]]);
                          char newSt = pickRandomSuitExcept(ourSuitChars[indexes[ind]]);
                         System.out.println("Changed " + ourCardChars[indexes[ind]] + ourSuitChars[indexes[ind]] + " to " +  ourCardChars[indexes[ind]] + newSt);
@@ -386,10 +386,10 @@ public class HandMakerSevenCard {
             System.out.println("Card " + i + " : " + ourCardChars[i] + ourSuitChars[i]);
         }*/
 
-        Long[] straightCards = new Long[util7.numOfCardsPerHand];//new Long[]{util7.makeDecimalFromChar()}
+        Long[] straightCards = new Long[Util7.numOfCardsPerHand];//new Long[]{util7.makeDecimalFromChar()}
         for(int i = 0; i < straightCards.length; i++){
             System.out.println("final list: " + ourCardChars[i] + ourSuitChars[i]);
-            straightCards[i] = util7.makeDecimalFromChars(ourCardChars[i], ourSuitChars[i]);
+            straightCards[i] = Util7.makeDecimalFromChars(ourCardChars[i], ourSuitChars[i]);
         }
 
         for(int i = 0; i < straightCards.length-1; i++){
@@ -414,9 +414,9 @@ public class HandMakerSevenCard {
     }
 
     private static char pickRandomSuitExcept(char suit ){
-        char[] newSuitChoices = new char[util.suitChars.length - 1];
+        char[] newSuitChoices = new char[Util.suitChars.length - 1];
         int counter = 0;
-        for(char sc : util.suitChars){
+        for(char sc : Util.suitChars){
             if(sc != suit){
                 newSuitChoices[counter++] = sc;
             }
@@ -431,11 +431,11 @@ public class HandMakerSevenCard {
         // go get the other 3 cards so we have all 4
         // pick any other random card as the kicker
 
-        List<Long> allCards = Arrays.stream(util7.all52CardsDecimal).boxed().collect(Collectors.toList());
-        int cardCount = util.cardChars.length;
-        int suitCount = util.suitChars.length;
+        List<Long> allCards = Arrays.stream(Util7.all52CardsDecimal).boxed().collect(Collectors.toList());
+        int cardCount = Util.cardChars.length;
+        int suitCount = Util.suitChars.length;
 
-        Long[] cards = new Long[util7.numOfCardsPerHand];
+        Long[] cards = new Long[Util7.numOfCardsPerHand];
 
 
         int cardInd = rand.nextInt(cardCount); //this 2, 3,4,5,6,7,8,9,T,J,Q,K
@@ -443,7 +443,7 @@ public class HandMakerSevenCard {
         //now we go get all 4 suits for that card. Like if we pick 4, go get 4H 4S 4C 4D
         for (int i = 0; i < suitCount; i++){
 
-            long nextCard = util7.makeDecimalFromIndexes(cardInd, i);//now we have all 4 cards for quads
+            long nextCard = Util7.makeDecimalFromIndexes(cardInd, i);//now we have all 4 cards for quads
             cards[i] = nextCard;
             allCards.remove(nextCard);
 

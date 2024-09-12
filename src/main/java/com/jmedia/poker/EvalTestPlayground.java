@@ -1,4 +1,4 @@
-package main;
+package com.jmedia.poker;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,9 +10,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static main.util.handNames;
-import static main.util5.*;
-import static main.util7.handFrequency;
+import static com.jmedia.poker.Util.handNames;
+import static com.jmedia.poker.Util5.*;
+import static com.jmedia.poker.Util7.handFrequency;
 
 public class EvalTestPlayground {
 	
@@ -36,10 +36,10 @@ public class EvalTestPlayground {
 
 	public static long[] createAllSevenCardHands(){
 
-		long[] allCards = new long[util7.total7CardHandCount*7];
+		long[] allCards = new long[Util7.total7CardHandCount*7];
 		int totalCounter=0;
 
-		long[] cards52_7 = util7.all52CardsDecimal; //DeadHorse7.makeAll52Cards7Decimal() ;
+		long[] cards52_7 = Util7.all52CardsDecimal; //DeadHorse7.makeAll52Cards7Decimal() ;
 
 //668.922.800
 
@@ -251,13 +251,13 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  //to the number of each type of hand we expect
 		   for(int j=0;j<handCounter.length;j++){
 			   //check if expected == actual
-			   boolean checked = handCounter[j] == util5.handFrequency[j];
+			   boolean checked = handCounter[j] == Util5.handFrequency[j];
 			   String res = checked
 					   //if all hands accounted for, good news
-					   ? "All " + util5.handFrequency[j] + " " + handNames[j] + " hands are accounted for"
+					   ? "All " + Util5.handFrequency[j] + " " + handNames[j] + " hands are accounted for"
 							   
 						//if the counts dont match, show how many failed
-					   : (handCounter[j] - util5.handFrequency[j]) + " of "+ handFrequency[j]
+					   : (handCounter[j] - Util5.handFrequency[j]) + " of "+ handFrequency[j]
 							   +" "+handNames[j]+" hands failed!"; 
 			   
 			   System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
@@ -351,13 +351,13 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 
 		   for(int j=0;j<handCounter.length;j++){
 			   //check if expected == actual
-			   boolean checked = handCounter[j]== util7.handFrequency[j];
+			   boolean checked = handCounter[j]== Util7.handFrequency[j];
 			   String res = checked
 					   //if all hands accounted for, good news
-					   ?"PASS - All "+ util7.handFrequency[j]+" "+handNames[j]+" hands are accounted for"
+					   ?"PASS - All "+ Util7.handFrequency[j]+" "+handNames[j]+" hands are accounted for"
 							   
 						//if the counts dont match, show how many failed
-					   : "FAIL - " +handCounter[j]+" out of "+ util7.handFrequency[j]
+					   : "FAIL - " +handCounter[j]+" out of "+ Util7.handFrequency[j]
 							   +" "+handNames[j]+" hands received!"; 
 			   
 			   System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
@@ -604,7 +604,7 @@ public static void randomizerSpeedTest7Card(int howMany){
 	
 	
 
-	  long[] ac = util7.makeThisManyRandom7CardHands(howMany);
+	  long[] ac = Util7.makeThisManyRandom7CardHands(howMany);
 	  //get start time
 	  long startTf = System.nanoTime();
 	  
@@ -637,7 +637,7 @@ public static void randomizerSpeedTest7nCard(int howMany){
 	
 	
 
-	  long[] ac = util7.makeThisManyRandom7CardHands(howMany);
+	  long[] ac = Util7.makeThisManyRandom7CardHands(howMany);
 	  //get start time
 	  long startTf = System.nanoTime();
 	  

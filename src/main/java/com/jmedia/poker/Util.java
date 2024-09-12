@@ -1,8 +1,8 @@
-package main;
+package com.jmedia.poker;
 
 import java.util.Arrays;
 
-public abstract class util {
+public abstract class Util {
     static String[] allCardNames = new String[]{
             //"2s", "3s", "4s", "5s", "6s", "7s", "8s", "9s", "10s", "Js", "Qs", "Ks", "As",
             "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "TS", "JS", "QS", "KS", "AS",
@@ -120,12 +120,12 @@ public abstract class util {
         int cardIndex = getCardIndexChar(cardString.charAt(0));
         int suitIndex = getSuitIndexChar(cardString.charAt(1));
 
-        return util.cardLongNames[cardIndex] + util.OF + util.suitLongs[suitIndex];
+        return Util.cardLongNames[cardIndex] + Util.OF + Util.suitLongs[suitIndex];
     }
 
     public static int getSuitIndexChar(char suitChar) throws Exception {
-        for (int i = 0; i < util.suitChars.length; i++) {
-            if (suitChar == util.suitChars[i]) {
+        for (int i = 0; i < Util.suitChars.length; i++) {
+            if (suitChar == Util.suitChars[i]) {
                 return i;
             }
         }
@@ -133,8 +133,8 @@ public abstract class util {
     }
 
     public static int getCardIndexChar(char cardChar) throws Exception {
-        for (int i = 0; i < util.cardChars.length; i++) {
-            if (cardChar == util.cardChars[i]) {
+        for (int i = 0; i < Util.cardChars.length; i++) {
+            if (cardChar == Util.cardChars[i]) {
                 return i;
             }
         }

@@ -1,4 +1,4 @@
-package main;
+package com.jmedia.poker;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,12 +7,12 @@ public class DeadHorse5Examples {
 
 
     public static void doTestExamples() throws Exception {
-        shortToLong(); //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
+        //shortToLong(); //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
         //HandMakerFiveCard.testGetRandomTestSomeHand();
         //getRandomHandFromDescription();
 
         //speedGameOfPoker();
-        //speedGameOfPokerRealDeck();
+        speedGameOfPokerRealDeck();
         //getSomeRandomHand();
     }
 
@@ -28,18 +28,18 @@ public class DeadHorse5Examples {
             Integer[] randomHand = HandMakerFiveCard.getRandomHand();
             int res = DeadHorse.eval5(randomHand);
             handResults[i] = res;
-            String handDescription = util5.decode5CardHand(res, false);
+            String handDescription = Util5.decode5CardHand(res, false);
             handDescriptions[i] = handDescription;
             //hands.add(randomHand);
             //System.out.println("Player " + (i+1) + " is dealt a " + util5.convertDecimalsToLongHandDescription(randomHand));
             System.out.println("Player " + (i+1) + " is dealt a " + handDescription);
             for(Integer c : randomHand){
-                System.out.println(util5.decimalToLongCardName(c));
+                System.out.println(Util5.decimalToLongCardName(c));
             }
             System.out.println("----------\n");
         }
         System.out.println("Who Wins???");
-        int winnerIndex = util.indexOfLargestIntInArray(handResults);
+        int winnerIndex = Util.indexOfLargestIntInArray(handResults);
         System.out.println("\nPlayer " + (winnerIndex+1) + " WINS with a " + handDescriptions[winnerIndex]);
 
     }
@@ -47,8 +47,8 @@ public class DeadHorse5Examples {
     private static void speedGameOfPokerRealDeck() throws Exception {
         //This will deal cards from a 52 card deck, then show and evaluate each hand, and show who wins. Good for gambling
         System.out.println("dealing hands from the same deck");
-        int playerCount = 10;
-        List<Integer[]> hands = util5.dealRandomHandsFromDeck(playerCount);
+        int playerCount = 5;
+        List<Integer[]> hands = Util5.dealRandomHandsFromDeck(playerCount);
         int[] handResults = new int[playerCount];
         String[] handDescriptions = new String[playerCount];
 
@@ -56,13 +56,13 @@ public class DeadHorse5Examples {
             Integer[] hand = hands.get(i);
             int res = DeadHorse.eval5(hand);
             handResults[i] = res;
-            String handDescription = util5.decode5CardHand(res, false);
+            String handDescription = Util5.decode5CardHand(res, false);
             handDescriptions[i] = handDescription;
-            System.out.println("-----\nPlayer " + (i+1) + " has " + Arrays.toString(util5.decimalsToShortCardNames(hand)) + " - " + handDescription);
+            System.out.println("-----\nPlayer " + (i+1) + " has " + Arrays.toString(Util5.decimalsToShortCardNames(hand)) + " - " + handDescription);
         }
 
         System.out.println("Who Wins???");
-        int winnerIndex = util.indexOfLargestIntInArray(handResults);
+        int winnerIndex = Util.indexOfLargestIntInArray(handResults);
         System.out.println("\nPlayer " + (winnerIndex+1) + " WINS with a " + handDescriptions[winnerIndex]);
 
     }
@@ -71,7 +71,7 @@ public class DeadHorse5Examples {
         //gets a totally random hand and evaluates it, good for gambling
         System.out.println("Retrieving a totally random hand...");
         Integer[] cards = HandMakerFiveCard.getRandomHand();
-        String result = util5.decimalsToLongHandDescription(cards); //util5.shortCardsToLongDescription(cards, false);
+        String result = Util5.decimalsToLongHandDescription(cards); //util5.shortCardsToLongDescription(cards, false);
 
         System.out.println(result);
     }
@@ -81,7 +81,7 @@ public class DeadHorse5Examples {
         String handType = "full house";
         System.out.println("Retrieving random " + handType + " hand:");
         String[] cards = HandMakerFiveCard.getRandomHandFromDescription(handType);
-        System.out.println(Arrays.toString(cards) + " --- " + util5.shortCardsToLongHandDescription(cards, false));
+        System.out.println(Arrays.toString(cards) + " --- " + Util5.shortCardsToLongHandDescription(cards, false));
 
 
     }
@@ -92,14 +92,14 @@ public class DeadHorse5Examples {
         System.out.println("Example: shorthand card names to full hand description..." );
         String[] cards = new String[]{
                 //"3C", "3S", "7C", "3H", "3S"
-                "3C", "5D", "5C", "3H", "5S"
+                "2D", "5D", "3D", "4D", "6D"
         };
         System.out.println("Evaluating these cards: " + Arrays.toString(cards));
-        String result = util5.shortCardsToLongHandDescription(cards, false);
+        String result = Util5.shortCardsToLongHandDescription(cards, true);
 
-        Integer[] decs = util5.shortCardNamesToDecimals(cards);
+        Integer[] decs = Util5.shortCardNamesToDecimals(cards);
         int res = DeadHorse.eval5(decs);
-        System.out.println("5card result : " + res + " : " + util.bin32(res));
+        System.out.println("5card result : " + res + " : " + Util.bin32(res));
 
         System.out.println(result);
         System.out.println("\n");

@@ -1,10 +1,10 @@
-package main;
+package com.jmedia.poker;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Map.entry;
-import static main.util7.*;
+import static com.jmedia.poker.Util7.*;
 
 public class DeadHorse7 {
 
@@ -59,8 +59,8 @@ public class DeadHorse7 {
 	public static int eval7Checke() throws Exception {
 		String[] someCardCodes = new String[] { "8C", "5C", "6C", "7C", "9C", "4C", "3C" };
 		String[] someCardCodes2 = new String[] { "4D", "5C", "6C", "7C", "KC", "4C", "3C" };
-		long[] hand = convertHandHumanShortToDecimal(someCardCodes);
-		long[] handm = util.maskCards(hand, cardMask);
+		long[] hand = shortCardNamesToDecimals(someCardCodes);
+		long[] handm = Util.maskCards(hand, cardMask);
 		/*for(int i=0; i<hand.length; i++){
 			long c = hand[i];
 			long cm = handm[i];
@@ -74,10 +74,10 @@ public class DeadHorse7 {
 
 		long res = eval7(hand);
 		int resi = (int) (res >>> 51);
-		System.out.println("RES : " + res + " : " + resi + " : " + util.bin51(resi) + " : " + util.getPwrTwo(resi) );
-		System.out.println(util.bin51(res));
-		System.out.println(" : " + util7.handNames[resi]);
-		long[] handc = util7.getRandomThisType7CardHand(1);
+		System.out.println("RES : " + res + " : " + resi + " : " + Util.bin51(resi) + " : " + Util.getPwrTwo(resi) );
+		System.out.println(Util.bin51(res));
+		System.out.println(" : " + Util7.handNames[resi]);
+		long[] handc = Util7.getRandomThisType7CardHand(1);
 		System.out.println(" got this random hand " + handc);
 		eval7(handc);
 		System.out.println(" evald this random hand " + handc);
@@ -86,17 +86,17 @@ public class DeadHorse7 {
 		long ordMasked = ord & cardMask;
 		try {
 			System.out.println("got : "
-					+ util7.convertDecimalToShortCardName(handc[0]) + ", "
-					+ util7.convertDecimalToShortCardName(handc[1]) + ", "
-					+ util7.convertDecimalToShortCardName(handc[2]) + ", "
-					+ util7.convertDecimalToShortCardName(handc[3]) + ", "
-					+ util7.convertDecimalToShortCardName(handc[4]) + ", "
-					+ util7.convertDecimalToShortCardName(handc[5]) + ", "
-					+ util7.convertDecimalToShortCardName(handc[6]));
+					+ Util7.convertDecimalToShortCardName(handc[0]) + ", "
+					+ Util7.convertDecimalToShortCardName(handc[1]) + ", "
+					+ Util7.convertDecimalToShortCardName(handc[2]) + ", "
+					+ Util7.convertDecimalToShortCardName(handc[3]) + ", "
+					+ Util7.convertDecimalToShortCardName(handc[4]) + ", "
+					+ Util7.convertDecimalToShortCardName(handc[5]) + ", "
+					+ Util7.convertDecimalToShortCardName(handc[6]));
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
-		System.out.println("ord bit counts: " + util.countBits(ordMasked) + " : " + util.bin51(ordMasked));
+		System.out.println("ord bit counts: " + Util.countBits(ordMasked) + " : " + Util.bin51(ordMasked));
 
 
 		int nn = 256;
@@ -122,20 +122,20 @@ public class DeadHorse7 {
 	public static int eval7Checke2() throws Exception {
 		String[] someCardCodes = new String[] { "AS", "5S", "QD", "9C", "KC", "2D", "3S" };
 		String[] someCardCodes2 = new String[] { "4D", "5C", "6C", "7C", "KC", "4C", "3C" };
-		long[] hand = convertHandHumanShortToDecimal(someCardCodes);
-		long[] handm = util.maskCards(hand, cardMask);
+		long[] hand = shortCardNamesToDecimals(someCardCodes);
+		long[] handm = Util.maskCards(hand, cardMask);
 		for(int i=0; i<hand.length; i++){
 			long c = hand[i];
 
-			System.out.println("card " + i + " : " + util.bin51(c) + " : " + someCardCodes[i]);
+			System.out.println("card " + i + " : " + Util.bin51(c) + " : " + someCardCodes[i]);
 
 		}
 
 		long res = eval7(hand);
 		int resi = (int) (res >>> 51);
-		System.out.println("RES : " + res + " : " + resi + " : " + util.bin51(resi) + " : " + util.getPwrTwo(resi) );
-		System.out.println("binn: " + util.bin51(res));
-		System.out.println(" : " + util.handNames[resi]);
+		System.out.println("RES : " + res + " : " + resi + " : " + Util.bin51(resi) + " : " + Util.getPwrTwo(resi) );
+		System.out.println("binn: " + Util.bin51(res));
+		System.out.println(" : " + Util.handNames[resi]);
 		System.out.println("Checke 2");
 		return 0;
 	}
@@ -165,6 +165,26 @@ Straight flush - 5,6,7
 		//	throw new Exception("Hand must have exactly 7 cards");
 		//}
 		return eval7(hand[0],hand[1],hand[2],hand[3],hand[4],hand[5],hand[6]);
+	}
+
+	public static long eval7(PokerHand hand) throws Exception {
+
+		if(hand != null){
+			List<String> cards = hand.getCards();
+			if(cards != null && cards.size() == numOfCardsPerHand){
+				//return eval5(cards.get(0), cards.get(1), cards.get(2), cards.get(3), cards.get(4));
+				long[] cardDecimals = shortCardNamesToDecimals(cards);
+				return eval7(cardDecimals);
+			} else {
+				if(cards != null){
+					System.out.println(cards);
+				}
+				throw new IllegalArgumentException("Invalid Cards");
+			}
+		} else {
+			throw new IllegalArgumentException("Cards are null");
+		}
+
 	}
 
 	public static long checkFlush(long a, long b, long c, long d, long e, long f, long g, long suits ) {
@@ -254,8 +274,8 @@ Straight flush - 5,6,7
 	public static long eval7beta(long a, long b, long c, long d, long e, long f, long g) {
 
 		//TODO Still need to shift the bits upon the return so we have important bits and kicker bits. We are not doing that yet!
-		long[] cds = new long[] { a, b, c, d, e, f, g};
-		 double l2 = Math.log(2);
+		final long[] cds = new long[] { a, b, c, d, e, f, g};
+		final double l2 = Math.log(2);
 		final long ord = a | b | c | d | e | f | g; //orHand(hand);
 		final long sum = a + b + c + d + e + f + g; //sumHand(hand);
 		final long suits = sum & suitMask;
@@ -660,10 +680,10 @@ Straight flush - 5,6,7
 	public static long testeval7() throws Exception {
 		String[] someCardCodes = new String[] { "9C", "9H", "3C", "KS", "9S", "JD", "9D" };
 
-		long[] hand = convertHandHumanShortToDecimal(someCardCodes);
+		long[] hand = shortCardNamesToDecimals(someCardCodes);
 
 		for (long l : hand) {
-			System.out.println("card: " + l + " : " + convertDecimalToLongName(l) + " : " + util.bin51(l));
+			System.out.println("card: " + l + " : " + convertDecimalToLongName(l) + " : " + Util.bin51(l));
 		}
 		long ord = orHand(hand);
 		long sum = sumHand(hand);
@@ -714,11 +734,11 @@ Straight flush - 5,6,7
 		boolean isFlush = false, isStrt = false;
 		System.out.println("First checking for a flush ");
 		long suits = sum & suitMask;
-		System.out.println("suits: " + suits + " : " + util.bin51(suits));
+		System.out.println("suits: " + suits + " : " + Util.bin51(suits));
 		for (int i = 0; i < fullSuitMasks.length; i++) {
 			//long masked = fullSuitMasks[i] & suits;
 			if (/* masked != 0 && */ (fullSuitMasks[i] & suits) > almostFlush[i]) {
-				System.out.println("Flush of " + util.suitLongs[i] + " :: " + i + " ");
+				System.out.println("Flush of " + Util.suitLongs[i] + " :: " + i + " ");
 				//return suits;
 
 
@@ -729,7 +749,7 @@ Straight flush - 5,6,7
 				for(int j=0; j<hand.length; j++){
 					if((fullSuitMasks[i] & hand[i]) != 0){
 						long returnFlush = 0x14000000 | (hand[i] & suitMask);
-						System.out.println("About to return a Flush: " + returnFlush + " :: " + util.bin64(returnFlush));
+						System.out.println("About to return a Flush: " + returnFlush + " :: " + Util.bin64(returnFlush));
 
 
 						//return 5 ;//| (hand[i] & suitMask); //this 0x14000000 is not in the right spot.... need to recalculate, those are for 5 card..
@@ -751,19 +771,19 @@ Straight flush - 5,6,7
 				//return l | 0x10000000;
 
 				if(isFlush){
-					System.out.println("STraIght FluSh " + util.bin51(ord));
+					System.out.println("STraIght FluSh " + Util.bin51(ord));
 					return 8;//since also a flush, its a straight flush.
 				}
 
 				else{
-					System.out.println("Normal Straight " + util.bin51(ord));
+					System.out.println("Normal Straight " + Util.bin51(ord));
 					return 4; //if no flush, just straight
 				}
 
 			}
 		}
 		if(isFlush){
-			System.out.println("yep just returning a Flush: " + " :: " + util.bin64(ord));
+			System.out.println("yep just returning a Flush: " + " :: " + Util.bin64(ord));
 			return 5;
 		}
 
@@ -776,31 +796,31 @@ Straight flush - 5,6,7
 		long quads = sum & quadMask;
 
 		if (quads != 0) {
-			System.out.println("QUADS : " + util.bin51(quads));
+			System.out.println("QUADS : " + Util.bin51(quads));
 			//return 0x1C000000;
 			return 7;
 		}
 		if (trips != 0) {
-			System.out.println("TRIPS : " + util.bin51(trips));
+			System.out.println("TRIPS : " + Util.bin51(trips));
 			//here... what... it could be 1 trips or 2 trips technically..
 			long twoTrips = trips & trips-1;
 			if(twoTrips != 0 || onlyPairs != 0){
-				System.out.println("we have 2 trips or a trip and pair>?.. so fullhouse " + util.bin51(twoTrips) + " : " + util.bin51(trips^twoTrips));
+				System.out.println("we have 2 trips or a trip and pair>?.. so fullhouse " + Util.bin51(twoTrips) + " : " + Util.bin51(trips^twoTrips));
 				return 6;
 			} else{
-				System.out.println("Just 1 trips : " + util.bin51(trips) );
+				System.out.println("Just 1 trips : " + Util.bin51(trips) );
 				return 3;
 			}
 
 		}
 		if (onlyPairs != 0) {
-			System.out.println("PAIRS : " + util.bin51(onlyPairs));
+			System.out.println("PAIRS : " + Util.bin51(onlyPairs));
 			long nextPair = onlyPairs & onlyPairs - 1;
 			if(nextPair != 0){
-				System.out.println("Two pair... but we still need to find the top 2 pair... " + util.bin51(onlyPairs));
+				System.out.println("Two pair... but we still need to find the top 2 pair... " + Util.bin51(onlyPairs));
 				return 2;
 			} else {
-				System.out.println("single pair " + util.bin51(onlyPairs));
+				System.out.println("single pair " + Util.bin51(onlyPairs));
 				return 1;
 			}
 
@@ -862,11 +882,11 @@ Straight flush - 5,6,7
 */
 		//long suits = sumHand(hand) & suitMask;
 		long suits = sumCards & suitMask;
-		System.out.println("suits: " + suits + " : " + util.bin51(suits));
+		System.out.println("suits: " + suits + " : " + Util.bin51(suits));
 		for (int i = 0; i < fullSuitMasks.length; i++) {
 			long masked = fullSuitMasks[i] & suits;
 			if (/* masked != 0 && */ masked > almostFlush[i]) {
-				System.out.println("Flush of " + util.suitLongs[i] + " :: " + i + " ");
+				System.out.println("Flush of " + Util.suitLongs[i] + " :: " + i + " ");
 				return suits;
 			}
 		}
@@ -875,7 +895,7 @@ Straight flush - 5,6,7
 
 	public static void tt() throws Exception {
 
-		long[] all52Cards = util7.makeAll52CardsDecimal();
+		long[] all52Cards = Util7.makeAll52CardsDecimal();
 		/*
 		 * for(long l : all52Cards) { System.out.print(" " + l + "L,"); }
 		 */
@@ -892,14 +912,14 @@ Straight flush - 5,6,7
 				"AH" };
 		long[] someCards = new long[someCardCodes.length];
 		for (int i = 0; i < someCardCodes.length; i++) {
-			someCards[i] = convertHumanShortNameToDecimal(someCardCodes[i]);
+			someCards[i] = shortCardNameToDecimal(someCardCodes[i]);
 		}
 
 		for (int i = 0; i < someCards.length; i++) {
-			System.out.println("before:\t\t" + util.bin51(someCards[i]) + " : " + someCards[i]);
+			System.out.println("before:\t\t" + Util.bin51(someCards[i]) + " : " + someCards[i]);
 			System.out.println("name: " + convertDecimalToLongName(someCards[i]));
 			someCards[i] &= cardMask;
-			System.out.println("after:\t\t" + util.bin51(someCards[i]) + " : " + someCards[i]);
+			System.out.println("after:\t\t" + Util.bin51(someCards[i]) + " : " + someCards[i]);
 
 		}
 	}
@@ -913,14 +933,14 @@ Straight flush - 5,6,7
 		long quads = sumCards & quadMask;
 
 		if (quads != 0) {
-			System.out.println("QUADS : " + util.bin51(quads));
+			System.out.println("QUADS : " + Util.bin51(quads));
 
 		}
 		if (onlyPairs != 0) {
-			System.out.println("PAIRS : " + util.bin51(onlyPairs));
+			System.out.println("PAIRS : " + Util.bin51(onlyPairs));
 		}
 		if (trips != 0) {
-			System.out.println("TRIPS : " + util.bin51(trips));
+			System.out.println("TRIPS : " + Util.bin51(trips));
 		}
 		// tt();
 
@@ -972,7 +992,7 @@ Straight flush - 5,6,7
 
 
 		//System.out.println("ORD : " + EvalTestPlayground.bin51(ord));
-		System.out.println("SUM : " + util.bin51(sumCards));
+		System.out.println("SUM : " + Util.bin51(sumCards));
 		// System.out.println("sum == ord : " + (sum == ord));
 		/// System.out.println("PAIRS : " + EvalTestPlayground.bin51(pairs));
 		// System.out.println("TRIPS : " + EvalTestPlayground.bin51(trips));
@@ -1032,7 +1052,7 @@ Straight flush - 5,6,7
 
 
 	public static long[] getSomeHand() throws Exception {
-		return convertHandHumanShortToDecimal(new String[] { "AH", "5S", "7S", "AC", "2C", "TD", "4S" });
+		return shortCardNamesToDecimals(new String[] { "AH", "5S", "7S", "AC", "2C", "TD", "4S" });
 	}
 
 

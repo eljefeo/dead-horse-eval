@@ -1,10 +1,11 @@
-package main;
+package com.jmedia.poker;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class util7 extends util {
+public class Util7 extends Util {
 
     static final int numOfCardsPerHand = 7;
     final static int total7CardHandCount = 133784560;
@@ -258,8 +259,8 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
     }
     public static long[] makeAll52CardsDecimal() {
 
-        int cardCount = util.cardChars.length;
-        int suitCount = util.suitChars.length;
+        int cardCount = Util.cardChars.length;
+        int suitCount = Util.suitChars.length;
         long[] cards = new long[cardCount * suitCount];
         for (int i = 0; i < suitCount; i++) {
             for (int j = 0; j < cardCount; j++) {
@@ -315,7 +316,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
     public static long[] getRandomThisType7CardHand(int whatKind) throws Exception { // 0 = high card, 1 = pair, 2 = 2pair etc..
 
 
-        System.out.println("looking for this type of hand: " + whatKind + " : " + util.handNames[whatKind]);
+        System.out.println("looking for this type of hand: " + whatKind + " : " + Util.handNames[whatKind]);
 
         int counter = 0;
         int limit = 10000000;
@@ -325,7 +326,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         }
         while (true) {
 
-            long[] allCards = util7.makeThisManyRandom7CardHands(batchSize);
+            long[] allCards = Util7.makeThisManyRandom7CardHands(batchSize);
             for(int i=0; i < batchSize-7; i+=7){
                 /*if(counter % 100000 == 0){
                     System.out.println("counter is now : " + counter);
@@ -410,7 +411,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
 
     public static long[] makeThisManyRandom7CardHands(int howMany) {
 
-        long[] fiftyTwoCards = util7.all52CardsDecimal;
+        long[] fiftyTwoCards = Util7.all52CardsDecimal;
 
         // make a copy of array to do each hand
         long[] allc2 = fiftyTwoCards.clone();
@@ -461,7 +462,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
     // Spades) and turn it into the decimal equivalent for that card
     // This function is not optimized, just here to make things easier. If actually
     // needed in some performance situation, we should find faster ways to do this
-    public static long convertHumanShortNameToDecimal(String cardString) throws Exception {
+    public static long shortCardNameToDecimal(String cardString) throws Exception {
         // like AH or 5S
         if (cardString.length() != 2) {
             throw new IllegalArgumentException("Card must be 2 chars long:  " + cardString);
@@ -493,20 +494,31 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
         return decode7CardHand(res, showDetails);
     }
 
-    private static String decode7CardHand(long res, boolean showDetails) {
+    public static String decode7CardHand(long res, boolean showDetails) {
 
         //time to decode a 7 card hand
-        return "Finish me decode7CardHand...";
+        return "Finish me decode7CardHand... : " + res;
     }
 
 
-    public static long[] convertHandHumanShortToDecimal(String[] cards) throws Exception {
+    public static long[] shortCardNamesToDecimals(String[] cards) throws Exception {
         if (cards.length != 7) {
             throw new IllegalArgumentException("There must be 7 cards");
         }
         long[] ret = new long[cards.length];
         for (int i = 0; i < cards.length; i++) {
-            ret[i] = convertHumanShortNameToDecimal(cards[i]);
+            ret[i] = shortCardNameToDecimal(cards[i]);
+        }
+        return ret;
+    }
+
+    public static long[] shortCardNamesToDecimals(List<String> cards) throws Exception {
+        if (cards.size() != 7) {
+            throw new IllegalArgumentException("There must be 7 cards");
+        }
+        long[] ret = new long[cards.size()];
+        for (int i = 0; i < cards.size(); i++) {
+            ret[i] = shortCardNameToDecimal(cards.get(i));
         }
         return ret;
     }
@@ -540,7 +552,7 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
     }
 
     public static String convertDecimalToLongName(long card) throws Exception {
-        return getCardLong(card) + util.OF + getSuitLong(card);
+        return getCardLong(card) + Util.OF + getSuitLong(card);
     }
 
     public static String convertDecimalToShortCardName(long card) throws Exception {
@@ -548,19 +560,19 @@ A : 281543696187392 :001000000000001000000000000000000000000000000000000
     }
 
     public static String getSuitLong(long card) throws Exception {
-        return util.suitLongs[getSuitIndexDecimal(card)];
+        return Util.suitLongs[getSuitIndexDecimal(card)];
     }
 
     public static String getCardLong(long card) throws Exception {
-        return util.cardLongNames[getCardIndexDecimal(card)];
+        return Util.cardLongNames[getCardIndexDecimal(card)];
     }
 
     public static char getSuitChar(long card) throws Exception {
-        return util.suitChars[getSuitIndexDecimal(card)];
+        return Util.suitChars[getSuitIndexDecimal(card)];
     }
 
     public static char getCardChar(long card) throws Exception {
-        return util.cardChars[getCardIndexDecimal(card)];
+        return Util.cardChars[getCardIndexDecimal(card)];
     }
 
     public static int getSuitIndexDecimal(long card) throws Exception {

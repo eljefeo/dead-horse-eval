@@ -1,4 +1,4 @@
-package main;
+package com.jmedia.poker;
 
 public interface UtilI {
 

@@ -1,4 +1,4 @@
-package main;
+package com.jmedia.poker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +45,7 @@ public class DeadHorse7Examples {
 
         System.out.println("Evaluating these cards7: " + Arrays.toString(cards7));
         //System.out.println("Evaluating these cards5: " + Arrays.toString(cards5));
-        long[] decs = util7.convertHandHumanShortToDecimal(cards7);
+        long[] decs = Util7.shortCardNamesToDecimals(cards7);
         //long result1 = util7.evalShortCards(cards1);
         long result1 = DeadHorse7.eval7beta(decs);
 
@@ -58,8 +58,8 @@ public class DeadHorse7Examples {
 
         //long res1 = result1 >>> 51;
         long res1 = result1 >> 56;
-        System.out.println("long result1 = " + result1 + " : " + res1 + " :: " + util.handNames[(int)res1]);
-        System.out.println("bin1 : " + util.bin64(result1));
+        System.out.println("long result1 = " + result1 + " : " + res1 + " :: " + Util.handNames[(int)res1]);
+        System.out.println("bin1 : " + Util.bin64(result1));
         System.out.println("\n\n");
 
         //shortToLong5(cards5);
@@ -73,21 +73,21 @@ public class DeadHorse7Examples {
     private static final long resultKickersBitsMask =  549755813887L;
     public static String[] getImportantBits(long res){
         long masked = res & resultImpBitsMask;
-        System.out.println("Imp bits masked " + util.bin64(masked));
+        System.out.println("Imp bits masked " + Util.bin64(masked));
         long shifted = masked >>> 39;
-        System.out.println("Imp bits shifted " + util.bin64(shifted));
+        System.out.println("Imp bits shifted " + Util.bin64(shifted));
 
         String fCard = "";
         String sCard = "";
 
         long second = shifted & shifted - 1;
         if(second != 0){
-            sCard += util.cardChars[(int)second];
+            sCard += Util.cardChars[(int)second];
             shifted &= shifted - 1;
 
 
         }
-        fCard += util.cardChars[(int)shifted];
+        fCard += Util.cardChars[(int)shifted];
 
         System.out.println("imp bits f and s card : " + fCard + " : " + sCard);
 
@@ -114,7 +114,7 @@ public class DeadHorse7Examples {
 
         while(left != 0){
             long fiMask = left ^ masked;
-            System.out.println("First masked : " + fiMask + " : " + util.bin64(fiMask));
+            System.out.println("First masked : " + fiMask + " : " + Util.bin64(fiMask));
             kLongs.add(fiMask);
             left &= left - 1;
 
@@ -151,12 +151,12 @@ public class DeadHorse7Examples {
 
 
         System.out.println("Evaluating these cards1: " + Arrays.toString(cards1));
-        long[] decs = util7.convertHandHumanShortToDecimal(cards1);
+        long[] decs = Util7.shortCardNamesToDecimals(cards1);
         //long result1 = util7.evalShortCards(cards1);
         long result1 = DeadHorse7.eval7beta(decs);
         long res1 = result1 >>> 51;
-        System.out.println("long result1 = " + result1 + " : " + res1 + " :: " + util.handNames[(int)res1]);
-        System.out.println("bin1 : " + util.bin64(result1));
+        System.out.println("long result1 = " + result1 + " : " + res1 + " :: " + Util.handNames[(int)res1]);
+        System.out.println("bin1 : " + Util.bin64(result1));
         System.out.println("\n\n");
     }
 
@@ -168,11 +168,11 @@ public class DeadHorse7Examples {
                 "3C", "5D", "5C", "3H", "5S"
         };
         System.out.println("Evaluating these cards: " + Arrays.toString(cards2));
-        String result = util5.shortCardsToLongHandDescription(cards2, false);
+        String result = Util5.shortCardsToLongHandDescription(cards2, false);
 
-        Integer[] decs = util5.shortCardNamesToDecimals(cards);
+        Integer[] decs = Util5.shortCardNamesToDecimals(cards);
         int res = DeadHorse.eval5(decs);
-        System.out.println("5card result : " + res + " : " + util.bin32(res));
+        System.out.println("5card result : " + res + " : " + Util.bin32(res));
 
         System.out.println(result);
         System.out.println("\n");
@@ -196,17 +196,17 @@ public class DeadHorse7Examples {
                 //"3C", "3D", "5C", "2C", "7C", "3H", "3S"  //0000000000111000000000000000000000000000000000001000000000010000 four 3s with 7 kicker
         };
         System.out.println("Evaluating these cards1: " + Arrays.toString(cards1));
-        long result1 = util7.evalShortCards(cards1);
+        long result1 = Util7.evalShortCards(cards1);
         long res1 = result1 >>> 51;
-        System.out.println("long result1 = " + result1 + " : " + res1 + " :: " + util.handNames[(int)res1]);
-        System.out.println("bin1 : " + util.bin64(result1));
+        System.out.println("long result1 = " + result1 + " : " + res1 + " :: " + Util.handNames[(int)res1]);
+        System.out.println("bin1 : " + Util.bin64(result1));
         System.out.println("\n\n");
 
         System.out.println("Evaluating these cards2: " + Arrays.toString(cards2));
-        long result2 = util7.evalShortCards(cards2);
+        long result2 = Util7.evalShortCards(cards2);
         long res2 = result2 >>> 51;
-        System.out.println("long result2 = " + result2 + " : " + res2 + " :: " + util.handNames[(int)res2]);
-        System.out.println("bin : " + util.bin64(result2));
+        System.out.println("long result2 = " + result2 + " : " + res2 + " :: " + Util.handNames[(int)res2]);
+        System.out.println("bin : " + Util.bin64(result2));
 
         if(result1 == result2) System.out.println("They are the SAME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         int winner = result1 > result2 ? 1 : 2;
@@ -216,20 +216,20 @@ public class DeadHorse7Examples {
         long[] quadCards = HandMakerSevenCard.getRandomQuadsHand();
 
         long res3 = DeadHorse7.eval7(quadCards);
-        System.out.println("Manufactured quad hand: " + util.handNames[(int)(res3 >>> 51)]);
+        System.out.println("Manufactured quad hand: " + Util.handNames[(int)(res3 >>> 51)]);
 
 
         int type = 0;
-        for(int i = 0; i < util.handNames.length; i++){
-            System.out.println("\nSearching for a " + util.handNames[i] + " type of hand");
-            long[] randCards = util7.getRandomThisType7CardHand(i);
+        for(int i = 0; i < Util.handNames.length; i++){
+            System.out.println("\nSearching for a " + Util.handNames[i] + " type of hand");
+            long[] randCards = Util7.getRandomThisType7CardHand(i);
 
             long rRes = DeadHorse7.eval7(randCards);
             //int gotType = rRes >>> 51;
-            String[] shrts = util7.decimalsToShortCardNames(randCards);
+            String[] shrts = Util7.decimalsToShortCardNames(randCards);
 
 
-            System.out.println("Got : " + util.handNames[(int)(rRes >>> 51)] + " : " + shrts[0] + ", " + shrts[1] + ", " + shrts[2] + ", " + shrts[3] + ", " + shrts[4] + ", " + shrts[5] + ", " + shrts[6]);
+            System.out.println("Got : " + Util.handNames[(int)(rRes >>> 51)] + " : " + shrts[0] + ", " + shrts[1] + ", " + shrts[2] + ", " + shrts[3] + ", " + shrts[4] + ", " + shrts[5] + ", " + shrts[6]);
         }
         /*System.out.println("making straight hand");
         int max = 1000;
@@ -254,8 +254,8 @@ public class DeadHorse7Examples {
         String handType = "full house";
         System.out.println("Retrieving random " + handType + " hand:");
         long[] cardLongs = HandMakerSevenCard.getRandomHandFromDescription(handType);
-        String[] cards = util7.decimalsToShortCardNames(cardLongs);
-        System.out.println(Arrays.toString(cards) + " --- " + util5.shortCardsToLongHandDescription(cards, false));
+        String[] cards = Util7.decimalsToShortCardNames(cardLongs);
+        System.out.println(Arrays.toString(cards) + " --- " + Util5.shortCardsToLongHandDescription(cards, false));
 
 
     }
@@ -277,7 +277,7 @@ public class DeadHorse7Examples {
                 "2C", "4C", "5C", "3C", "6C", "9D", "KS"
         };
         System.out.println("Evaluating these cards: " + Arrays.toString(cards));
-        String result = util7.shortCardsToLongHandDescription(cards, false);
+        String result = Util7.shortCardsToLongHandDescription(cards, false);
 
         System.out.println(result);
     }

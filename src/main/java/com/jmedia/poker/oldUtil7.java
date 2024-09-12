@@ -1,6 +1,6 @@
-package main;
+package com.jmedia.poker;
 
-public class oldUtil7 extends util {
+public class oldUtil7 extends Util {
 
     static int[] old_allCardNums7 = new int[]{
             4194305,4194306,4194308,4194312,4194320,4194336,4194368,4194432,4194560,4194816,4195328,4196352,4198400,

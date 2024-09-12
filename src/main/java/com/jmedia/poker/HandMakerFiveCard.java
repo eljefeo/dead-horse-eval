@@ -1,4 +1,4 @@
-package main;
+package com.jmedia.poker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,7 +86,7 @@ public class HandMakerFiveCard {
 	public static int[] makeLotsOfRandom5CardHandsSlow(int howMany) { //this is so dang slow. But another way to do it I suppose...
 		// List<Integer> fiftyTwoCards = Arrays.asList(allc.clone())
 
-		List<Integer> fiftyTwoCards = Arrays.stream(util5.all52CardsDecimal).boxed().toList();
+		List<Integer> fiftyTwoCards = Arrays.stream(Util5.all52CardsDecimal).boxed().toList();
 
 		// make a copy of array to do each hand
 		List<Integer> allc2 = new ArrayList<Integer>(fiftyTwoCards);
@@ -125,7 +125,7 @@ public class HandMakerFiveCard {
 				67584, 69632, 32769, 32770, 32772, 32776, 32784, 32800, 32832, 32896, 33024, 33280, 33792, 34816, 36864,
 				16385, 16386, 16388, 16392, 16400, 16416, 16448, 16512, 16640, 16896, 17408, 18432, 20480, 8193, 8194,
 				8196, 8200, 8208, 8224, 8256, 8320, 8448, 8704, 9216, 10240, 12288 };*/
-		int[] fiftyTwoCards = util5.all52CardsDecimal;
+		int[] fiftyTwoCards = Util5.all52CardsDecimal;
 
 		// make a copy of array to do each hand
 		int[] allc2 = fiftyTwoCards.clone();
@@ -238,11 +238,11 @@ public class HandMakerFiveCard {
 		//if(handDescription.toUpperCase().equals(util.ROYAL_FLUSH.toUpperCase())){
 		//	handType = 9; //maybe can hijack some functions and use 9 as royal flush indicator
 		//} else {
-			int handType = util.handDescriptionToType(handDescription);
+			int handType = Util.handDescriptionToType(handDescription);
 			Integer[] cardsInt = getRandomCertainTypeHand(handType);
 		//}
 
-		return util5.decimalsToShortCardNames(cardsInt);
+		return Util5.decimalsToShortCardNames(cardsInt);
 	}
 
 
@@ -292,7 +292,7 @@ public class HandMakerFiveCard {
 	//Just testing if this could work, make sure references are good in the list of lists
 	public static void testGetRandomTestSomeHand() throws Exception {
 		Integer[] cards = allQuadHands.get(0);
-		String[] cardsSt = util5.decimalsToShortCardNames(cards);
+		String[] cardsSt = Util5.decimalsToShortCardNames(cards);
 		System.out.println("Random hand : " + Arrays.toString(cardsSt));
 	}
 
