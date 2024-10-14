@@ -345,14 +345,14 @@ public class Util5 extends Util {
 
     //TODO
         // return cardMap.get(cardString);
-        System.out.println("Finish developing me util5.convertHumanLongNameToDecimal");
+        System.out.println("Finish developing me util5.longCardNameToDecimal(String cardString");
         return 0;
     }
 
     public static String longCardNameToShortCardName(String cardString){
         //return cardMap.get(cardString);
         //TODO
-        System.out.println("Finish developing me util5.convertHumanLongNameToShortName");
+        System.out.println("Finish developing me util5.longCardNameToShortCardName(String cardString");
         return "";
     }
 
@@ -362,7 +362,7 @@ public class Util5 extends Util {
 
     public static Integer[] shortCardNamesToDecimals(String[] cardString){
         //TODO
-        System.out.println("Finish developing me util5.convertHumanShortNamesToDecimals");
+        System.out.println("Finish developing me shortCardNamesToDecimals(String[] cardString");
 
         //return cardMap.get(cardString);
 
@@ -372,10 +372,15 @@ public class Util5 extends Util {
 
     public static Integer[] shortCardNamesToDecimals(List<String> cards){
         //TODO
-        System.out.println("Finish developing me util5.convertHumanShortNamesToDecimals");
+        System.out.println("Finish developing me util5.shortCardNamesToDecimals(List<String> cards");
 
         //return cardMap.get(cardString);
         if(cards != null && cards.size() == numOfCardsPerHand){
+            System.out.println("getting in shortCardNamesToDecimals " + cards.get(0) + " : " + cardMap.get(cards.get(0)));
+            System.out.println("getting in shortCardNamesToDecimals " + cards.get(1) + " : " + cardMap.get(cards.get(1)));
+            System.out.println("getting in shortCardNamesToDecimals " + cards.get(2) + " : " + cardMap.get(cards.get(2)));
+            System.out.println("getting in shortCardNamesToDecimals " + cards.get(3) + " : " + cardMap.get(cards.get(3)));
+            System.out.println("getting in shortCardNamesToDecimals " + cards.get(4) + " : " + cardMap.get(cards.get(4)));
             return new Integer[]{cardMap.get(cards.get(0)), cardMap.get(cards.get(1)), cardMap.get(cards.get(2)), cardMap.get(cards.get(3)), cardMap.get(cards.get(4))};
 
         } else {

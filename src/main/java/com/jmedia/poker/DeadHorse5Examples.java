@@ -7,12 +7,13 @@ public class DeadHorse5Examples {
 
 
     public static void doTestExamples() throws Exception {
-        //shortToLong(); //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
+        shortToLong(); //This shows how to mock up a hand and get it evaluated into a human-readable description like "2C", "2S", "9C", "7C", "7H" and it shows Two Pair: Sevens and Twos with a Nine kicker
+        testEval5Ints();
         //HandMakerFiveCard.testGetRandomTestSomeHand();
         //getRandomHandFromDescription();
 
         //speedGameOfPoker();
-        speedGameOfPokerRealDeck();
+        //speedGameOfPokerRealDeck();
         //getSomeRandomHand();
     }
 
@@ -92,7 +93,8 @@ public class DeadHorse5Examples {
         System.out.println("Example: shorthand card names to full hand description..." );
         String[] cards = new String[]{
                 //"3C", "3S", "7C", "3H", "3S"
-                "2D", "5D", "3D", "4D", "6D"
+                //"2D", "5D", "3D", "4D", "6D",
+                "AC","2C","2D","2H","4C"
         };
         System.out.println("Evaluating these cards: " + Arrays.toString(cards));
         String result = Util5.shortCardsToLongHandDescription(cards, true);
@@ -103,6 +105,24 @@ public class DeadHorse5Examples {
 
         System.out.println(result);
         System.out.println("\n");
+    }
+
+
+    public static void testEval5Ints() throws Exception {
+        int a =   20480;
+        int b =  16385;
+        int c =  8193;
+        int d =  32769;
+        int e =  16388;
+        System.out.println("Short to long cards testEval5Ints : " + a + " : " + Util5.decimalToShortCardName(a));
+        System.out.println("Short to long cards testEval5Ints : " + b + " : " + Util5.decimalToShortCardName(b));
+        System.out.println("Short to long cards testEval5Ints : " + c + " : " + Util5.decimalToShortCardName(c));
+        System.out.println("Short to long cards testEval5Ints : " + d + " : " + Util5.decimalToShortCardName(d));
+        System.out.println("Short to long cards testEval5Ints : " + e + " : " + Util5.decimalToShortCardName(e));
+        //int res = DeadHorse.eval5(a,b,c,d,e);
+        int res = DeadHorse.eval5WithNotes(a,b,c,d,e);
+        System.out.println("Eval 5 hopefully no bug : " + res);
+        String resString = Util5.decode5CardHand(res, true);
     }
 
 }

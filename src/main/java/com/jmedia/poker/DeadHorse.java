@@ -13,7 +13,7 @@ public class DeadHorse {
                     ? 0x1C000000 | x | z << 13 : 0x18000000 | z | x << 13; //4 of a kind or full house
         else if ((v &= v - 1) == 0)
             return z != 0 ? 0x8000000 | x | z << 13
-                    : 0xC000000 | (v = (((a&b)!=0||(a&c)!=0?a:(b&c)!=0?b:e) & m)) ^ y | (v << 13);
+                    : 0xC000000 | (v = (((a&b&m)!=0||(a&c&m)!=0?a:(b&c&m)!=0?b:e) & m)) ^ y | (v << 13);
         else if ((v &= v - 1) == 0) return 0x4000000 | x | z << 13;
         boolean s = 0x1F1D100 % y == 0, f = (a & b & c & d & e) != 0;
         return s ? (x == 0x100F ? 15 : x) | (f ? 0x20000000 : 0x10000000) : f ? 0x14000000 | x : x;
@@ -48,6 +48,9 @@ public class DeadHorse {
             if(cards != null && cards.size() == Util5.numOfCardsPerHand){
                 //return eval5(cards.get(0), cards.get(1), cards.get(2), cards.get(3), cards.get(4));
                 Integer[] cardDecimals = Util5.shortCardNamesToDecimals(cards);
+                for(Integer cardDec : cardDecimals){
+                    System.out.println("getting card decimals: " + cardDec);
+                }
                 return eval5(cardDecimals);
             } else {
                 if(cards != null){
@@ -94,11 +97,15 @@ public class DeadHorse {
                 return 0x8000000 | xor | orXorXor << importantBitShift;
             } else {
 
-                if ((a&b) != 0 ||(a&c) != 0) {
+                if ((a & b & first13Bits) != 0 || (a & c & first13Bits) != 0) {
+                    System.out.println("a=" + a + " b=" + b + " c=" + c + " d=" + d + " e=" + e);
+                    System.out.println("returning 3 kind of a : " + a + " : a&b = " + (a&b) + " .. a&c = " + (a&c));
                     bitCntr = a;
-                } else if ((b & c) != 0) {
+                } else if ((b & c & first13Bits) != 0) {
+                    System.out.println("returning 3 kind of b : " + b);
                     bitCntr = b;
                 } else {
+                    System.out.println("returning 3 kind of e : " + e);
                     bitCntr = e;
                 }
                 bitCntr = bitCntr & first13Bits;// here we get rid of the suits;
