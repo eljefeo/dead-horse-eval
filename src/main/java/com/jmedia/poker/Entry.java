@@ -36,9 +36,9 @@ public class Entry {
 
 		 //EvalTestPlayground.randomizerSpeedTest5Card(50000000); // speed average :
 		//EvalTestPlayground.randomizerSpeedTest5Card_2(50000000); // speed average :
-		// 25000000 hands in 0.121995199 seconds = 204Mhps
-		//EvalTestPlayground.randomizerSpeedTest5Card(100000000); // Did 130000000
-		// hands in 0.6159191 seconds 211 million hands a second
+		// Did 50000000 hands in 0.2413853 seconds = 207 million hands a second
+		//EvalTestPlayground.randomizerSpeedTest5Card(100000000); //
+		// Did 100000000 hands in 2.2256084 seconds = 44 million hands a second
 		 //System.out.println(EvalTestPlayground.humanDecodeEval("9D", "9C", "9H", "6S","9S"));
 
 		//util5.getRandomThisType5CardHand(4);

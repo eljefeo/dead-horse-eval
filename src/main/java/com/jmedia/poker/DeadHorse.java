@@ -13,7 +13,7 @@ public class DeadHorse {
                     ? 0x1C000000 | x | z << 13 : 0x18000000 | z | x << 13; //4 of a kind or full house
         else if ((v &= v - 1) == 0)
             return z != 0 ? 0x8000000 | x | z << 13
-                    : 0xC000000 | (v = (((a&b&m)!=0||(a&c&m)!=0?a:(b&c&m)!=0?b:e) & m)) ^ y | (v << 13);
+                    : 0xC000000 | (v = (((a & b & m) != 0 || (a & c & m) != 0 ? a : (b & c & m) != 0 ? b : e) & m)) ^ y | (v << 13);
         else if ((v &= v - 1) == 0) return 0x4000000 | x | z << 13;
         boolean s = 0x1F1D100 % y == 0, f = (a & b & c & d & e) != 0;
         return s ? (x == 0x100F ? 15 : x) | (f ? 0x20000000 : 0x10000000) : f ? 0x14000000 | x : x;
@@ -21,23 +21,23 @@ public class DeadHorse {
 
 
     public static int eval5(int[] cards) {
-        if (cards.length != 5) {
+        /*if (cards.length != 5) {
             throw new IllegalArgumentException("You must pass in 5 and only 5 numbers");
-        }
+        }*/
         return eval5(cards[0], cards[1], cards[2], cards[3], cards[4]);
     }
 
     public static int eval5(Integer[] cards) {
-        if (cards.length != 5) {
+        /*if (cards.length != 5) {
             throw new IllegalArgumentException("You must pass in 5 and only 5 numbers");
-        }
+        }*/
         return eval5(cards[0], cards[1], cards[2], cards[3], cards[4]);
     }
 
     public static int eval5(List<Integer> cards) {
-        if (cards == null || cards.size() != 5) {
+        /*if (cards == null || cards.size() != 5) {
             throw new IllegalArgumentException("You must pass in 5 and only 5 numbers");
-        }
+        }*/
         return eval5(cards.get(0), cards.get(1), cards.get(2), cards.get(3), cards.get(4));
     }
 
@@ -47,11 +47,7 @@ public class DeadHorse {
             List<String> cards = hand.getCards();
             if(cards != null && cards.size() == Util5.numOfCardsPerHand){
                 //return eval5(cards.get(0), cards.get(1), cards.get(2), cards.get(3), cards.get(4));
-                Integer[] cardDecimals = Util5.shortCardNamesToDecimals(cards);
-                for(Integer cardDec : cardDecimals){
-                    System.out.println("getting card decimals: " + cardDec);
-                }
-                return eval5(cardDecimals);
+                return eval5(Util5.shortCardNamesToDecimals(cards));
             } else {
                 if(cards != null){
                     System.out.println(cards);
@@ -97,6 +93,8 @@ public class DeadHorse {
                 return 0x8000000 | xor | orXorXor << importantBitShift;
             } else {
 
+                //here we are just looking for the card that has a duplicate, we know there are 3 of some card, and the other 2 cards are unique.
+                //we also need to mask the suits, so we are just comparing the card value without the suits to see if they are the same.
                 if ((a & b & first13Bits) != 0 || (a & c & first13Bits) != 0) {
                     System.out.println("a=" + a + " b=" + b + " c=" + c + " d=" + d + " e=" + e);
                     System.out.println("returning 3 kind of a : " + a + " : a&b = " + (a&b) + " .. a&c = " + (a&c));
