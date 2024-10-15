@@ -1,8 +1,8 @@
-package main;
+package com.jmedia.poker;
 
-import static main.util5.getCardName5;
-import static main.util.handNames;
-import static main.util5.all52CardsDecimal;
+import static com.jmedia.poker.Util5.getCardName5;
+import static com.jmedia.poker.Util.handNames;
+import static com.jmedia.poker.Util5.all52CardsDecimal;
 
 public class oldBad7Code {
 
@@ -676,7 +676,7 @@ public class oldBad7Code {
         //int res = DeadHorseEval.eval7(f7);
         int res = oldBad7Code.eval7(f7[0],f7[1],f7[2],f7[3],f7[4],f7[5],f7[6]);
 
-        System.out.println("Outcome " + res + ", " + handNames[(res>>26)] + "\n"+ util.bin32(res));
+        System.out.println("Outcome " + res + ", " + handNames[(res>>26)] + "\n"+ Util.bin32(res));
 
 /*DeadHorseEval.sort7(f7);
 	System.out.println(f7[0]+" "+getName(f7[0])+", "+f7[1]+" "+getName(f7[1])+", "+f7[2]+" "+getName(f7[2])+", "

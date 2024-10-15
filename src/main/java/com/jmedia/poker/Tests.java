@@ -1,4 +1,4 @@
-package main;
+package com.jmedia.poker;
 
 public class Tests {
 
@@ -13,7 +13,7 @@ public class Tests {
 	public static void shortToLong() throws Exception {
 		String card = "AH";
 		String expected = "Ace of Hearts";
-		String name = util.convertHumanShortNameToLongName(card);
+		String name = Util.convertHumanShortNameToLongName(card);
 		if (!name.equals(expected)) {
 			throw new Exception(card + " did not convert to " + expected + " : " + name);
 		}
@@ -22,8 +22,8 @@ public class Tests {
 
 	public static void shortToDecimalToLong() throws Exception {
 		String card = "6S";
-		long cardDecimal = util7.convertHumanShortNameToDecimal(card);
-		String shortName = util7.convertDecimalToShortName(cardDecimal);
+		long cardDecimal = Util7.shortCardNameToDecimal(card);
+		String shortName = Util7.convertDecimalToShortCardName(cardDecimal);
 		if (!shortName.equals(card)) {
 			throw new Exception(
 					"Error converting. card: " + card + ", cardDecimal: " + cardDecimal + ", shortName: " + shortName);
@@ -33,19 +33,19 @@ public class Tests {
 		}
 		String expected = "Six of Spades";
 
-		String longName1 = util.convertHumanShortNameToLongName(card);
-		String longName2 = util7.convertDecimalToLongName(cardDecimal);
+		String longName1 = Util.convertHumanShortNameToLongName(card);
+		String longName2 = Util7.convertDecimalToLongName(cardDecimal);
 		if (!longName1.equals(longName2) || !longName1.equals(expected)) {
 			throw new Exception(card + " did not convert..." + longName1 + " : " + longName2);
 		} else {
 			System.out.println("Converted card: " + card + ", longName1: " + longName1 + ", longName2: " + longName2);
 		}
-		System.out.println("success: " + expected);
+		System.out.println("success: " + expected) ;
 	}
 
 	public static void check52GeneratedSameAsInline() throws Exception {
-		long[] generated = util7.makeAll52CardsDecimal();
-		long[] inline = util7.all52CardsDecimal;
+		long[] generated = Util7.makeAll52CardsDecimal();
+		long[] inline = Util7.all52CardsDecimal;
 		if (generated.length != inline.length) {
 			throw new Exception("Generated cards dont match length of inline, are there 52?");
 		}

@@ -1,8 +1,10 @@
-package main;
+package com.jmedia.poker;
+
+import java.util.List;
 
 public class DeadHorse {
 
-
+//
     public static int eval5(int a, int b, int c, int d, int e) {
         int m = 0x1FFF;
         int x = (a ^ b ^ c ^ d ^ e) & m, y = (a | b | c | d | e) & m, z = y ^ x, v = y & y - 1;
@@ -11,7 +13,7 @@ public class DeadHorse {
                     ? 0x1C000000 | x | z << 13 : 0x18000000 | z | x << 13; //4 of a kind or full house
         else if ((v &= v - 1) == 0)
             return z != 0 ? 0x8000000 | x | z << 13
-                    : 0xC000000 | (v = (((a&b)!=0||(a&c)!=0?a:(b&c)!=0?b:e) & m)) ^ y | (v << 13);
+                    : 0xC000000 | (v = (((a & b & m) != 0 || (a & c & m) != 0 ? a : (b & c & m) != 0 ? b : e) & m)) ^ y | (v << 13);
         else if ((v &= v - 1) == 0) return 0x4000000 | x | z << 13;
         boolean s = 0x1F1D100 % y == 0, f = (a & b & c & d & e) != 0;
         return s ? (x == 0x100F ? 15 : x) | (f ? 0x20000000 : 0x10000000) : f ? 0x14000000 | x : x;
@@ -19,11 +21,46 @@ public class DeadHorse {
 
 
     public static int eval5(int[] cards) {
-        if (cards.length != 5) {
+        /*if (cards.length != 5) {
             throw new IllegalArgumentException("You must pass in 5 and only 5 numbers");
-        }
+        }*/
         return eval5(cards[0], cards[1], cards[2], cards[3], cards[4]);
     }
+
+    public static int eval5(Integer[] cards) {
+        /*if (cards.length != 5) {
+            throw new IllegalArgumentException("You must pass in 5 and only 5 numbers");
+        }*/
+        return eval5(cards[0], cards[1], cards[2], cards[3], cards[4]);
+    }
+
+    public static int eval5(List<Integer> cards) {
+        /*if (cards == null || cards.size() != 5) {
+            throw new IllegalArgumentException("You must pass in 5 and only 5 numbers");
+        }*/
+        return eval5(cards.get(0), cards.get(1), cards.get(2), cards.get(3), cards.get(4));
+    }
+
+    public static int eval5(PokerHand hand) {
+
+        if(hand != null){
+            List<String> cards = hand.getCards();
+            if(cards != null && cards.size() == Util5.numOfCardsPerHand){
+                //return eval5(cards.get(0), cards.get(1), cards.get(2), cards.get(3), cards.get(4));
+                return eval5(Util5.shortCardNamesToDecimals(cards));
+            } else {
+                if(cards != null){
+                    System.out.println(cards);
+                }
+                throw new IllegalArgumentException("Invalid Cards");
+            }
+        } else {
+            throw new IllegalArgumentException("Cards are null");
+        }
+
+    }
+
+
 
     public static int eval5WithNotes(int a, int b, int c, int d, int e) {
         //& (and) is if both bits are 1, then return 1
@@ -44,30 +81,36 @@ public class DeadHorse {
 
         if (bitCntr == 0) { //if we have no bits left, that means we had 2 bits. Only 4of a kind and fullhouse have only 2 bits
             if ((a + b + c + d + e - xor & first13Bits) == (first13Bits & (or ^ xor) << 2)) {
-                System.out.println("Returning here 4 of a kind "+ util.handNames[(0x1C000000 >> 26)]);
+                System.out.println("Returning here 4 of a kind "+ Util.handNames[(0x1C000000 >> 26)]);
                 return 0x1C000000 | xor | orXorXor << importantBitShift;
             } else {
-                System.out.println("Returning here Full house "+ util.handNames[(0x18000000 >> 26)]);
+                System.out.println("Returning here Full house "+ Util.handNames[(0x18000000 >> 26)]);
                 return 0x18000000 | orXorXor | xor << importantBitShift; //4 of a kind or full house
             }
         } else if ((bitCntr &= bitCntr - 1) == 0) { //take away the 3rd bit.. 2 pair or 3 of a kind would have 3 bits like we see here.
             if (orXorXor != 0) {
-                System.out.println("Returning here Two Pair "+ util.handNames[(0x8000000 >> 26)]);
+                System.out.println("Returning here Two Pair "+ Util.handNames[(0x8000000 >> 26)]);
                 return 0x8000000 | xor | orXorXor << importantBitShift;
             } else {
 
-                if ((a&b) != 0 ||(a&c) != 0) {
+                //here we are just looking for the card that has a duplicate, we know there are 3 of some card, and the other 2 cards are unique.
+                //we also need to mask the suits, so we are just comparing the card value without the suits to see if they are the same.
+                if ((a & b & first13Bits) != 0 || (a & c & first13Bits) != 0) {
+                    System.out.println("a=" + a + " b=" + b + " c=" + c + " d=" + d + " e=" + e);
+                    System.out.println("returning 3 kind of a : " + a + " : a&b = " + (a&b) + " .. a&c = " + (a&c));
                     bitCntr = a;
-                } else if ((b & c) != 0) {
+                } else if ((b & c & first13Bits) != 0) {
+                    System.out.println("returning 3 kind of b : " + b);
                     bitCntr = b;
                 } else {
+                    System.out.println("returning 3 kind of e : " + e);
                     bitCntr = e;
                 }
                 bitCntr = bitCntr & first13Bits;// here we get rid of the suits;
 
                 // (bitCntr^or) This will leave us with the 'other' two cards (not the triple card)
                 // bitCntr<<13 this is the triple card, so we move this card 13 to the left so it is the important card
-                System.out.println("returning here trips " + util.handNames[(0xC000000 >> 26)]);
+                System.out.println("returning here trips " + Util.handNames[(0xC000000 >> 26)]);
                 return 0xC000000|(bitCntr^or)|(bitCntr<<13);
 
                 //3 of a kind works like this
@@ -93,7 +136,7 @@ public class DeadHorse {
 
         int tempV = bitCntr & bitCntr - 1; //take away a 4th bit.. only a pair could be here if we had only 4 unique bits
         if (tempV == 0) {
-            System.out.println("Returning here Pair "+ util.handNames[(0x4000000 >> 26)]);
+            System.out.println("Returning here Pair "+ Util.handNames[(0x4000000 >> 26)]);
             return 0x4000000 | xor | orXorXor << importantBitShift;
 
         }
@@ -131,10 +174,10 @@ public class DeadHorse {
             //straightCards are the 5 (or 4 if ace,2,3,4,5) cards, typeOfHand is whether it's a straight or straight flush
 
         } else if (flush) {
-            System.out.println("Returning here Flush "+ util.handNames[(0x14000000 >> 26)]);
+            System.out.println("Returning here Flush "+ Util.handNames[(0x14000000 >> 26)]);
             return 0x14000000 | xor; //this is just the type of hand for Flush, and xor are just the 5 cards (we could use OR cards here too, same result)
         } else {
-            System.out.println("Returning high card hand here " + util.handNames[0]);
+            System.out.println("Returning high card hand here " + Util.handNames[0]);
             return xor;
             //this is just High card, the lowest type. So we dont even put a hand type, leave it as 0.
             //and just return the 5 cards as is.

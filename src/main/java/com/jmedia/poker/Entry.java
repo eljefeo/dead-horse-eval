@@ -1,4 +1,4 @@
-package main;
+package com.jmedia.poker;
 
 public class Entry {
 
@@ -10,7 +10,12 @@ public class Entry {
 		//doTest1();
 		//doTest2();
 
-		testCardConversion();
+		//testCardConversion();
+		DeadHorse5Examples.doTestExamples();
+		//DeadHorse7Examples.doTestExamples();
+		//util7.testEveryHand7n();
+		//EvalTestPlayground.randomizerSpeedTest7Card(10000000);
+
 		//util5.decode5CardHand(403701764);
 		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"2H", "9H", "TC", "7H", "JS"});
 		//util5.humanEncodeShortAndDecodeLongHand(new String[] {"8H", "8S", "TH", "TD", "8C"});
@@ -22,17 +27,18 @@ public class Entry {
 		// EvalTestPlayground.howLongUntilYouGetThisKindOfHands(2);
 		 //EvalTestPlayground.handCompareTest(1000000);
 
-		// EvalTestPlayground.randomizerSpeedTest7Card(10000000);
+		//EvalTestPlayground.randomizerSpeedTest7Card(10000000);
 		// EvalTestPlayground.randomizerSpeedTest7nCard(10000000);
 
 		// EvalTestPlayground.randomizerSpeedTest7Cardr(10000000);
 
 		// EvalTestPlayground.randomizerSpeedTest7Card(30000000);
 
-		 //EvalTestPlayground.randomizerSpeedTest5Card(25000000); // speed average :
-		// 25000000 hands in 0.121995199 seconds = 204Mhps
-		//EvalTestPlayground.randomizerSpeedTest5Card(100000000); // Did 130000000
-		// hands in 0.6159191 seconds 211 million hands a second
+		 //EvalTestPlayground.randomizerSpeedTest5Card(50000000); // speed average :
+		//EvalTestPlayground.randomizerSpeedTest5Card_2(50000000); // speed average :
+		// Did 50000000 hands in 0.2413853 seconds = 207 million hands a second
+		//EvalTestPlayground.randomizerSpeedTest5Card(100000000); //
+		// Did 100000000 hands in 2.2256084 seconds = 44 million hands a second
 		 //System.out.println(EvalTestPlayground.humanDecodeEval("9D", "9C", "9H", "6S","9S"));
 
 		//util5.getRandomThisType5CardHand(4);
@@ -95,35 +101,35 @@ Total Count : 133784560
 
 	public static void doTest1() throws Exception {
 
-		for(int i = 0; i < util.handNames.length; i++) {
+		for(int i = 0; i < Util.handNames.length; i++) {
 			testHandMaker(i);
 		}
 	}
 
 	private static void makeAllCards() throws Exception {
-		System.out.println("making all 52 cards for 5 card poker:");
-		util5.makeAllDecimalNumsFromScratch();
+		System.out.println("making all 52 cards for 5 card poker: ");
+		Util5.makeAllDecimalNumsFromScratch();
 		System.out.println();
 
 		System.out.println("making all 52 cards for 7 card poker:");
-		util7.makeAllDecimalNumsFromScratch();
+		Util7.makeAllDecimalNumsFromScratch();
 		System.out.println();
 	}
 
 	private static void testCardConversion() throws Exception {
 		String test1 = "5H";
 		//int humanShortDecimal5 = util5.convertHumanShortNameToDecimal(test1);
-		int humanShortDecimal5 = util5.convertHumanShortNameToDecimal(test1);
+		int humanShortDecimal5 = Util5.shortCardNameToDecimal(test1);
 		System.out.println("convert human short to decimal 5: " + test1 + " : " + humanShortDecimal5);
-		System.out.println("human short binary : " + util.bin32(humanShortDecimal5));
-		System.out.println("Decimal to long name : " + util5.convertDecimalToLongName(humanShortDecimal5));
-		System.out.println("converting decimal back to short name 5: " + util5.convertDecimalToShortName(humanShortDecimal5));
+		System.out.println("human short binary : " + Util.bin32(humanShortDecimal5));
+		System.out.println("Decimal to long name : " + Util5.decimalToLongCardName(humanShortDecimal5));
+		System.out.println("converting decimal back to short name 5: " + Util5.decimalToShortCardName(humanShortDecimal5));
 
-		long humanShortDecimal7 = util7.convertHumanShortNameToDecimal(test1);
+		long humanShortDecimal7 = Util7.shortCardNameToDecimal(test1);
 		System.out.println("conver human short to decimal 7: " + test1 + " : " + humanShortDecimal7);
-		System.out.println("human short binary : " + util.bin64(humanShortDecimal7));
-		System.out.println("Decimal to long name : " + util7.convertHumanShortNameToLongName(test1));
-		System.out.println("converting decimal back to short name 7: " + util7.convertDecimalToShortName(humanShortDecimal7));
+		System.out.println("human short binary : " + Util.bin64(humanShortDecimal7));
+		System.out.println("Decimal to long name : " + Util7.convertHumanShortNameToLongName(test1));
+		System.out.println("converting decimal back to short name 7: " + Util7.convertDecimalToShortCardName(humanShortDecimal7));
 
 	}
 
@@ -133,8 +139,8 @@ Total Count : 133784560
 
 
 
-		int[] allCardNums = util5.all52CardsDecimal;
-		String[] allCardNames = util.allCardNames;
+		int[] allCardNums = Util5.all52CardsDecimal;
+		String[] allCardNames = Util.allCardNames;
 		String[] hand = new String[]{"7H", "4S", "2D", "5D", "KC"};
 		if(allCardNames.length != allCardNums.length){
 			throw new Error("Card numbers and names are not the same length!");
@@ -143,7 +149,7 @@ Total Count : 133784560
 
 		System.out.println("doing card names and nums: ");
 		for(String s : hand){
-			System.out.println(s + " " + util5.convertHumanShortNameToDecimal(s));//util5.cardMap.get(s) );//+ " : " + util5.de);
+			System.out.println(s + " " + Util5.shortCardNameToDecimal(s));//util5.cardMap.get(s) );//+ " : " + util5.de);
 		}
 
 		//for (int i = 0; i < allCardNums.length; i++) {
@@ -163,17 +169,17 @@ Total Count : 133784560
             case 6 -> HandMakerFiveCard.getRandomFullHouseHand();
             case 7 -> HandMakerFiveCard.getRandomQuadsHand();
             case 8 -> HandMakerFiveCard.getRandomStraightFlushHand();
-            default -> throw new Error("Please enter a correct hand type from 0-" + util.handNames.length);
+            default -> throw new Error("Please enter a correct hand type from 0-" + Util.handNames.length);
         };
 
 
         //System.out.println(hch[0] + " = " + util5.getCardName5(hch[0]), " + hch[1] + ", " + hch[2] + ", " + hch[3] + ", " + hch[4]);
 		for (Integer integer : cards) {
-			System.out.print(integer + " = " + util5.getCardName5(integer) + ", ");
+			System.out.print(integer + " = " + Util5.getCardName5(integer) + ", ");
 		}
 		System.out.println("\n\n");
-		int cardsRes = util5.humanEncodeEval(util5.getCardName5(cards[0]), util5.getCardName5(cards[1]), util5.getCardName5(cards[2]), util5.getCardName5(cards[3]), util5.getCardName5(cards[4]));
-		String handDescription1 = util5.decode5CardHand(cardsRes);
+		int cardsRes = Util5.evalShortCards(Util5.getCardName5(cards[0]), Util5.getCardName5(cards[1]), Util5.getCardName5(cards[2]), Util5.getCardName5(cards[3]), Util5.getCardName5(cards[4]));
+		String handDescription1 = Util5.decode5CardHand(cardsRes, true);
 		System.out.println("Description: " + handDescription1 + " :: " + "int res : " + cardsRes);
 	}
 }

@@ -1,4 +1,4 @@
-package main;
+package com.jmedia.poker;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,11 +7,12 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
-import static main.util.handNames;
-import static main.util5.*;
-import static main.util7.handFrequency;
+import static com.jmedia.poker.Util.handNames;
+import static com.jmedia.poker.Util5.*;
+import static com.jmedia.poker.Util7.handFrequency;
 
 public class EvalTestPlayground {
 	
@@ -35,10 +36,10 @@ public class EvalTestPlayground {
 
 	public static long[] createAllSevenCardHands(){
 
-		long[] allCards = new long[util7.total7CardHandCount*7];
+		long[] allCards = new long[Util7.total7CardHandCount*7];
 		int totalCounter=0;
 
-		long[] cards52_7 = util7.all52CardsDecimal;//DeadHorse7.makeAll52Cards7Decimal();
+		long[] cards52_7 = Util7.all52CardsDecimal; //DeadHorse7.makeAll52Cards7Decimal() ;
 
 //668.922.800
 
@@ -65,6 +66,9 @@ public class EvalTestPlayground {
 
 
 	  public static int[] createAllFiveCardHands(){
+		  //there is a speed test method below
+		  //but in case you want the good ol fashion 'create every single possible hand'
+		  //here you go
 		  
 		  int[] allCards = new int[total5CardHandCount*5];
 		  int totalCounter=0;
@@ -85,9 +89,7 @@ public class EvalTestPlayground {
 		 return allCards;
 	  }
 	  
-	  //there is a speed test method below
-	  //but in case you want the good ol fashion 'create every single possible hand'
-	  //here you go
+
 
 public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card, 1 = pair, 2 = 2pair etc..
 	  /*
@@ -120,11 +122,42 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 	}
 	*/
 }
-	  public static void testStatisticsManyHand5(int howManyHands){
+
+	public static void testStatisticsManyHand5(int howManyHands){
+
+		String thisManyString = NumberFormat.getNumberInstance(Locale.US).format(howManyHands);
+		System.out.println("Doing this many hands: " + thisManyString);
+		List<Integer[]> allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(howManyHands);
+		int totalHandsNow = allCards.size();//allCards.length / 5;
+		int[] handCounter = new int[handNames.length];
+		double[] frequencyPerc = new double[handFrequency.length];
+
+
+
+		for(Integer[] hand : allCards){
+			int res = DeadHorse.eval5(hand[0],hand[1],
+					hand[2],hand[3],hand[4])>>26;
+			handCounter[res]++;
+		}
+
+		System.out.println("\nNow our hands:");
+		for(int i = 0; i< handFrequency.length; i++) {
+			//frequencyPerc[i] = handFrequency5[i]/(double)totalHands5;total5CardHandCount
+			frequencyPerc[i] = handFrequency[i] / (double)total5CardHandCount;
+			System.out.println("hand frequency of " + handNames[i] + " : (had this many in this test: " + handCounter[i] + ")");
+			System.out.println("expected:\t" + (frequencyPerc[i]*100) + "%");
+			System.out.println("Actual:  \t" + ((double)( handCounter[i]/(double)totalHandsNow)*100) + "%");
+			System.out.println();
+		}
+
+
+		//System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
+	}
+	  public static void testStatisticsManyHand5_2(int howManyHands){
 
 		  String thisManyString = NumberFormat.getNumberInstance(Locale.US).format(howManyHands);
 		  System.out.println("Doing this many hands: " + thisManyString);
-		  int[] allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(howManyHands);
+		  int[] allCards = HandMakerFiveCard.makeThisManyRandom5CardHandsOld(howManyHands);
 		  int totalHandsNow = allCards.length / 5; 
 		  int[] handCounter = new int[9];
 		  double[] frequencyPerc = new double[handFrequency.length];
@@ -218,13 +251,13 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  //to the number of each type of hand we expect
 		   for(int j=0;j<handCounter.length;j++){
 			   //check if expected == actual
-			   boolean checked = handCounter[j]== handFrequency[j];
+			   boolean checked = handCounter[j] == Util5.handFrequency[j];
 			   String res = checked
 					   //if all hands accounted for, good news
-					   ?"All "+ handFrequency[j]+" "+handNames[j]+" hands are accounted for"
+					   ? "All " + Util5.handFrequency[j] + " " + handNames[j] + " hands are accounted for"
 							   
 						//if the counts dont match, show how many failed
-					   : (handCounter[j]- handFrequency[j])+" of "+ handFrequency[j]
+					   : (handCounter[j] - Util5.handFrequency[j]) + " of "+ handFrequency[j]
 							   +" "+handNames[j]+" hands failed!"; 
 			   
 			   System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
@@ -318,13 +351,13 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 
 		   for(int j=0;j<handCounter.length;j++){
 			   //check if expected == actual
-			   boolean checked = handCounter[j]== util7.handFrequency[j];
+			   boolean checked = handCounter[j]== Util7.handFrequency[j];
 			   String res = checked
 					   //if all hands accounted for, good news
-					   ?"PASS - All "+ util7.handFrequency[j]+" "+handNames[j]+" hands are accounted for"
+					   ?"PASS - All "+ Util7.handFrequency[j]+" "+handNames[j]+" hands are accounted for"
 							   
 						//if the counts dont match, show how many failed
-					   : "FAIL - " +handCounter[j]+" out of "+ util7.handFrequency[j]
+					   : "FAIL - " +handCounter[j]+" out of "+ Util7.handFrequency[j]
 							   +" "+handNames[j]+" hands received!"; 
 			   
 			   System.out.println(res+" " + ((double)handCounter[j]/totalCounter*100) + "%");
@@ -333,16 +366,25 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  System.out.println("Total Count : " + totalCounter);
 		  
 	  }
-	  
-	  
-
-	  
 
 
-	  
+
+
+
 	public static void randomizerSpeedTest5CardDiagnostics(int howMany){
+
+		List<Integer[]> allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(howMany);
+
+		for(Integer[] hand : allCards){
+			int res = DeadHorse.eval5(hand[0],hand[1],hand[2],hand[3],hand[4]);
+			res>>=26;
+			System.out.println(res+", "+handNames[res]);
+		}
+	}
+	  
+	public static void randomizerSpeedTest5CardDiagnostics_2(int howMany){
 		  
-		  int[] allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(howMany);
+		  int[] allCards = HandMakerFiveCard.makeThisManyRandom5CardHandsOld(howMany);
 		  
 		  for(int i=0;i<allCards.length;i+=5){
 			int res = DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4]);
@@ -350,15 +392,35 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  	System.out.println(res+", "+handNames[res]);
 		  }
 	  }
-	
-	
+
 	public static void randomizerSpeedTest5Card(int howMany){
+
+		//number of hands to burn through
+		//pick a nice huge round number to let this sucker get warmed up
+		// int howMany = 10000000;
+		System.out.println("Making " + howMany + " hands...");
+		List<Integer[]> allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(howMany);
+		System.out.println("...Done making " + howMany + " hands");
+		System.out.println("...Evaluating " + howMany + " hands");
+		long startT = System.nanoTime();
+
+		//let er rip, go through every hand, 5 cards at a time
+		for(Integer[] hand : allCards)
+			DeadHorse.eval5(hand[0],hand[1],hand[2],hand[3],hand[4]);
+		long endT = System.nanoTime();
+		double time = (double) (endT - startT )/1000000000;
+
+		System.out.println("Did " + howMany + " hands in " + time +" seconds");
+		System.out.println((int)(howMany/time/1000000) + " million hands a second");
+	}
+
+	public static void randomizerSpeedTest5Card_2(int howMany){
 		  
 		  //number of hands to burn through
 		  //pick a nice huge round number to let this sucker get warmed up
 		  // int howMany = 10000000;
 		System.out.println("Making " + howMany + " hands...");
-		int[] allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(howMany);
+		int[] allCards = HandMakerFiveCard.makeThisManyRandom5CardHandsOld(howMany);
 		  System.out.println("...Done making " + howMany + " hands");
 		  System.out.println("...Evaluating " + howMany + " hands");
 		  long startT = System.nanoTime();
@@ -377,15 +439,16 @@ public static void testStatisticsOfEachHand(int howManyToRun){ // 0 = high card,
 		  //how many hands do you want to test? choose a few million to be sure..
 		 // int howMany = 10000000;
 
-		  int[] allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(howMany);
+		  List<Integer[]> allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(howMany);
 		  
 		  //create an array of size 9. 0-8 for each type of hand
 		  //this will hold the count of each type of hand that gets created/evaluated
 		  int[] handCounter = new int[9];
 
 		  //evaluate every hand, 5 cards at a time
-		  for(int i=0;i<allCards.length;i+=5)
-			  handCounter[DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4])]++;
+		  for(Integer[] hand : allCards)
+			  handCounter[DeadHorse.eval5(hand[0],hand[1],hand[2],hand[3],hand[4])]++;
+			  //handCounter[DeadHorse.eval5(allCards[i],allCards[i+1],allCards[i+2],allCards[i+3],allCards[i+4])]++;
 		
 		  //this will show the frequency and percentages of each type of hand 
 		  //these frequencies can be compared to the actual frequency percentages 
@@ -541,7 +604,7 @@ public static void randomizerSpeedTest7Card(int howMany){
 	
 	
 
-	  long[] ac = util7.makeThisManyRandom7CardHands(howMany);
+	  long[] ac = Util7.makeThisManyRandom7CardHands(howMany);
 	  //get start time
 	  long startTf = System.nanoTime();
 	  
@@ -552,7 +615,7 @@ public static void randomizerSpeedTest7Card(int howMany){
 	  long startT = System.nanoTime();
 	  
 	  for(int v=0;v<ac.length/7;v++)
-		  DeadHorse7.eval7(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
+		  DeadHorse7.eval7beta(ac[(v*7)],ac[(v*7)+1],ac[(v*7)+2],ac[(v*7)+3],ac[(v*7)+4],ac[(v*7)+5],ac[(v*7)+6]);
 
 
 	  //get end time
@@ -574,7 +637,7 @@ public static void randomizerSpeedTest7nCard(int howMany){
 	
 	
 
-	  long[] ac = util7.makeThisManyRandom7CardHands(howMany);
+	  long[] ac = Util7.makeThisManyRandom7CardHands(howMany);
 	  //get start time
 	  long startTf = System.nanoTime();
 	  

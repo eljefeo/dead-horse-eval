@@ -1,16 +1,16 @@
-package main;
+package com.jmedia.poker;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class util5 extends util{
+public class Util5 extends Util {
 
     static int total5CardHandCount = 2598960;
+    static final Random rand = new Random();
 
+    static final int numOfCardsPerHand = 5;
 
+    static final int maxNumPlayers = 10;
 
     static int[] handFrequency = {
             1302540, 1098240, 123552, 54912, 10200, 5108, 3744, 624, 40
@@ -110,7 +110,7 @@ public class util5 extends util{
         for(int i = 0; i < suitDecimals.length; i++){
             for(int j = 0; j < cardDecimals.length; j++){
                 int newNum = makeDecimalFromIndexes(j, i);
-                System.out.println("new num : " + newNum + " : " + convertDecimalToShortName(newNum));
+                System.out.println("new num : " + newNum + " : " + decimalToShortCardName(newNum));
             }
         }
 
@@ -130,7 +130,7 @@ public class util5 extends util{
         return cards;
     }
 
-    public static int[] getRandomThisType5CardHandRandomly(int whatKind) { // 0 = high card, 1 = pair, 2 = 2pair etc..
+    public static Integer[] getRandomThisType5CardHandRandomly(int whatKind) { // 0 = high card, 1 = pair, 2 = 2pair etc..
 
         int counter = 0;
         int limit = 100000000;
@@ -140,19 +140,19 @@ public class util5 extends util{
         }
         while (true) {
 
-            int[] allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(10000);
-            for(int i=0; i < batchSize; i+=5){
+            List<Integer[]> allCards = HandMakerFiveCard.makeThisManyRandom5CardHands(10000);
+            for(Integer[] hand : allCards){
                 counter++;
                // int[] fiveCards = new allCards[i*5]
-                int res = DeadHorse.eval5(allCards[i*5], allCards[i*5+1], allCards[i*5+2], allCards[i*5+3], allCards[i*5+4]);
+                int res = DeadHorse.eval5(hand[0], hand[1], hand[2], hand[3], hand[4]);
                 //System.out.println("Cards: " + allCards[i*5] + ", " + allCards[i*5+1] + ", " + allCards[i*5+2] + ", " + allCards[i*5+3] + ", " + allCards[i*5+4]);
                 res >>= 26;
                 if (res == whatKind) {
                     System.out.println("Finally got " + handNames[res] + " after " + counter + " hands");
-                    return new int[]{allCards[i*5], allCards[i*5+1], allCards[i*5+2], allCards[i*5+3], allCards[i*5+4]};
+                    return hand;
                 } else if (counter > limit) {
                     System.out.println("Did not get a " + handNames[whatKind] + " after " + limit + " hands...stopping the search so it doesnt go on forever. something doesnt seem right, it shouldnt take this long");
-                    return new int[]{};
+                    return new Integer[]{};
                 }
             }
 
@@ -195,13 +195,13 @@ public class util5 extends util{
 
     // can send user readable strings into here like 'AS or JC or 9H or TD (ten of diamonds)'..
 //capital letter for face cards and UPPER case letter for suit
-    public  static int humanEncodeEval(String as, String bs, String cs, String ds, String es){
+    public  static int evalShortCards(String as, String bs, String cs, String ds, String es){
 
         //convert strings like 7H to numbers that the eval recognizes
 
         //return DeadHorse.eval5WithNotes(a, b, c, d, e);
         int res = DeadHorse.eval5(cardMap.get(as), cardMap.get(bs), cardMap.get(cs), cardMap.get(ds), cardMap.get(es));
-        System.out.println("humanEncodeEval3 : " + res + " : " + util.bin32(res));
+        //System.out.println("humanEncodeEval3 : " + res + " : " + util.bin32(res));
         return res;
     }
 
@@ -232,11 +232,11 @@ public class util5 extends util{
         int e = encodeShortByHand(es);
 
         System.out.println("humanEncodeEval1: " + a + ", " + b + ", " + c + ", " + d + ", " + e);
-        System.out.println("humanEncodeEval2: " + util.bin32(a) + ", " + util.bin32(b) + ", " + util.bin32(c) + ", " + util.bin32(d) + ", " + util.bin32(e));
+        System.out.println("humanEncodeEval2: " + Util.bin32(a) + ", " + Util.bin32(b) + ", " + Util.bin32(c) + ", " + Util.bin32(d) + ", " + Util.bin32(e));
 
         //return DeadHorse.eval5WithNotes(a, b, c, d, e);
         int res = DeadHorse.eval5(a, b, c, d, e);
-        System.out.println("humanEncodeEval3 : " + res + " : " + util.bin32(res));
+        System.out.println("humanEncodeEval3 : " + res + " : " + Util.bin32(res));
         return res;
     }
 
@@ -267,30 +267,40 @@ public class util5 extends util{
     }
 
     //give it human readable string cards, it will spit back a human readable hand type(pair, full house etc..)
-    public static String humanEncodeFullHandEval(String as, String bs, String cs, String ds, String es){
-        int res= humanEncodeEval(as,bs,cs,ds,es);
+    /*public static String humanEncodeFullHandEval(String as, String bs, String cs, String ds, String es){
+        int res= shortCardsToLongDescription(as,bs,cs,ds,es);
         return "unique hand value = " + res + "\n"+ as + ", " + bs + ", " +cs+", " +ds+", "+es+"\n= "+ handNames[res>>26];
-    }
-
-    public static String decode5CardHand(int hand){
+    }*/
+    public static String decode5CardHand(int hand, boolean showDetails){
         int handType = hand >> rightShiftForHandType;
-        System.out.println("decode 5card hand type int: " + handType);
+
+        if(showDetails)
+            System.out.println("decode 5card hand type int : " + handType);
+
         int importantBits = (hand & leaveImportantBitMask) >> rightShiftForimportantCards;
         int kickerBits = hand & leaveKickerBitMask;
-        System.out.println("This hand: " + hand + " :: " + util.bin32(hand) + " :: " + handType + " : " + handNames[handType]);
-        System.out.println("important bits: " + importantBits + " :: " + util.bin13(importantBits));
-        System.out.println("kicker bits: " + kickerBits + " :: " + util.bin13(kickerBits));
+
+        if(showDetails) {
+            System.out.println("This hand: " + hand + " :: " + Util.bin32(hand) + " :: " + handType + " : " + handNames[handType]);
+            System.out.println("important bits: " + importantBits + " :: " + Util.bin13(importantBits));
+            System.out.println("kicker bits: " + kickerBits + " :: " + Util.bin13(kickerBits));
+        }
 
         String longHandName = handNames[handType];
         List<String> importantStrings = parseHandBits(importantBits);
 
-        for(String importS : importantStrings){
-            System.out.println("Important Card: " + importS);
+        if(showDetails) {
+            for (String importS : importantStrings) {
+                System.out.println("Important Card: " + importS);
+            }
         }
 
         List<String> kickerStrings = parseHandBits(kickerBits);
-        for(String kickS : kickerStrings){
-            System.out.println("Kicker Card: " + kickS);
+
+        if(showDetails) {
+            for (String kickS : kickerStrings) {
+                System.out.println("Kicker Card: " + kickS);
+            }
         }
 
         String[] cardStrings = new String[5];
@@ -300,24 +310,20 @@ public class util5 extends util{
         for(int i = 0; i < kickerStrings.size(); i++){
             cardStrings[i + importantStrings.size()] = kickerStrings.get(i);
         }
-        for(String s : cardStrings){
-            System.out.println("Card String going in: " + s);
+
+        if(showDetails) {
+            for (String s : cardStrings) {
+                System.out.println("Card String going in: " + s);
+            }
         }
         String handDescription = getLongHandName(handType, cardStrings);
 
-        System.out.println(handDescription);
-
+        if(showDetails) {
+            System.out.println(handDescription);
+        }
         return handDescription;
     }
 
-
-
-    public static String humanEncodeShortAndDecodeLongHand(String[] someHand) throws Exception {
-        //String[] someHand = new String[] {"9D", "3H", "6H", "5H", "4H"};
-        System.out.println(someHand[0] + " " + someHand[1] + " " + someHand[2] + " " + someHand[3] + " " + someHand[4]);
-        int res = humanEncodeEval(someHand[0], someHand[1], someHand[2], someHand[3], someHand[4]);
-        return decode5CardHand(res);
-    }
 
     private static List<String> parseHandBits(int impKickBts) {
         List<String> strngs = new ArrayList<String>();
@@ -326,7 +332,7 @@ public class util5 extends util{
             int someOne = (int) Math.pow(2,impKickCount);
             int maybe1 = impKickBts & someOne;
             if(maybe1 != 0){
-                strngs.add(util.cardLongs[impKickCount]);
+                strngs.add(Util.cardLongNames[impKickCount]);
                 impKickBts ^= maybe1;
             }
             impKickCount--;
@@ -334,23 +340,58 @@ public class util5 extends util{
         return strngs;
     }
 
-    public static int convertHumanLongNameToDecimal (String cardString){
-        //return cardMap.get(cardString);
+
+    public static int longCardNameToDecimal(String cardString){
+
+    //TODO
+        // return cardMap.get(cardString);
+        System.out.println("Finish developing me util5.longCardNameToDecimal(String cardString");
         return 0;
     }
 
-    public static String convertHumanLongNameToShortName (String cardString){
+    public static String longCardNameToShortCardName(String cardString){
         //return cardMap.get(cardString);
+        //TODO
+        System.out.println("Finish developing me util5.longCardNameToShortCardName(String cardString");
         return "";
     }
 
-    public static int convertHumanShortNameToDecimal (String cardString){
+    public static int shortCardNameToDecimal(String cardString){
         return cardMap.get(cardString);
+    }
+
+    public static Integer[] shortCardNamesToDecimals(String[] cardString){
+        //TODO
+        System.out.println("Finish developing me shortCardNamesToDecimals(String[] cardString");
+
+        //return cardMap.get(cardString);
+
+
+        return new Integer[]{cardMap.get(cardString[0]), cardMap.get(cardString[1]), cardMap.get(cardString[2]), cardMap.get(cardString[3]), cardMap.get(cardString[4])};
+    }
+
+    public static Integer[] shortCardNamesToDecimals(List<String> cards){
+        //TODO
+        System.out.println("Finish developing me util5.shortCardNamesToDecimals(List<String> cards");
+
+        //return cardMap.get(cardString);
+        if(cards != null && cards.size() == numOfCardsPerHand){
+            System.out.println("getting in shortCardNamesToDecimals " + cards.get(0) + " : " + cardMap.get(cards.get(0)));
+            System.out.println("getting in shortCardNamesToDecimals " + cards.get(1) + " : " + cardMap.get(cards.get(1)));
+            System.out.println("getting in shortCardNamesToDecimals " + cards.get(2) + " : " + cardMap.get(cards.get(2)));
+            System.out.println("getting in shortCardNamesToDecimals " + cards.get(3) + " : " + cardMap.get(cards.get(3)));
+            System.out.println("getting in shortCardNamesToDecimals " + cards.get(4) + " : " + cardMap.get(cards.get(4)));
+            return new Integer[]{cardMap.get(cards.get(0)), cardMap.get(cards.get(1)), cardMap.get(cards.get(2)), cardMap.get(cards.get(3)), cardMap.get(cards.get(4))};
+
+        } else {
+            throw new IllegalArgumentException("Cards must be not null and 5 cards only");
+        }
+
     }
 
 
 
-    public static int convertHumanShortNameToDecimalByHand(String cardString) throws Exception {
+    public static int shortCardNameToDecimalByHand(String cardString) throws Exception {
         // like AH or 5S
         if (cardString.length() != 2) {
             throw new IllegalArgumentException("Card must be 2 chars long:  " + cardString);
@@ -363,14 +404,8 @@ public class util5 extends util{
     }
 
 
-
-
-    public static String convertDecimalToShortName(int card) throws Exception {
-        return (getCardChar(card) + "" + getSuitChar(card));
-    }
-
     public static char getCardChar(int card) throws Exception {
-        return util.cardChars[getCardIndexDecimal(card)];
+        return Util.cardChars[getCardIndexDecimal(card)];
     }
 
     public static int getCardIndexDecimal(int card) throws Exception {
@@ -383,7 +418,7 @@ public class util5 extends util{
     }
 
     public static char getSuitChar(int card) throws Exception {
-        return util.suitChars[getSuitIndexDecimal(card)];
+        return Util.suitChars[getSuitIndexDecimal(card)];
     }
 
     public static int getSuitIndexDecimal(int card) throws Exception {
@@ -399,16 +434,66 @@ public class util5 extends util{
         return (1 << cardIndex) | (1 << (13 + suitIndex ) ); //(1L << (cardIndex * 3)) | (1L << ((suitIndex + 13) * 3));
     }
 
-    public static String convertDecimalToLongName(int card) throws Exception {
-        return getCardLong(card) + util.OF + getSuitLong(card);
+    public static String decimalToShortCardName(int card) throws Exception {
+        return (getCardChar(card) + "" + getSuitChar(card));
+    }
+
+    public static String[] decimalsToShortCardNames(Integer[] cards) throws Exception {
+        String[] cardShorts = new String[cards.length];
+        for(int i = 0; i < cards.length; i++){
+            cardShorts[i] = decimalToShortCardName(cards[i]);// getCardChar(card) + "" + getSuitChar(card);
+        }
+        return cardShorts;
+    }
+
+    public static String decimalToLongCardName(int card) throws Exception {
+        return getCardLong(card) + Util.OF + getSuitLong(card);
     }
 
     public static String getCardLong(int card) throws Exception {
-        return util.cardLongs[getCardIndexDecimal(card)];
+        return Util.cardLongNames[getCardIndexDecimal(card)];
     }
 
     public static String getSuitLong(int card) throws Exception {
-        return util.suitLongs[getSuitIndexDecimal(card)];
+        return Util.suitLongs[getSuitIndexDecimal(card)];
     }
 
+    public static String decimalsToLongHandDescription(Integer[] cards) {
+        int res = DeadHorse.eval5(cards);
+        return decode5CardHand(res, false);
+    }
+
+    public static String shortCardsToLongHandDescription(String[] someHand, boolean showDetails) {
+        //String[] someHand = new String[] {"9D", "3H", "6H", "5H", "4H"};
+
+        //System.out.println(someHand[0] + " " + someHand[1] + " " + someHand[2] + " " + someHand[3] + " " + someHand[4]);
+        int res = evalShortCards(someHand[0], someHand[1], someHand[2], someHand[3], someHand[4]);
+        return decode5CardHand(res, showDetails);
+    }
+
+
+    public static List<Integer[]> dealRandomHandsFromDeck(int playerCount) {
+
+        if(playerCount > maxNumPlayers){
+            throw new IllegalArgumentException("Cannot play a game of 5 card poker with 1 deck of 52 cards with more than " + maxNumPlayers + " players! You asked for " + playerCount);
+        }
+
+        System.out.println("Dealing " + playerCount + " hands from the deck");
+        List<Integer> allCards = new ArrayList<>(Arrays.stream(all52CardsDecimal).boxed().toList());
+        List<Integer[]> playerHands = new ArrayList<>();
+        for (int i = 0; i < playerCount; i++){
+            Integer[] cards = new Integer[numOfCardsPerHand];
+
+            for(int j = 0; j < cards.length; j++){
+                int cardIndex  = rand.nextInt(allCards.size());
+                cards[j] = allCards.get(cardIndex);
+                allCards.remove(cardIndex);
+            }
+            playerHands.add(cards);
+
+        }
+
+        return playerHands;
+
+    }
 }

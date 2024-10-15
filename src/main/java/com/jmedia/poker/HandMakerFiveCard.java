@@ -1,4 +1,4 @@
-package main;
+package com.jmedia.poker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,37 +12,42 @@ public class HandMakerFiveCard {
 			16386, 16388, 16392, 16400, 16416, 16448, 16512, 16640, 16896, 17408, 18432, 20480, 8193, 8194, 8196, 8200,
 			8208, 8224, 8256, 8320, 8448, 8704, 9216, 10240, 12288 };*/
 
-	static Random rand = new Random();
+	static final Random rand = new Random();
 
-	private static List<Integer[]> allHighCardHands = new ArrayList<>();
-	private static List<Integer[]> allPairHands = new ArrayList<>();
-	private static List<Integer[]> allTwoPairHands = new ArrayList<>();
-	private static List<Integer[]> allTripHands = new ArrayList<>();
-	private static List<Integer[]> allStraightHands = new ArrayList<>();
-	private static List<Integer[]> allFlushHands = new ArrayList<>();
-	private static List<Integer[]> allFullHouseHands = new ArrayList<>();
-	private static List<Integer[]> allQuadHands = new ArrayList<>();
-	private static List<Integer[]> allRoyalFlushHands = new ArrayList<>();
-	private static List<List<Integer[]>> allHands = new ArrayList<>();
+	private static final List<Integer[]> allHighCardHands = new ArrayList<>();
+	private static final List<Integer[]> allPairHands = new ArrayList<>();
+	private static final List<Integer[]> allTwoPairHands = new ArrayList<>();
+	private static final List<Integer[]> allTripHands = new ArrayList<>();
+	private static final List<Integer[]> allStraightHands = new ArrayList<>();
+	private static final List<Integer[]> allFlushHands = new ArrayList<>();
+	private static final List<Integer[]> allFullHouseHands = new ArrayList<>();
+	private static final List<Integer[]> allQuadHands = new ArrayList<>();
+	private static final List<Integer[]> allStraightFlushHands = new ArrayList<>();
+	private static final List<List<Integer[]>> allHandsOrdered = new ArrayList<>();
+	private static final List<Integer[]> allHands = new ArrayList<>();
 	static {
-		allHands.add(allHighCardHands);
-		allHands.add(allPairHands);
-		allHands.add(allTwoPairHands);
-		allHands.add(allTripHands);
-		allHands.add(allStraightHands);
-		allHands.add(allFlushHands);
-		allHands.add(allFullHouseHands);
-		allHands.add(allQuadHands);
-		allHands.add(allRoyalFlushHands);
-	}
+		allHandsOrdered.add(allHighCardHands);
+		allHandsOrdered.add(allPairHands);
+		allHandsOrdered.add(allTwoPairHands);
+		allHandsOrdered.add(allTripHands);
+		allHandsOrdered.add(allStraightHands);
+		allHandsOrdered.add(allFlushHands);
+		allHandsOrdered.add(allFullHouseHands);
+		allHandsOrdered.add(allQuadHands);
+		allHandsOrdered.add(allStraightFlushHands);
 
-	static{
+		//This will create and evaluate every possible 5 card hand. Then add the hand to allHandsOrdered in the correct spot, and add it to allHands
 		int[] allFiveCardHands = EvalTestPlayground.createAllFiveCardHands();
 		for(int i=0;i<allFiveCardHands.length;i+=5){
-			int res = DeadHorse.eval5(allFiveCardHands[i],allFiveCardHands[i+1],
-					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4])>>26;
-			allHands.get(res).add(new Integer[] {allFiveCardHands[i],allFiveCardHands[i+1],
-					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4]});
+
+			Integer[] aHand = new Integer[] {allFiveCardHands[i],allFiveCardHands[i+1],
+					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4]};
+
+			int res = DeadHorse.eval5(aHand)>>26;
+
+			allHandsOrdered.get(res).add(aHand);
+
+			allHands.add(aHand);
 		}
 	}
 
@@ -78,10 +83,10 @@ public class HandMakerFiveCard {
 		return allCards;
 	}*/
 
-	public static int[] makeLotsOfRandom5CardHandsSlow(int howMany) { //this is so dang slow. But a more proper way to do it I suppose...
+	public static int[] makeLotsOfRandom5CardHandsSlow(int howMany) { //this is so dang slow. But another way to do it I suppose...
 		// List<Integer> fiftyTwoCards = Arrays.asList(allc.clone())
 
-		List<Integer> fiftyTwoCards = Arrays.stream(util5.all52CardsDecimal).boxed().toList();
+		List<Integer> fiftyTwoCards = Arrays.stream(Util5.all52CardsDecimal).boxed().toList();
 
 		// make a copy of array to do each hand
 		List<Integer> allc2 = new ArrayList<Integer>(fiftyTwoCards);
@@ -104,7 +109,15 @@ public class HandMakerFiveCard {
 		return allCards;
 	}
 
-	public static int[] makeThisManyRandom5CardHands(int howMany) {
+	public static List<Integer[]> makeThisManyRandom5CardHands(int howMany) {
+		List<Integer[]> hands = new ArrayList<>();
+		for(int i = 0; i < howMany; i++){
+			hands.add(allHands.get(rand.nextInt(allHands.size())));
+		}
+		return hands;
+	}
+
+	public static int[] makeThisManyRandom5CardHandsOld(int howMany) {
 
 		// keep a copy of the original array
 		// in case we want to use this method on its own out of this class
@@ -112,7 +125,7 @@ public class HandMakerFiveCard {
 				67584, 69632, 32769, 32770, 32772, 32776, 32784, 32800, 32832, 32896, 33024, 33280, 33792, 34816, 36864,
 				16385, 16386, 16388, 16392, 16400, 16416, 16448, 16512, 16640, 16896, 17408, 18432, 20480, 8193, 8194,
 				8196, 8200, 8208, 8224, 8256, 8320, 8448, 8704, 9216, 10240, 12288 };*/
-		int[] fiftyTwoCards = util5.all52CardsDecimal;
+		int[] fiftyTwoCards = Util5.all52CardsDecimal;
 
 		// make a copy of array to do each hand
 		int[] allc2 = fiftyTwoCards.clone();
@@ -137,7 +150,7 @@ public class HandMakerFiveCard {
 				// x would remain zero if it chose it again, and the loop will continue
 				// while x==0 until it chooses a card we have not picked yet
 				while (x == 0) {
-					ran = r.nextInt(52);
+					ran = r.nextInt(52 );
 					x = allc2[ran];
 				}
 
@@ -200,23 +213,44 @@ public class HandMakerFiveCard {
 				}
 	}
 
-	public static void prepAllHands() {
+	/*public static void prepAllHands() { //done in static block now
 
 		int[] allFiveCardHands = EvalTestPlayground.createAllFiveCardHands();
 		for(int i=0;i<allFiveCardHands.length;i+=5){
 			int res = DeadHorse.eval5(allFiveCardHands[i],allFiveCardHands[i+1],
 					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4])>>26;
-			allHands.get(res).add(new Integer[] {allFiveCardHands[i],allFiveCardHands[i+1],
+			allHandsOrdered.get(res).add(new Integer[] {allFiveCardHands[i],allFiveCardHands[i+1],
 					allFiveCardHands[i+2],allFiveCardHands[i+3],allFiveCardHands[i+4]});
 		}
 
 
+	}*/
+
+	public static List<List<Integer[]>> getAllHandsOrdered(){
+		return allHandsOrdered;
 	}
 
-	public static List<List<Integer[]>> getAllHands(){
-		return allHands;
+
+
+	public static String[] getRandomHandFromDescription(String handDescription) throws Exception {
+
+		//int handType;
+		//if(handDescription.toUpperCase().equals(util.ROYAL_FLUSH.toUpperCase())){
+		//	handType = 9; //maybe can hijack some functions and use 9 as royal flush indicator
+		//} else {
+			int handType = Util.handDescriptionToType(handDescription);
+			Integer[] cardsInt = getRandomCertainTypeHand(handType);
+		//}
+
+		return Util5.decimalsToShortCardNames(cardsInt);
 	}
 
+
+
+	public static Integer[] getRandomHand(){
+
+		return allHands.get(rand.nextInt(allHands.size()));
+	}
 	public static Integer[] getRandomHighCardHand(){
 		return getRandomCertainTypeHand(0);
 	}
@@ -246,10 +280,20 @@ public class HandMakerFiveCard {
 	}
 
 	public static Integer[] getRandomCertainTypeHand(int type){
-		List<Integer[]> highCardHands = allHands.get(type);
-		int ni = rand.nextInt(highCardHands.size());
-		//System.out.println("getRandomCertainTypeHand : " + util.handNames[type] + " random hand : " + ni + ", " + highCardHands.size());
-		return highCardHands.get(ni);
+		List<Integer[]> handList = allHandsOrdered.get(type);
+		int ni = rand.nextInt(handList.size());
+		// System.out.println("getRandomCertainTypeHand : " + util.handNames[type] + " random hand : " + ni + ", " + highCardHands.size());
+		return handList.get(ni);
+	}
+
+
+
+
+	//Just testing if this could work, make sure references are good in the list of lists
+	public static void testGetRandomTestSomeHand() throws Exception {
+		Integer[] cards = allQuadHands.get(0);
+		String[] cardsSt = Util5.decimalsToShortCardNames(cards);
+		System.out.println("Random hand : " + Arrays.toString(cardsSt));
 	}
 
 }

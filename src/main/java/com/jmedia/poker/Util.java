@@ -1,6 +1,8 @@
-package main;
+package com.jmedia.poker;
 
-public abstract class util {
+import java.util.Arrays;
+
+public abstract class Util {
     static String[] allCardNames = new String[]{
             //"2s", "3s", "4s", "5s", "6s", "7s", "8s", "9s", "10s", "Js", "Qs", "Ks", "As",
             "2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "TS", "JS", "QS", "KS", "AS",
@@ -17,7 +19,7 @@ public abstract class util {
             "Straight", "Flush", "Full House", "4 of a kind", "Straight Flush"
     };
     static final char[] cardChars = new char[]{'2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'};
-    static final String[] cardLongs = new String[]{"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+    static final String[] cardLongNames = new String[]{"Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
             "Ten", "Jack", "Queen", "King", "Ace"};
 
     static final char[] suitChars = new char[]{'D', 'C', 'H', 'S'};
@@ -25,6 +27,7 @@ public abstract class util {
     //static final String[] suitLongsReversed = new String[]{"Spades", "Hearts", "Clubs", "Diamonds"};
 
     static final String OF = " of ";
+    static final String ROYAL_FLUSH = "Royal Flush";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -68,6 +71,22 @@ public abstract class util {
         return counter;
     }
 
+    public static boolean arrayContains(int[] nums, int n){
+        for(int l : nums){
+            if(l == n)
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean arrayContains(long[] nums, long n){
+        for(long l : nums){
+            if(l == n)
+                return true;
+        }
+        return false;
+    }
+
     public static long[] maskCards(long[] hand, long mask){
         long[] masked = new long[hand.length];
         for(int i=0; i<hand.length; i++){
@@ -101,12 +120,12 @@ public abstract class util {
         int cardIndex = getCardIndexChar(cardString.charAt(0));
         int suitIndex = getSuitIndexChar(cardString.charAt(1));
 
-        return util.cardLongs[cardIndex] + util.OF + util.suitLongs[suitIndex];
+        return Util.cardLongNames[cardIndex] + Util.OF + Util.suitLongs[suitIndex];
     }
 
     public static int getSuitIndexChar(char suitChar) throws Exception {
-        for (int i = 0; i < util.suitChars.length; i++) {
-            if (suitChar == util.suitChars[i]) {
+        for (int i = 0; i < Util.suitChars.length; i++) {
+            if (suitChar == Util.suitChars[i]) {
                 return i;
             }
         }
@@ -114,12 +133,12 @@ public abstract class util {
     }
 
     public static int getCardIndexChar(char cardChar) throws Exception {
-        for (int i = 0; i < util.cardChars.length; i++) {
-            if (cardChar == util.cardChars[i]) {
+        for (int i = 0; i < Util.cardChars.length; i++) {
+            if (cardChar == Util.cardChars[i]) {
                 return i;
             }
         }
-        throw new Exception("Error retreiving card index for card char: " + cardChar);
+        throw new Exception("Error retreiving card index for card char : " + cardChar);
     }
 
 
@@ -181,8 +200,41 @@ public abstract class util {
         // that way it wont appear higher than a 2,3,4,5,6. So here we check if that ACE is missing, and we add the word in...
         if(cards[4] == null)
             cards[4] = "Ace";
+
         return handNames[8] + " : " + cards[4] + " " + cards[3] + " " + cards[2] + " " + cards[1] + " " + cards[0];
     }
 
     //abstract public Object makeDecimalFromIndexes(int cardIndex, int suitIndex) ;
+
+
+    public static int handDescriptionToType(String handDescription){
+        return switch (handDescription.toUpperCase().trim()){
+            case "HIGH CARD" -> 0;
+            case "PAIR" -> 1;
+            case "TWO PAIR" -> 2;
+            case "THREE OF A KIND", "TRIPS" -> 3;
+            case "STRAIGHT" -> 4;
+            case "FLUSH" -> 5;
+            case "FULL HOUSE", "FULL BOAT", "BOAT" -> 6;
+            case "QUADS", "FOUR OF A KIND" -> 7;
+            case "STRAIGHT FLUSH" -> 8;
+            //case "ROYAL FLUSH" -> 8???;
+
+            default -> throw new IllegalStateException("Unexpected value for hand description: " + handDescription.toUpperCase());
+        };
+    }
+
+    public static int indexOfLargestIntInArray(Integer[] nums){
+        int maxI = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            maxI = nums[i] > nums[maxI] ? i : maxI;
+        }
+
+        return maxI;
+    }
+
+    public static int indexOfLargestIntInArray(int[] nums){
+        return indexOfLargestIntInArray(Arrays.stream(nums).boxed().toArray(Integer[]::new));
+    }
 }
